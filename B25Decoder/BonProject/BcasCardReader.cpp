@@ -25,11 +25,13 @@
 // 汎用スマートカードリーダ用 B-CASカードインタフェース実装クラス
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 const BONGUID CBcasCardReader::GetDeviceType(void)
 {
 	// デバイスのタイプを返す
 	return ::BON_NAME_TO_GUID(TEXT("IHalBcasCard"));
 }
+#endif
 
 const DWORD CBcasCardReader::GetDeviceName(LPTSTR lpszName)
 {

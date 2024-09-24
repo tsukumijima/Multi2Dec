@@ -12,7 +12,9 @@
 class IHalDevice :				public IBonObject
 {
 public:
+#ifdef _WIN32
 	virtual const BONGUID GetDeviceType(void) = 0;
+#endif
 	virtual const DWORD GetDeviceName(LPTSTR lpszName) = 0;
 	virtual const DWORD GetTotalDeviceNum(void) = 0;
 	virtual const DWORD GetActiveDeviceNum(void) = 0;

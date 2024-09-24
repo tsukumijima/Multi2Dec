@@ -11,9 +11,10 @@
 
 #include "BonObject.h"
 #include "BonDebug.h"
-#include "ModCatalogBase.h"
 #include "SyncObject.h"
-#include "SmartThread.h"
 #include "MediaBase.h"
 #include "TsDataEncode.h"
-
+#ifdef _WIN32
+#include "ModCatalogBase.h"
+#include "SmartThread.h"
+#endif

@@ -4,6 +4,9 @@
 
 #pragma once
 
+#ifndef _WIN32
+#include <mutex>
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // クリティカルセクションラッパークラス
@@ -19,7 +22,11 @@ public:
 	void Unlock(void);
 	
 protected:
+#ifdef _WIN32
 	CRITICAL_SECTION m_CriticalSection;
+#else
+	std::recursive_mutex m_mutex;
+#endif
 };
 
 
@@ -37,7 +44,7 @@ protected:
 	CSmartLock *m_pSmartLock;
 };
 
-
+#ifdef _WIN32
 /////////////////////////////////////////////////////////////////////////////
 // イベントラッパークラス
 /////////////////////////////////////////////////////////////////////////////
@@ -85,3 +92,4 @@ public:
 protected:
 	HANDLE m_hMutex;
 };
+#endif

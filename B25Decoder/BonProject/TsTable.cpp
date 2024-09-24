@@ -156,7 +156,7 @@ const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescBlock.GetDescNum() ; dwIndex++){
 		const IDescBase *pDescBase = m_DescBlock.GetDescByIndex(dwIndex);
-		::BON_TRACE(TEXT("[%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+		::BON_TRACE(TEXT("[%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 		}
 
 	// ハンドラへ通知
@@ -270,7 +270,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescBlock.GetDescNum() ; dwIndex++){
 		const IDescBase *pDescBase = m_DescBlock.GetDescByIndex(dwIndex);
-		::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+		::BON_TRACE(TEXT("    [%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 		}
 
 	// ストリーム情報の開始位置を計算
@@ -292,7 +292,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 		for(DWORD dwIndex = 0UL ; dwIndex < PmtItem.pDescBlock->GetDescNum() ; dwIndex++){
 			const IDescBase *pDescBase = PmtItem.pDescBlock->GetDescByIndex(dwIndex);
-			::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+			::BON_TRACE(TEXT("    [%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 			}
 
 		// テーブルに追加する

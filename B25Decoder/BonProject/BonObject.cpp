@@ -17,11 +17,13 @@ void CBonObject::Release(void)
 	delete this;
 }
 
+#ifdef _WIN32
 const BONGUID CBonObject::GetGuid(void)
 {
 	// クラス名を返す
 	return TypeToGuid(typeid(CBonObject));
 }
+#endif
 
 CBonObject::CBonObject(IBonObject *pOwner)
 	: m_pOwner(pOwner)
@@ -40,6 +42,7 @@ IBonObject * CBonObject::CreateInstance(IBonObject *pOwner)
 	return reinterpret_cast<IBonObject *>(new CBonObject(pOwner));
 }
 
+#ifdef _WIN32
 const BONGUID CBonObject::TypeToGuid(const type_info &TypeID)
 {
 	TCHAR szClassName[BON_MAX_CLASS_NAME] = TEXT("");
@@ -56,3 +59,4 @@ const BONGUID CBonObject::TypeToGuid(const type_info &TypeID)
 	// GUIDを返す
 	return ::BON_NAME_TO_GUID(szClassName);
 }
+#endif

@@ -6,7 +6,12 @@
 
 #include <vector>
 #include <string>
+#ifdef _WIN32
 #include <WinScard.h>
+#else
+#include "MyWinScard.h"
+using namespace MyWinScard;
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,7 +27,9 @@ public:
 	DECLARE_IBONOBJECT(CBcasCardReader)
 
 // IHalDevice
+#ifdef _WIN32
 	virtual const BONGUID GetDeviceType(void);
+#endif
 	virtual const DWORD GetDeviceName(LPTSTR lpszName);
 	virtual const DWORD GetTotalDeviceNum(void);
 	virtual const DWORD GetActiveDeviceNum(void);

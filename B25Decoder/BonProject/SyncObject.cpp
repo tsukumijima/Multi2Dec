@@ -13,26 +13,38 @@
 
 CSmartLock::CSmartLock()
 {
+#ifdef _WIN32
 	// クリティカルセクション初期化
 	::InitializeCriticalSection(&m_CriticalSection);
+#endif
 }
 
 CSmartLock::~CSmartLock()
 {
+#ifdef _WIN32
 	// クリティカルセクション削除
 	::DeleteCriticalSection(&m_CriticalSection);
+#endif
 }
 
 void CSmartLock::Lock(void)
 {
 	// クリティカルセクション取得
+#ifdef _WIN32
 	::EnterCriticalSection(&m_CriticalSection);
+#else
+	m_mutex.lock();
+#endif
 }
 
 void CSmartLock::Unlock(void)
 {
 	// クリティカルセクション開放
+#ifdef _WIN32
 	::LeaveCriticalSection(&m_CriticalSection);
+#else
+	m_mutex.unlock();
+#endif
 }
 	
 	
@@ -54,6 +66,7 @@ CBlockLock::~CBlockLock()
 }
 
 
+#ifdef _WIN32
 //////////////////////////////////////////////////////////////////////
 // イベントラッパークラス
 //////////////////////////////////////////////////////////////////////
@@ -162,3 +175,4 @@ const bool CSmartMutex::IsExist(LPCTSTR lpszName)
 		return false;
 		}	
 }
+#endif

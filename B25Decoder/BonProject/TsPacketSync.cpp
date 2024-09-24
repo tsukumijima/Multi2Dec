@@ -5,6 +5,10 @@
 #include "stdafx.h"
 #include "BonSDK.h"
 #include "TsPacketSync.h"
+#ifndef _WIN32
+#include <chrono>
+namespace chrono = std::chrono;
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -54,7 +58,12 @@ void CTsPacketSync::ResetStatistics(void)
 	m_dwFormatErrNum = 0UL;
 	m_dwTransportErrNum = 0UL;
 	m_dwContinuityErrNum = 0UL;
-	m_dwLastUpdateTime = ::GetTickCount();
+	m_dwLastUpdateTime =
+#ifdef _WIN32
+		::GetTickCount();
+#else
+		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
+#endif
 	m_dwLastInputPacket = 0UL;
 	m_dwLastOutputPacket = 0UL;
 	m_dwCurInputPacket = 0UL;
@@ -277,7 +286,9 @@ const bool CTsPacketSync::ParseTsPacket(void)
 		
 		default :
 			// 例外
+#ifdef _WIN32
 			::DebugBreak();
+#endif
 			return false;
 		}
 }
@@ -302,7 +313,12 @@ void CTsPacketSync::OnTsPacket(void)
 void CTsPacketSync::UpdateBitrate(void)
 {
 	// ビットレート更新
-	const DWORD dwCurUpdateTime = ::GetTickCount();
+	const DWORD dwCurUpdateTime =
+#ifdef _WIN32
+		::GetTickCount();
+#else
+		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
+#endif
 	
 	// 更新周期チェック
 	if((dwCurUpdateTime - m_dwLastUpdateTime) < BITRATE_PERIOD)return;

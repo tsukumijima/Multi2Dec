@@ -7,6 +7,11 @@
 #include "TsDescrambler.h"
 #include "TsTable.h"
 #include "TsPacket.h"
+#ifndef _WIN32
+#include "BcasCardReader.h"
+#include <chrono>
+namespace chrono = std::chrono;
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,11 +68,17 @@ const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
 	IHalDevice *pHalDevice = NULL;
 
 	try{
+#ifdef _WIN32
 		// B-CASカードのインスタンスを生成する
 		if(!(pHalDevice = ::BON_SAFE_CREATE<IHalDevice *>(lpszBCId)))throw __LINE__;
 
 		// デバイスタイプをチェック
 		if(pHalDevice->GetDeviceType() != ::BON_NAME_TO_GUID(TEXT("IHalBcasCard")))throw __LINE__;
+#else
+		// 名前解決によるインスタンス生成は未実装なので直接生成する
+		if(::_tcscmp(lpszBCId, TEXT("CBcasCardReader")))throw __LINE__;
+		pHalDevice = new CBcasCardReader(NULL);
+#endif
 
 		// デバイスの存在をチェック
 		if(!pHalDevice->GetTotalDeviceNum())throw __LINE__;
@@ -459,7 +470,6 @@ void CTsDescrambler::PushUnprocPacket(const ITsPacket *pPacket)
 {
 	// 未処理パケットをバッファにプッシュする
 	CTsPacket * const pNewPacket = new CTsPacket(NULL);
-	::BON_ASSERT(pNewPacket);
 
 	if(pNewPacket->CopyPacket(pPacket)){	
 		m_PacketBuf.push_back(pNewPacket);
@@ -501,7 +511,13 @@ CTsDescrambler::CEcmProcessor::CEcmProcessor(IBonObject *pOwner)
 	: CPsiTableBase(NULL)
 	, m_pTsDescrambler(dynamic_cast<CTsDescrambler *>(pOwner))
 	, m_pHalBcasCard(m_pTsDescrambler->m_pHalBcasCard)
-	, m_dwLastRetryTime(::GetTickCount() - BCAS_REFRESH_INTERVAL)
+	, m_dwLastRetryTime(
+#ifdef _WIN32
+		::GetTickCount() - BCAS_REFRESH_INTERVAL
+#else
+		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count() - (DWORD)BCAS_REFRESH_INTERVAL
+#endif
+		)
 	, m_dwDescramblingState(IHalBcasCard::EC_NO_ERROR)
 {
 	// MULTI2デコーダを初期化
@@ -557,14 +573,20 @@ const bool CTsDescrambler::CEcmProcessor::OnTableUpdate(const IPsiSection *pNewS
 
 	// ECM処理失敗時は一度だけB-CASカードを再初期化する
 	if(!pKsData && (m_pHalBcasCard->GetEcmError() != IHalBcasCard::EC_NOT_CONTRACTED)){
-		if((::GetTickCount() - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
+		DWORD dwTick =
+#ifdef _WIN32
+			::GetTickCount();
+#else
+			(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
+#endif
+		if((dwTick - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
 			// 再初期化ガードインターバル経過なら			
 			if(m_pHalBcasCard->OpenCard()){
 				pKsData = m_pHalBcasCard->GetKsFromEcm(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 				}
 				
 			// 最終リトライ時間更新
-			m_dwLastRetryTime = ::GetTickCount();
+			m_dwLastRetryTime = dwTick;
 			}
 		}
 

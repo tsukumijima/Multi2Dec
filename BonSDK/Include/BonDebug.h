@@ -16,6 +16,7 @@
 
 
 
+#ifdef _WIN32
 /////////////////////////////////////////////////////////////////////////////
 // 汎用例外クラス
 /////////////////////////////////////////////////////////////////////////////
@@ -60,6 +61,7 @@ protected:
 	LPCSTR m_lpszSourceFile;
 	const DWORD m_dwSourceLine;
 };
+#endif
 
 
 /*
@@ -126,5 +128,7 @@ void BON_TRACE(LPCTSTR lpszFormat, ...);
 // デバッグ補助マクロ
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 #define BON_EXPECTION	CBonException(__FILE__, __LINE__, GetGuid())
 #define BON_ASSERT		CBonAssert(__FILE__, __LINE__, GetGuid())
+#endif

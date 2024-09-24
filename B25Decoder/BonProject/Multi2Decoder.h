@@ -32,10 +32,10 @@ private:
 	class SYSKEY	// System Key(Sk), Expanded Key(Wk) 256bit
 	{
 	public:
-		inline void SetHexData(const BYTE *pHexData);
-		inline void GetHexData(BYTE *pHexData) const;
+		void SetHexData(const BYTE *pHexData);
+		void SetKey(int nIndex, DWORD dwKey);
 	
-		DWORD dwKey2, dwKey1, dwKey4, dwKey3, dwKey6, dwKey5, dwKey8, dwKey7;
+		DWORD dwKeys[8];
 	};
 
 	static inline void DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey);
@@ -47,8 +47,6 @@ private:
 	static inline void RoundFuncPi2(DATKEY &Block, const DWORD dwK1);
 	static inline void RoundFuncPi3(DATKEY &Block, const DWORD dwK2, const DWORD dwK3);
 	static inline void RoundFuncPi4(DATKEY &Block, const DWORD dwK4);
-
-	static inline const DWORD LeftRotate(const DWORD dwValue, const DWORD dwRotate);
 
 	DATKEY m_InitialCbc;
 	SYSKEY m_SystemKey;

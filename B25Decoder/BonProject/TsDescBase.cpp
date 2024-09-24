@@ -105,7 +105,7 @@ const DWORD CDescBlock::ParseDescs(void)
 			}
 		else{
 			// 非対応 or エラー
-			::BON_ASSERT(false, TEXT("記述子が非対応 or エラー\r\nTag = %02X"), pData[dwPos]);
+			::BON_TRACE(TEXT("記述子が非対応 or エラー\r\nTag = %02X"), pData[dwPos]);
 			
 			pDescBase->Release();
 			}

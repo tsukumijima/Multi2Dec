@@ -9,6 +9,7 @@
 // グローバル関数宣言 (オブジェクト生成メソッド)
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 #ifdef BONSDK_IMPLEMENT
 	#define BONAPI	__declspec(dllexport)
 #else
@@ -69,3 +70,4 @@ template <class T> T BON_SAFE_CREATE(LPCTSTR lpszBCId, IBonObject *pOwner = NULL
 
 	return pDestInterface;
 }
+#endif

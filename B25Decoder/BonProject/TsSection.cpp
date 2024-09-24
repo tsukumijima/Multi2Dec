@@ -314,7 +314,9 @@ CPsiSectionParser::CPsiSectionParser(IBonObject *pOwner)
 	, m_bIsStoring(false)
 	, m_dwCrcErrorNum(0UL)
 {
+#ifdef _WIN32
 	if(!m_pHandler)::DebugBreak();
+#endif
 }
 
 CPsiSectionParser::~CPsiSectionParser(void)
@@ -409,7 +411,7 @@ const DWORD CPsiSectionParser::CalcCrc(const BYTE *pData, const WORD wDataSize, 
 		0x89B8FD09UL, 0x8D79E0BEUL, 0x803AC667UL, 0x84FBDBD0UL,	0x9ABC8BD5UL, 0x9E7D9662UL, 0x933EB0BBUL, 0x97FFAD0CUL,	0xAFB010B1UL, 0xAB710D06UL, 0xA6322BDFUL, 0xA2F33668UL,	0xBCB4666DUL, 0xB8757BDAUL, 0xB5365D03UL, 0xB1F740B4UL
 		};		
 
-	for(register WORD wPos = 0U ; wPos < wDataSize ; wPos++){
+	for(WORD wPos = 0U ; wPos < wDataSize ; wPos++){
 		dwCurCrc = (dwCurCrc << 8) ^ CrcTable[ (dwCurCrc >> 24) ^ pData[wPos] ];
 		}
 

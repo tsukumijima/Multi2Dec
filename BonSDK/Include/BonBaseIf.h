@@ -13,7 +13,9 @@ class IBonObject
 {
 public:
 	virtual void Release(void) = 0;
+#ifdef _WIN32
 	virtual const BONGUID GetGuid(void) = 0;
+#endif
 };
 
 

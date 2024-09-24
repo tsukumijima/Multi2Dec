@@ -69,10 +69,14 @@ public:
 // From MobileHackerz (http://mobilehackerz.jp/contents/Software/cap_hdus)
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 #ifdef B25SDK_IMPLEMENT
 	#define B25DECAPI	__declspec(dllexport)
 #else
 	#define B25DECAPI	__declspec(dllimport)
+#endif
+#else
+	#define B25DECAPI
 #endif
 
 

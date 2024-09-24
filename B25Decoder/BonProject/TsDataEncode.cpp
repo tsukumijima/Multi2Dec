@@ -3,7 +3,13 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#ifdef _WIN32
 #include <MbString.h>
+#else
+#include <time.h>
+#include <chrono>
+namespace chrono = std::chrono;
+#endif
 #include "TsDataEncode.h"
 
 
@@ -750,7 +756,25 @@ CTsTime::CTsTime(const SYSTEMTIME &SystemTime)
 CTsTime::CTsTime(const ULONGLONG llFileTime)
 {
 	// FILETIME形式から時間を生成(1601/1/1からの100ns単位の経過時間)
+#ifdef _WIN32
 	::FileTimeToSystemTime((FILETIME *)&llFileTime, this);
+#else
+	time_t tt = (time_t)((llFileTime - 116444736000000000) / 10000000);
+	tm t;
+	if(::gmtime_r(&tt, &t)){
+		wYear = (WORD)(t.tm_year + 1900);
+		wMonth = (WORD)(t.tm_mon + 1);
+		wDayOfWeek = (WORD)t.tm_wday;
+		wDay = (WORD)t.tm_mday;
+		wHour = (WORD)t.tm_hour;
+		wMinute = (WORD)t.tm_min;
+		wSecond = (WORD)t.tm_sec;
+		wMilliseconds = (WORD)(llFileTime / 10000 % 1000);
+		}
+	else{
+		ClearTime();
+		}
+#endif
 }
 
 CTsTime::CTsTime(const BYTE *pHexData)
@@ -769,9 +793,14 @@ CTsTime::CTsTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WOR
 void CTsTime::SetNowTime(void)
 {
 	// 現在時刻をセットする
+#ifdef _WIN32
 	LONGLONG llFileTime;
 	::GetSystemTimeAsFileTime((FILETIME *)&llFileTime);
 	*this = llFileTime + ARIB_TIMEZONE_SEC * 10000;
+#else
+	*this = chrono::duration_cast<chrono::microseconds>(chrono::system_clock::now().time_since_epoch()).count() * 10 +
+	        116444736000000000 + ARIB_TIMEZONE_SEC * 10000;
+#endif
 }
 
 void CTsTime::SetAribTime(const BYTE *pHexData)
@@ -811,7 +840,21 @@ CTsTime::operator const ULONGLONG () const
 {
 	// FILETIME形式へのキャスト演算子
 	ULONGLONG llFileTime = 0;
+#ifdef _WIN32
 	::SystemTimeToFileTime(this, (FILETIME *)&llFileTime);
+#else
+	tm t = {};
+	t.tm_year = wYear - 1900;
+	t.tm_mon = wMonth - 1;
+	t.tm_mday = wDay;
+	t.tm_hour = wHour;
+	t.tm_min = wMinute;
+	t.tm_sec = wSecond;
+	time_t tt = ::timegm(&t);
+	if(tt != (time_t)-1){
+		llFileTime = (ULONGLONG)tt * 10000000 + wMilliseconds * 10000 + 116444736000000000;
+		}
+#endif
 	
 	return llFileTime;
 }

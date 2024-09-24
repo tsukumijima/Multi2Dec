@@ -4,9 +4,11 @@
 
 #include "stdafx.h"
 #include "BonSDK.h"
+#include <stdarg.h>
 #include <stdlib.h>
 
 
+#ifdef _WIN32
 /////////////////////////////////////////////////////////////////////////////
 // 汎用例外クラス
 /////////////////////////////////////////////////////////////////////////////
@@ -187,6 +189,7 @@ void CBonAssert::operator( )(const void *pPointer, LPCTSTR lpszFormat, ...)
 		Exception.Notify();
 		}
 }
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -210,5 +213,10 @@ void BON_TRACE(LPCTSTR lpszFormat, ...)
 	va_end(Args);
 
 	// デバッグ出力に書き込み
+#ifdef _WIN32
 	::OutputDebugString(szOutput);
+#else
+	// 標準エラー出力したいときはアンコメント
+	//::fputs(szOutput, stderr);
+#endif
 }
