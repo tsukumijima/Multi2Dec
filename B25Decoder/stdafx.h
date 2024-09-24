@@ -27,6 +27,7 @@
 // Windows ヘッダー ファイル:
 #include <Windows.h>
 #include <crtdbg.h>
+#include <tchar.h>
 
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。

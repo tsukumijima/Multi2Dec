@@ -5,7 +5,6 @@
 #include "StdAfx.h"
 #include "BonSDK.h"
 #include "SyncObject.h"
-#include <TChar.h>
 
 
 //////////////////////////////////////////////////////////////////////

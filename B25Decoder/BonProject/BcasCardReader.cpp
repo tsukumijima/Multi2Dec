@@ -5,7 +5,6 @@
 #include "StdAfx.h"
 #include "BonSDK.h"
 #include <Memory>
-#include <TChar.h>
 #include "BcasCardReader.h"
 
 

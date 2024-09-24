@@ -4,7 +4,6 @@
 
 #include "StdAfx.h"
 #include "BonSDK.h"
-#include <TChar.h>
 #include "TsTable.h"
 
 

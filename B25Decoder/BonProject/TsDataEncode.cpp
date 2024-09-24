@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include <TChar.h>
 #include <MbString.h>
 #include "TsDataEncode.h"
 
