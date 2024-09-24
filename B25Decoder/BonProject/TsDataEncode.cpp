@@ -767,7 +767,9 @@ CTsTime::CTsTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WOR
 void CTsTime::SetNowTime(void)
 {
 	// 現在時刻をセットする
-	::GetLocalTime(this);
+	LONGLONG llFileTime;
+	::GetSystemTimeAsFileTime((FILETIME *)&llFileTime);
+	*this = llFileTime + ARIB_TIMEZONE_SEC * 10000;
 }
 
 void CTsTime::SetAribTime(const BYTE *pHexData)
@@ -788,9 +790,7 @@ void CTsTime::SetTime(const WORD wYear, const WORD wMonth, const WORD wDay, cons
 	this->wSecond = wSecond;
 
 	// 曜日を求める
-	FILETIME FileTime;
-	::SystemTimeToFileTime(this, &FileTime);
-	::FileTimeToSystemTime(&FileTime, this);
+	wDayOfWeek = CTsTime((ULONGLONG)*this).wDayOfWeek;
 }
 
 void  CTsTime::ClearTime(void)
@@ -808,7 +808,7 @@ const bool CTsTime::IsEmpty(void) const
 CTsTime::operator const ULONGLONG () const
 {
 	// FILETIME形式へのキャスト演算子
-	ULONGLONG llFileTime;
+	ULONGLONG llFileTime = 0;
 	::SystemTimeToFileTime(this, (FILETIME *)&llFileTime);
 	
 	return llFileTime;
@@ -825,7 +825,7 @@ const CTsTime & CTsTime::operator = (const SYSTEMTIME &SystemTime)
 const CTsTime & CTsTime::operator = (const ULONGLONG llFileTime)
 {
 	// FILETIME形式から代入
-	::FileTimeToSystemTime((FILETIME *)&llFileTime, this);
+	*this = CTsTime((ULONGLONG)*this);
 	
 	return *this;
 }

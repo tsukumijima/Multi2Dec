@@ -101,6 +101,8 @@ public:
 class CTsTime : public SYSTEMTIME
 {
 public:
+	static const int ARIB_TIMEZONE_SEC = 9 * 3600;
+
 	CTsTime();
 	CTsTime(const SYSTEMTIME &SystemTime);
 	CTsTime(const ULONGLONG llFileTime);
