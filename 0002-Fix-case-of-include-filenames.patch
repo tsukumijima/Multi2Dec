@@ -1,0 +1,316 @@
+From ebcd23f8fd8cab0dbfb48061cbd660f6811f471c Mon Sep 17 00:00:00 2001
+From: unknown <email@example.com>
+Date: Fri, 19 Jul 2024 18:45:56 +0900
+Subject: [PATCH 02/10] Fix case of include filenames
+
+---
+ B25Decoder/BonProject/BcasCardReader.cpp | 4 ++--
+ B25Decoder/BonProject/BcasCardReader.h   | 4 ++--
+ B25Decoder/BonProject/BonDebug.cpp       | 4 ++--
+ B25Decoder/BonProject/BonObject.cpp      | 2 +-
+ B25Decoder/BonProject/MediaBase.cpp      | 2 +-
+ B25Decoder/BonProject/MediaGrabber.cpp   | 2 +-
+ B25Decoder/BonProject/Multi2Decoder.cpp  | 4 ++--
+ B25Decoder/BonProject/SyncObject.cpp     | 2 +-
+ B25Decoder/BonProject/TsDataEncode.cpp   | 2 +-
+ B25Decoder/BonProject/TsDescBase.cpp     | 2 +-
+ B25Decoder/BonProject/TsDescBase.h       | 2 +-
+ B25Decoder/BonProject/TsDescrambler.cpp  | 2 +-
+ B25Decoder/BonProject/TsDescrambler.h    | 2 +-
+ B25Decoder/BonProject/TsDescriptor.cpp   | 2 +-
+ B25Decoder/BonProject/TsPacket.cpp       | 2 +-
+ B25Decoder/BonProject/TsPacketSync.cpp   | 2 +-
+ B25Decoder/BonProject/TsPidMapper.cpp    | 2 +-
+ B25Decoder/BonProject/TsSection.cpp      | 2 +-
+ B25Decoder/BonProject/TsTable.cpp        | 2 +-
+ B25Decoder/BonProject/TsTable.h          | 2 +-
+ B25Decoder/BonProject/TsTableBase.cpp    | 2 +-
+ 21 files changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/B25Decoder/BonProject/BcasCardReader.cpp b/B25Decoder/BonProject/BcasCardReader.cpp
+index 5dc5e89..fc55af0 100644
+--- a/B25Decoder/BonProject/BcasCardReader.cpp
++++ b/B25Decoder/BonProject/BcasCardReader.cpp
+@@ -2,9 +2,9 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+-#include <Memory>
++#include <memory>
+ #include "BcasCardReader.h"
+ 
+ 
+diff --git a/B25Decoder/BonProject/BcasCardReader.h b/B25Decoder/BonProject/BcasCardReader.h
+index 5d65e5e..1b92739 100644
+--- a/B25Decoder/BonProject/BcasCardReader.h
++++ b/B25Decoder/BonProject/BcasCardReader.h
+@@ -4,8 +4,8 @@
+ 
+ #pragma once
+ 
+-#include <Vector>
+-#include <String>
++#include <vector>
++#include <string>
+ #include <WinScard.h>
+ 
+ 
+diff --git a/B25Decoder/BonProject/BonDebug.cpp b/B25Decoder/BonProject/BonDebug.cpp
+index f9e42a4..99dc320 100644
+--- a/B25Decoder/BonProject/BonDebug.cpp
++++ b/B25Decoder/BonProject/BonDebug.cpp
+@@ -2,9 +2,9 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+-#include <StdLib.h>
++#include <stdlib.h>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/BonObject.cpp b/B25Decoder/BonProject/BonObject.cpp
+index fff1f59..d8a8710 100644
+--- a/B25Decoder/BonProject/BonObject.cpp
++++ b/B25Decoder/BonProject/BonObject.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "BonObject.h"
+ 
+diff --git a/B25Decoder/BonProject/MediaBase.cpp b/B25Decoder/BonProject/MediaBase.cpp
+index 894ebed..e0bdddb 100644
+--- a/B25Decoder/BonProject/MediaBase.cpp
++++ b/B25Decoder/BonProject/MediaBase.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "MediaBase.h"
+ 
+diff --git a/B25Decoder/BonProject/MediaGrabber.cpp b/B25Decoder/BonProject/MediaGrabber.cpp
+index 7bf935a..9d51313 100644
+--- a/B25Decoder/BonProject/MediaGrabber.cpp
++++ b/B25Decoder/BonProject/MediaGrabber.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "MediaGrabber.h"
+ 
+diff --git a/B25Decoder/BonProject/Multi2Decoder.cpp b/B25Decoder/BonProject/Multi2Decoder.cpp
+index 5b8816d..fb562c0 100644
+--- a/B25Decoder/BonProject/Multi2Decoder.cpp
++++ b/B25Decoder/BonProject/Multi2Decoder.cpp
+@@ -2,9 +2,9 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "Multi2Decoder.h"
+-#include <StdLib.h>
++#include <stdlib.h>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/SyncObject.cpp b/B25Decoder/BonProject/SyncObject.cpp
+index c025b8b..40f8c59 100644
+--- a/B25Decoder/BonProject/SyncObject.cpp
++++ b/B25Decoder/BonProject/SyncObject.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "SyncObject.h"
+ 
+diff --git a/B25Decoder/BonProject/TsDataEncode.cpp b/B25Decoder/BonProject/TsDataEncode.cpp
+index 876bb4f..92f93fb 100644
+--- a/B25Decoder/BonProject/TsDataEncode.cpp
++++ b/B25Decoder/BonProject/TsDataEncode.cpp
+@@ -2,7 +2,7 @@
+ //
+ //////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include <MbString.h>
+ #include "TsDataEncode.h"
+ 
+diff --git a/B25Decoder/BonProject/TsDescBase.cpp b/B25Decoder/BonProject/TsDescBase.cpp
+index ab83750..e806fea 100644
+--- a/B25Decoder/BonProject/TsDescBase.cpp
++++ b/B25Decoder/BonProject/TsDescBase.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsDescBase.h"
+ #include "TsDescriptor.h"
+diff --git a/B25Decoder/BonProject/TsDescBase.h b/B25Decoder/BonProject/TsDescBase.h
+index cd82fc7..42d2d09 100644
+--- a/B25Decoder/BonProject/TsDescBase.h
++++ b/B25Decoder/BonProject/TsDescBase.h
+@@ -5,7 +5,7 @@
+ #pragma once
+ 
+ 
+-#include <Vector>
++#include <vector>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsDescrambler.cpp b/B25Decoder/BonProject/TsDescrambler.cpp
+index 77848d1..14609ee 100644
+--- a/B25Decoder/BonProject/TsDescrambler.cpp
++++ b/B25Decoder/BonProject/TsDescrambler.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsDescrambler.h"
+ #include "TsTable.h"
+diff --git a/B25Decoder/BonProject/TsDescrambler.h b/B25Decoder/BonProject/TsDescrambler.h
+index 69fc658..b9f33f9 100644
+--- a/B25Decoder/BonProject/TsDescrambler.h
++++ b/B25Decoder/BonProject/TsDescrambler.h
+@@ -8,7 +8,7 @@
+ #include "TsPidMapper.h"
+ #include "TsTableBase.h"
+ #include "Multi2Decoder.h"
+-#include <Vector>
++#include <vector>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsDescriptor.cpp b/B25Decoder/BonProject/TsDescriptor.cpp
+index 051580e..74e7803 100644
+--- a/B25Decoder/BonProject/TsDescriptor.cpp
++++ b/B25Decoder/BonProject/TsDescriptor.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsDescriptor.h"
+ 
+diff --git a/B25Decoder/BonProject/TsPacket.cpp b/B25Decoder/BonProject/TsPacket.cpp
+index eeefda1..0f41348 100644
+--- a/B25Decoder/BonProject/TsPacket.cpp
++++ b/B25Decoder/BonProject/TsPacket.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsPacket.h"
+ 
+diff --git a/B25Decoder/BonProject/TsPacketSync.cpp b/B25Decoder/BonProject/TsPacketSync.cpp
+index fa3a59f..5120f2b 100644
+--- a/B25Decoder/BonProject/TsPacketSync.cpp
++++ b/B25Decoder/BonProject/TsPacketSync.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsPacketSync.h"
+ 
+diff --git a/B25Decoder/BonProject/TsPidMapper.cpp b/B25Decoder/BonProject/TsPidMapper.cpp
+index 7ef57f6..1168a99 100644
+--- a/B25Decoder/BonProject/TsPidMapper.cpp
++++ b/B25Decoder/BonProject/TsPidMapper.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsPidMapper.h"
+ 
+diff --git a/B25Decoder/BonProject/TsSection.cpp b/B25Decoder/BonProject/TsSection.cpp
+index c5d0bbb..114ada0 100644
+--- a/B25Decoder/BonProject/TsSection.cpp
++++ b/B25Decoder/BonProject/TsSection.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsSection.h"
+ 
+diff --git a/B25Decoder/BonProject/TsTable.cpp b/B25Decoder/BonProject/TsTable.cpp
+index 96a5c76..5051e2d 100644
+--- a/B25Decoder/BonProject/TsTable.cpp
++++ b/B25Decoder/BonProject/TsTable.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsTable.h"
+ 
+diff --git a/B25Decoder/BonProject/TsTable.h b/B25Decoder/BonProject/TsTable.h
+index 40c7884..9dad8bf 100644
+--- a/B25Decoder/BonProject/TsTable.h
++++ b/B25Decoder/BonProject/TsTable.h
+@@ -5,7 +5,7 @@
+ #pragma once
+ 
+ 
+-#include <Vector>
++#include <vector>
+ #include "TsSection.h"
+ #include "TsTableBase.h"
+ #include "TsDescBase.h"
+diff --git a/B25Decoder/BonProject/TsTableBase.cpp b/B25Decoder/BonProject/TsTableBase.cpp
+index 7bdd158..be6fdf5 100644
+--- a/B25Decoder/BonProject/TsTableBase.cpp
++++ b/B25Decoder/BonProject/TsTableBase.cpp
+@@ -2,7 +2,7 @@
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+-#include "StdAfx.h"
++#include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsTableBase.h"
+ 
+-- 
+2.45.2
+

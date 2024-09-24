@@ -1,0 +1,1224 @@
+From c689103b3b743b381990f3416d95edc0f5c12751 Mon Sep 17 00:00:00 2001
+From: unknown <email@example.com>
+Date: Fri, 19 Jul 2024 18:47:15 +0900
+Subject: [PATCH 07/10] Make B25Decoder available in UNIX environment
+
+---
+ B25Decoder/BonProject/BcasCardReader.cpp |   2 +
+ B25Decoder/BonProject/BcasCardReader.h   |   7 ++
+ B25Decoder/BonProject/BonDebug.cpp       |   8 ++
+ B25Decoder/BonProject/BonObject.cpp      |   4 +
+ B25Decoder/BonProject/Multi2Decoder.cpp  | 123 +++++++++++++----------
+ B25Decoder/BonProject/Multi2Decoder.h    |   8 +-
+ B25Decoder/BonProject/MyWinScard.cpp     |  83 +++++++++++++++
+ B25Decoder/BonProject/MyWinScard.h       |  76 ++++++++++++++
+ B25Decoder/BonProject/SyncObject.cpp     |  14 +++
+ B25Decoder/BonProject/TsDataEncode.cpp   |  43 ++++++++
+ B25Decoder/BonProject/TsDescBase.cpp     |   2 +-
+ B25Decoder/BonProject/TsDescrambler.cpp  |  30 +++++-
+ B25Decoder/BonProject/TsPacketSync.cpp   |  20 +++-
+ B25Decoder/BonProject/TsSection.cpp      |   4 +-
+ B25Decoder/BonProject/TsTable.cpp        |   6 +-
+ B25Decoder/IB25Decoder.h                 |   4 +
+ B25Decoder/Makefile                      |  62 ++++++++++++
+ B25Decoder/stdafx.h                      |  66 ++++++++++++
+ BonSDK/Include/BonBaseIf.h               |   2 +
+ BonSDK/Include/BonBaseLib.h              |   7 +-
+ BonSDK/Include/BonDebug.h                |   4 +
+ BonSDK/Include/BonGlobal.h               |   2 +
+ BonSDK/Include/BonHalIf.h                |   2 +
+ BonSDK/Include/BonObject.h               |  12 ++-
+ BonSDK/Include/SyncObject.h              |  10 +-
+ 25 files changed, 528 insertions(+), 73 deletions(-)
+ create mode 100644 B25Decoder/BonProject/MyWinScard.cpp
+ create mode 100644 B25Decoder/BonProject/MyWinScard.h
+ create mode 100644 B25Decoder/Makefile
+
+diff --git a/B25Decoder/BonProject/BcasCardReader.cpp b/B25Decoder/BonProject/BcasCardReader.cpp
+index 5aa6a89..f83c7ac 100644
+--- a/B25Decoder/BonProject/BcasCardReader.cpp
++++ b/B25Decoder/BonProject/BcasCardReader.cpp
+@@ -25,11 +25,13 @@
+ // 汎用スマートカードリーダ用 B-CASカードインタフェース実装クラス
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#ifdef _WIN32
+ const BONGUID CBcasCardReader::GetDeviceType(void)
+ {
+ 	// デバイスのタイプを返す
+ 	return ::BON_NAME_TO_GUID(TEXT("IHalBcasCard"));
+ }
++#endif
+ 
+ const DWORD CBcasCardReader::GetDeviceName(LPTSTR lpszName)
+ {
+diff --git a/B25Decoder/BonProject/BcasCardReader.h b/B25Decoder/BonProject/BcasCardReader.h
+index 1b92739..2896137 100644
+--- a/B25Decoder/BonProject/BcasCardReader.h
++++ b/B25Decoder/BonProject/BcasCardReader.h
+@@ -6,7 +6,12 @@
+ 
+ #include <vector>
+ #include <string>
++#ifdef _WIN32
+ #include <WinScard.h>
++#else
++#include "MyWinScard.h"
++using namespace MyWinScard;
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -22,7 +27,9 @@ public:
+ 	DECLARE_IBONOBJECT(CBcasCardReader)
+ 
+ // IHalDevice
++#ifdef _WIN32
+ 	virtual const BONGUID GetDeviceType(void);
++#endif
+ 	virtual const DWORD GetDeviceName(LPTSTR lpszName);
+ 	virtual const DWORD GetTotalDeviceNum(void);
+ 	virtual const DWORD GetActiveDeviceNum(void);
+diff --git a/B25Decoder/BonProject/BonDebug.cpp b/B25Decoder/BonProject/BonDebug.cpp
+index 99dc320..9e10f81 100644
+--- a/B25Decoder/BonProject/BonDebug.cpp
++++ b/B25Decoder/BonProject/BonDebug.cpp
+@@ -4,9 +4,11 @@
+ 
+ #include "stdafx.h"
+ #include "BonSDK.h"
++#include <stdarg.h>
+ #include <stdlib.h>
+ 
+ 
++#ifdef _WIN32
+ /////////////////////////////////////////////////////////////////////////////
+ // 汎用例外クラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -187,6 +189,7 @@ void CBonAssert::operator( )(const void *pPointer, LPCTSTR lpszFormat, ...)
+ 		Exception.Notify();
+ 		}
+ }
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -210,5 +213,10 @@ void BON_TRACE(LPCTSTR lpszFormat, ...)
+ 	va_end(Args);
+ 
+ 	// デバッグ出力に書き込み
++#ifdef _WIN32
+ 	::OutputDebugString(szOutput);
++#else
++	// 標準エラー出力したいときはアンコメント
++	//::fputs(szOutput, stderr);
++#endif
+ }
+diff --git a/B25Decoder/BonProject/BonObject.cpp b/B25Decoder/BonProject/BonObject.cpp
+index d8a8710..a3e2411 100644
+--- a/B25Decoder/BonProject/BonObject.cpp
++++ b/B25Decoder/BonProject/BonObject.cpp
+@@ -17,11 +17,13 @@ void CBonObject::Release(void)
+ 	delete this;
+ }
+ 
++#ifdef _WIN32
+ const BONGUID CBonObject::GetGuid(void)
+ {
+ 	// クラス名を返す
+ 	return TypeToGuid(typeid(CBonObject));
+ }
++#endif
+ 
+ CBonObject::CBonObject(IBonObject *pOwner)
+ 	: m_pOwner(pOwner)
+@@ -40,6 +42,7 @@ IBonObject * CBonObject::CreateInstance(IBonObject *pOwner)
+ 	return reinterpret_cast<IBonObject *>(new CBonObject(pOwner));
+ }
+ 
++#ifdef _WIN32
+ const BONGUID CBonObject::TypeToGuid(const type_info &TypeID)
+ {
+ 	TCHAR szClassName[BON_MAX_CLASS_NAME] = TEXT("");
+@@ -56,3 +59,4 @@ const BONGUID CBonObject::TypeToGuid(const type_info &TypeID)
+ 	// GUIDを返す
+ 	return ::BON_NAME_TO_GUID(szClassName);
+ }
++#endif
+diff --git a/B25Decoder/BonProject/Multi2Decoder.cpp b/B25Decoder/BonProject/Multi2Decoder.cpp
+index fb562c0..06f9bf2 100644
+--- a/B25Decoder/BonProject/Multi2Decoder.cpp
++++ b/B25Decoder/BonProject/Multi2Decoder.cpp
+@@ -18,34 +18,52 @@
+ // MULTI2暗号デコーダクラス
+ /////////////////////////////////////////////////////////////////////////////
+ 
++static inline DWORD HexToDword(const BYTE *pHexData)
++{
++#ifdef _WIN32
++	return ::_byteswap_ulong(*reinterpret_cast<const DWORD *>(pHexData));
++#else
++	return (DWORD)pHexData[0] << 24 | (DWORD)pHexData[1] << 16 | (DWORD)pHexData[2] << 8 | (DWORD)pHexData[3];
++#endif
++}
++
++static inline void DwordToHex(DWORD dwSrc, BYTE *pHexData)
++{
++#ifdef _WIN32
++	*reinterpret_cast<DWORD *>(pHexData) = ::_byteswap_ulong(dwSrc);
++#else
++	pHexData[0] = (BYTE)(dwSrc >> 24);
++	pHexData[1] = (BYTE)(dwSrc >> 16);
++	pHexData[2] = (BYTE)(dwSrc >> 8);
++	pHexData[3] = (BYTE)dwSrc;
++#endif
++}
++
+ inline void CMulti2Decoder::DATKEY::SetHexData(const BYTE *pHexData)
+ {
+ 	// バイトオーダー変換
+-	*reinterpret_cast<ULONG64 *>(this) = ::_byteswap_uint64(*reinterpret_cast<const ULONG64 *>(pHexData));
++	dwRight = HexToDword(pHexData + 4);
++	dwLeft = HexToDword(pHexData);
+ }
+ 
+ inline void CMulti2Decoder::DATKEY::GetHexData(BYTE *pHexData) const
+ {
+ 	// バイトオーダー変換
+-	*reinterpret_cast<ULONG64 *>(pHexData) = ::_byteswap_uint64(*reinterpret_cast<const ULONG64 *>(this));
++	DwordToHex(dwRight, pHexData + 4);
++	DwordToHex(dwLeft, pHexData);
+ }
+ 
+-inline void CMulti2Decoder::SYSKEY::SetHexData(const BYTE *pHexData)
++void CMulti2Decoder::SYSKEY::SetHexData(const BYTE *pHexData)
+ {
+ 	// バイトオーダー変換
+-	reinterpret_cast<ULONG64 *>(this)[0] = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(pHexData)[0]);
+-	reinterpret_cast<ULONG64 *>(this)[1] = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(pHexData)[1]);
+-	reinterpret_cast<ULONG64 *>(this)[2] = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(pHexData)[2]);
+-	reinterpret_cast<ULONG64 *>(this)[3] = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(pHexData)[3]);
++	for(int i = 0; i < 8; i++){
++		SetKey(i, HexToDword(pHexData + i * 4));
++		}
+ }
+ 
+-inline void CMulti2Decoder::SYSKEY::GetHexData(BYTE *pHexData) const
++void CMulti2Decoder::SYSKEY::SetKey(int nIndex, DWORD dwKey)
+ {
+-	// バイトオーダー変換
+-	reinterpret_cast<ULONG64 *>(pHexData)[0]  = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(this)[0]);
+-	reinterpret_cast<ULONG64 *>(pHexData)[1]  = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(this)[1]);
+-	reinterpret_cast<ULONG64 *>(pHexData)[2]  = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(this)[2]);
+-	reinterpret_cast<ULONG64 *>(pHexData)[3]  = ::_byteswap_uint64(reinterpret_cast<const ULONG64 *>(this)[3]);
++	dwKeys[nIndex] = dwKey;
+ }
+ 
+ CMulti2Decoder::CMulti2Decoder(void)
+@@ -139,13 +157,13 @@ inline void CMulti2Decoder::DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey)
+ {
+ 	// Block Decryption
+ 	for(DWORD dwRound = 0UL ; dwRound < SCRAMBLE_ROUND ; dwRound++){
+-		RoundFuncPi4(Block, WorkKey.dwKey8);
+-		RoundFuncPi3(Block, WorkKey.dwKey6, WorkKey.dwKey7);
+-		RoundFuncPi2(Block, WorkKey.dwKey5);
++		RoundFuncPi4(Block, WorkKey.dwKeys[7]);
++		RoundFuncPi3(Block, WorkKey.dwKeys[5], WorkKey.dwKeys[6]);
++		RoundFuncPi2(Block, WorkKey.dwKeys[4]);
+ 		RoundFuncPi1(Block);
+-		RoundFuncPi4(Block, WorkKey.dwKey4);
+-		RoundFuncPi3(Block, WorkKey.dwKey2, WorkKey.dwKey3);
+-		RoundFuncPi2(Block, WorkKey.dwKey1);
++		RoundFuncPi4(Block, WorkKey.dwKeys[3]);
++		RoundFuncPi3(Block, WorkKey.dwKeys[1], WorkKey.dwKeys[2]);
++		RoundFuncPi2(Block, WorkKey.dwKeys[0]);
+ 		RoundFuncPi1(Block);
+ 		}
+ }
+@@ -155,13 +173,13 @@ inline void CMulti2Decoder::EncryptBlock(DATKEY &Block, const SYSKEY &WorkKey)
+ 	// Block Encryption
+ 	for(DWORD dwRound = 0UL ; dwRound < SCRAMBLE_ROUND ; dwRound++){
+ 		RoundFuncPi1(Block);
+-		RoundFuncPi2(Block, WorkKey.dwKey1);
+-		RoundFuncPi3(Block, WorkKey.dwKey2, WorkKey.dwKey3);
+-		RoundFuncPi4(Block, WorkKey.dwKey4);
++		RoundFuncPi2(Block, WorkKey.dwKeys[0]);
++		RoundFuncPi3(Block, WorkKey.dwKeys[1], WorkKey.dwKeys[2]);
++		RoundFuncPi4(Block, WorkKey.dwKeys[3]);
+ 		RoundFuncPi1(Block);
+-		RoundFuncPi2(Block, WorkKey.dwKey5);
+-		RoundFuncPi3(Block, WorkKey.dwKey6, WorkKey.dwKey7);
+-		RoundFuncPi4(Block, WorkKey.dwKey8);
++		RoundFuncPi2(Block, WorkKey.dwKeys[4]);
++		RoundFuncPi3(Block, WorkKey.dwKeys[5], WorkKey.dwKeys[6]);
++		RoundFuncPi4(Block, WorkKey.dwKeys[7]);
+ 		}
+ }
+ 
+@@ -170,29 +188,36 @@ inline void CMulti2Decoder::KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, D
+ 	// Key Schedule
+ 	RoundFuncPi1(DataKey);									// π1
+ 
+-	RoundFuncPi2(DataKey, SysKey.dwKey1);					// π2
+-	WorkKey.dwKey1 = DataKey.dwLeft;
++	RoundFuncPi2(DataKey, SysKey.dwKeys[0]);					// π2
++	WorkKey.SetKey(0, DataKey.dwLeft);
+ 
+-	RoundFuncPi3(DataKey, SysKey.dwKey2, SysKey.dwKey3);	// π3
+-	WorkKey.dwKey2 = DataKey.dwRight;
++	RoundFuncPi3(DataKey, SysKey.dwKeys[1], SysKey.dwKeys[2]);	// π3
++	WorkKey.SetKey(1, DataKey.dwRight);
+ 
+-	RoundFuncPi4(DataKey, SysKey.dwKey4);					// π4
+-	WorkKey.dwKey3 = DataKey.dwLeft;
++	RoundFuncPi4(DataKey, SysKey.dwKeys[3]);					// π4
++	WorkKey.SetKey(2, DataKey.dwLeft);
+ 	
+ 	RoundFuncPi1(DataKey);									// π1
+-	WorkKey.dwKey4 = DataKey.dwRight;
++	WorkKey.SetKey(3, DataKey.dwRight);
+ 	
+-	RoundFuncPi2(DataKey, SysKey.dwKey5);					// π2
+-	WorkKey.dwKey5 = DataKey.dwLeft;
++	RoundFuncPi2(DataKey, SysKey.dwKeys[4]);					// π2
++	WorkKey.SetKey(4, DataKey.dwLeft);
+ 
+-	RoundFuncPi3(DataKey, SysKey.dwKey6, SysKey.dwKey7);	// π3
+-	WorkKey.dwKey6 = DataKey.dwRight;
++	RoundFuncPi3(DataKey, SysKey.dwKeys[5], SysKey.dwKeys[6]);	// π3
++	WorkKey.SetKey(5, DataKey.dwRight);
+ 
+-	RoundFuncPi4(DataKey, SysKey.dwKey8);					// π4
+-	WorkKey.dwKey7 = DataKey.dwLeft;
++	RoundFuncPi4(DataKey, SysKey.dwKeys[7]);					// π4
++	WorkKey.SetKey(6, DataKey.dwLeft);
+ 
+ 	RoundFuncPi1(DataKey);									// π1
+-	WorkKey.dwKey8 = DataKey.dwRight;
++	WorkKey.SetKey(7, DataKey.dwRight);
++}
++
++template <int Rotate>
++static inline const DWORD LeftRotate(const DWORD dwValue)
++{
++	// 左ローテート
++	return (dwValue << Rotate) | (dwValue >> (32 - Rotate));
+ }
+ 
+ inline void CMulti2Decoder::RoundFuncPi1(DATKEY &Block)
+@@ -205,30 +230,24 @@ inline void CMulti2Decoder::RoundFuncPi2(DATKEY &Block, const DWORD dwK1)
+ {
+ 	// Elementary Encryption Function π2
+ 	const DWORD dwY = Block.dwRight + dwK1;
+-	const DWORD dwZ = LeftRotate(dwY, 1UL) + dwY - 1UL;
+-	Block.dwLeft ^= LeftRotate(dwZ, 4UL) ^ dwZ;
++	const DWORD dwZ = LeftRotate<1>(dwY) + dwY - 1UL;
++	Block.dwLeft ^= LeftRotate<4>(dwZ) ^ dwZ;
+ }
+ 
+ inline void CMulti2Decoder::RoundFuncPi3(DATKEY &Block, const DWORD dwK2, const DWORD dwK3)
+ {
+ 	// Elementary Encryption Function π3
+ 	const DWORD dwY = Block.dwLeft + dwK2;
+-	const DWORD dwZ = LeftRotate(dwY, 2UL) + dwY + 1UL;
+-	const DWORD dwA = LeftRotate(dwZ, 8UL) ^ dwZ;
++	const DWORD dwZ = LeftRotate<2>(dwY) + dwY + 1UL;
++	const DWORD dwA = LeftRotate<8>(dwZ) ^ dwZ;
+ 	const DWORD dwB = dwA + dwK3;
+-	const DWORD dwC = LeftRotate(dwB, 1UL) - dwB;
+-	Block.dwRight ^= (LeftRotate(dwC, 16UL) ^ (dwC | Block.dwLeft));
++	const DWORD dwC = LeftRotate<1>(dwB) - dwB;
++	Block.dwRight ^= (LeftRotate<16>(dwC) ^ (dwC | Block.dwLeft));
+ }
+ 
+ inline void CMulti2Decoder::RoundFuncPi4(DATKEY &Block, const DWORD dwK4)
+ {
+ 	// Elementary Encryption Function π4
+ 	const DWORD dwY = Block.dwRight + dwK4;
+-	Block.dwLeft ^= (LeftRotate(dwY, 2UL) + dwY + 1UL);
+-}
+-
+-inline const DWORD CMulti2Decoder::LeftRotate(const DWORD dwValue, const DWORD dwRotate)
+-{
+-	// 左ローテート
+-	return (dwValue << dwRotate) | (dwValue >> (sizeof(dwValue) * 8UL - dwRotate));
++	Block.dwLeft ^= (LeftRotate<2>(dwY) + dwY + 1UL);
+ }
+diff --git a/B25Decoder/BonProject/Multi2Decoder.h b/B25Decoder/BonProject/Multi2Decoder.h
+index 9d3c64f..496806f 100644
+--- a/B25Decoder/BonProject/Multi2Decoder.h
++++ b/B25Decoder/BonProject/Multi2Decoder.h
+@@ -32,10 +32,10 @@ private:
+ 	class SYSKEY	// System Key(Sk), Expanded Key(Wk) 256bit
+ 	{
+ 	public:
+-		inline void SetHexData(const BYTE *pHexData);
+-		inline void GetHexData(BYTE *pHexData) const;
++		void SetHexData(const BYTE *pHexData);
++		void SetKey(int nIndex, DWORD dwKey);
+ 	
+-		DWORD dwKey2, dwKey1, dwKey4, dwKey3, dwKey6, dwKey5, dwKey8, dwKey7;
++		DWORD dwKeys[8];
+ 	};
+ 
+ 	static inline void DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey);
+@@ -48,8 +48,6 @@ private:
+ 	static inline void RoundFuncPi3(DATKEY &Block, const DWORD dwK2, const DWORD dwK3);
+ 	static inline void RoundFuncPi4(DATKEY &Block, const DWORD dwK4);
+ 
+-	static inline const DWORD LeftRotate(const DWORD dwValue, const DWORD dwRotate);
+-
+ 	DATKEY m_InitialCbc;
+ 	SYSKEY m_SystemKey;
+ 	SYSKEY m_WorkKeyOdd, m_WorkKeyEven;
+diff --git a/B25Decoder/BonProject/MyWinScard.cpp b/B25Decoder/BonProject/MyWinScard.cpp
+new file mode 100644
+index 0000000..d14f1b9
+--- /dev/null
++++ b/B25Decoder/BonProject/MyWinScard.cpp
+@@ -0,0 +1,83 @@
++﻿// MyWinScard.cpp: winscard.hのラッパー関数群
++//
++/////////////////////////////////////////////////////////////////////////////
++
++// Linuxのlibpcsclite-devのwinscard.hはLONGをlong、DWORDをunsigned longとしていて
++// LP64環境ではかなり使い勝手が悪いのでここで差異を吸収する
++
++#include <winscard.h>
++#include "MyWinScard.h"
++
++static_assert(sizeof(MyWinScard::SCARDCONTEXT) == sizeof(::SCARDCONTEXT));
++static_assert(sizeof(MyWinScard::SCARDHANDLE) == sizeof(::SCARDHANDLE));
++
++namespace MyWinScard
++{
++int SCardEstablishContext(unsigned int dwScope,
++                          /*@null@*/ const void *pvReserved1,
++                          /*@null@*/ const void *pvReserved2,
++                          /*@out@*/ SCARDCONTEXT *phContext)
++{
++	return (int)::SCardEstablishContext(dwScope, pvReserved1, pvReserved2, (::SCARDCONTEXT *)phContext);
++}
++
++int SCardReleaseContext(SCARDCONTEXT hContext)
++{
++	return (int)::SCardReleaseContext(hContext);
++}
++
++int SCardConnect(SCARDCONTEXT hContext,
++                 LPCSTR szReader,
++                 unsigned int dwShareMode,
++                 unsigned int dwPreferredProtocols,
++                 /*@out@*/ SCARDHANDLE *phCard,
++                 /*@out@*/ unsigned int *pdwActiveProtocol)
++{
++	DWORD dwActiveProtocol;
++	LONG nRet = ::SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols,
++	                           (::SCARDHANDLE *)phCard, pdwActiveProtocol ? &dwActiveProtocol : NULL);
++	if (pdwActiveProtocol) {
++		*pdwActiveProtocol = (unsigned int)dwActiveProtocol;
++	}
++	return (int)nRet;
++}
++
++int SCardDisconnect(SCARDHANDLE hCard,
++                    unsigned int dwDisposition)
++{
++	return (int)::SCardDisconnect(hCard, dwDisposition);
++}
++
++int SCardTransmit(SCARDHANDLE hCard,
++                  const void *pioSendPci,
++                  const BYTE *pbSendBuffer,
++                  unsigned int cbSendLength,
++                  /*@out@*/ void *pioRecvPci,
++                  /*@out@*/ BYTE *pbRecvBuffer,
++                  unsigned int *pcbRecvLength)
++{
++	if (pioSendPci || pioRecvPci) {
++		return (int)SCARD_E_INVALID_PARAMETER;
++	}
++	DWORD cbRecvLength;
++	LONG nRet = ::SCardTransmit(hCard, SCARD_PCI_T1, pbSendBuffer, cbSendLength, NULL,
++	                            pbRecvBuffer, pcbRecvLength ? &cbRecvLength : NULL);
++	if (pcbRecvLength) {
++		*pcbRecvLength = (unsigned int)cbRecvLength;
++	}
++	return (int)nRet;
++}
++
++int SCardListReaders(SCARDCONTEXT hContext,
++                     /*@null@*/ /*@out@*/ LPCSTR mszGroups,
++                     /*@null@*/ /*@out@*/ LPSTR mszReaders,
++                     /*@out@*/ unsigned int *pcchReaders)
++{
++	DWORD cchReaders;
++	LONG nRet = ::SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders ? &cchReaders : NULL);
++	if (pcchReaders) {
++		*pcchReaders = (unsigned int)cchReaders;
++	}
++	return (int)nRet;
++}
++}
+diff --git a/B25Decoder/BonProject/MyWinScard.h b/B25Decoder/BonProject/MyWinScard.h
+new file mode 100644
+index 0000000..98a91e8
+--- /dev/null
++++ b/B25Decoder/BonProject/MyWinScard.h
+@@ -0,0 +1,76 @@
++﻿// MyWinScard.h: winscard.hのラッパー関数群
++//
++/////////////////////////////////////////////////////////////////////////////
++
++#pragma once
++
++#include <stddef.h>
++#include <stdint.h>
++
++#ifndef SCARD_PROTOCOL_UNDEFINED
++#define SCARD_PROTOCOL_UNDEFINED 0x00000000
++#endif
++
++#ifndef SCARD_PROTOCOL_T1
++#define SCARD_PROTOCOL_T1 0x00000002
++#endif
++
++#ifndef SCARD_SHARE_SHARED
++#define SCARD_SHARE_SHARED 2
++#endif
++
++#ifndef SCARD_S_SUCCESS
++#define SCARD_S_SUCCESS 0
++#endif
++
++#ifndef SCARD_E_INVALID_PARAMETER
++#define SCARD_E_INVALID_PARAMETER (int)(0x80100004U)
++#endif
++
++#ifndef SCARD_LEAVE_CARD
++#define SCARD_LEAVE_CARD 0
++#endif
++
++#ifndef SCARD_SCOPE_USER
++#define SCARD_SCOPE_USER 0
++#endif
++
++#ifndef SCARD_PCI_T1
++#define SCARD_PCI_T1 NULL
++#endif
++
++namespace MyWinScard
++{
++typedef intptr_t SCARDCONTEXT;
++typedef intptr_t SCARDHANDLE;
++
++int SCardEstablishContext(unsigned int dwScope,
++                          /*@null@*/ const void *pvReserved1,
++                          /*@null@*/ const void *pvReserved2,
++                          /*@out@*/ SCARDCONTEXT *phContext);
++
++int SCardReleaseContext(SCARDCONTEXT hContext);
++
++int SCardConnect(SCARDCONTEXT hContext,
++                 LPCSTR szReader,
++                 unsigned int dwShareMode,
++                 unsigned int dwPreferredProtocols,
++                 /*@out@*/ SCARDHANDLE *phCard,
++                 /*@out@*/ unsigned int *pdwActiveProtocol);
++
++int SCardDisconnect(SCARDHANDLE hCard,
++                    unsigned int dwDisposition);
++
++int SCardTransmit(SCARDHANDLE hCard,
++                  const void *pioSendPci, // SCARD_PCI_T1であること
++                  const BYTE *pbSendBuffer,
++                  unsigned int cbSendLength,
++                  /*@out@*/ void *pioRecvPci, // NULLであること
++                  /*@out@*/ BYTE *pbRecvBuffer,
++                  unsigned int *pcbRecvLength);
++
++int SCardListReaders(SCARDCONTEXT hContext,
++                     /*@null@*/ /*@out@*/ LPCSTR mszGroups,
++                     /*@null@*/ /*@out@*/ LPSTR mszReaders,
++                     /*@out@*/ unsigned int *pcchReaders);
++}
+diff --git a/B25Decoder/BonProject/SyncObject.cpp b/B25Decoder/BonProject/SyncObject.cpp
+index 40f8c59..a49e5e6 100644
+--- a/B25Decoder/BonProject/SyncObject.cpp
++++ b/B25Decoder/BonProject/SyncObject.cpp
+@@ -13,26 +13,38 @@
+ 
+ CSmartLock::CSmartLock()
+ {
++#ifdef _WIN32
+ 	// クリティカルセクション初期化
+ 	::InitializeCriticalSection(&m_CriticalSection);
++#endif
+ }
+ 
+ CSmartLock::~CSmartLock()
+ {
++#ifdef _WIN32
+ 	// クリティカルセクション削除
+ 	::DeleteCriticalSection(&m_CriticalSection);
++#endif
+ }
+ 
+ void CSmartLock::Lock(void)
+ {
+ 	// クリティカルセクション取得
++#ifdef _WIN32
+ 	::EnterCriticalSection(&m_CriticalSection);
++#else
++	m_mutex.lock();
++#endif
+ }
+ 
+ void CSmartLock::Unlock(void)
+ {
+ 	// クリティカルセクション開放
++#ifdef _WIN32
+ 	::LeaveCriticalSection(&m_CriticalSection);
++#else
++	m_mutex.unlock();
++#endif
+ }
+ 	
+ 	
+@@ -54,6 +66,7 @@ CBlockLock::~CBlockLock()
+ }
+ 
+ 
++#ifdef _WIN32
+ //////////////////////////////////////////////////////////////////////
+ // イベントラッパークラス
+ //////////////////////////////////////////////////////////////////////
+@@ -162,3 +175,4 @@ const bool CSmartMutex::IsExist(LPCTSTR lpszName)
+ 		return false;
+ 		}	
+ }
++#endif
+diff --git a/B25Decoder/BonProject/TsDataEncode.cpp b/B25Decoder/BonProject/TsDataEncode.cpp
+index 101c123..3402c76 100644
+--- a/B25Decoder/BonProject/TsDataEncode.cpp
++++ b/B25Decoder/BonProject/TsDataEncode.cpp
+@@ -3,7 +3,13 @@
+ //////////////////////////////////////////////////////////////////////
+ 
+ #include "stdafx.h"
++#ifdef _WIN32
+ #include <MbString.h>
++#else
++#include <time.h>
++#include <chrono>
++namespace chrono = std::chrono;
++#endif
+ #include "TsDataEncode.h"
+ 
+ 
+@@ -750,7 +756,25 @@ CTsTime::CTsTime(const SYSTEMTIME &SystemTime)
+ CTsTime::CTsTime(const ULONGLONG llFileTime)
+ {
+ 	// FILETIME形式から時間を生成(1601/1/1からの100ns単位の経過時間)
++#ifdef _WIN32
+ 	::FileTimeToSystemTime((FILETIME *)&llFileTime, this);
++#else
++	time_t tt = (time_t)((llFileTime - 116444736000000000) / 10000000);
++	tm t;
++	if(::gmtime_r(&tt, &t)){
++		wYear = (WORD)(t.tm_year + 1900);
++		wMonth = (WORD)(t.tm_mon + 1);
++		wDayOfWeek = (WORD)t.tm_wday;
++		wDay = (WORD)t.tm_mday;
++		wHour = (WORD)t.tm_hour;
++		wMinute = (WORD)t.tm_min;
++		wSecond = (WORD)t.tm_sec;
++		wMilliseconds = (WORD)(llFileTime / 10000 % 1000);
++		}
++	else{
++		ClearTime();
++		}
++#endif
+ }
+ 
+ CTsTime::CTsTime(const BYTE *pHexData)
+@@ -769,9 +793,14 @@ CTsTime::CTsTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WOR
+ void CTsTime::SetNowTime(void)
+ {
+ 	// 現在時刻をセットする
++#ifdef _WIN32
+ 	LONGLONG llFileTime;
+ 	::GetSystemTimeAsFileTime((FILETIME *)&llFileTime);
+ 	*this = llFileTime + ARIB_TIMEZONE_SEC * 10000;
++#else
++	*this = chrono::duration_cast<chrono::microseconds>(chrono::system_clock::now().time_since_epoch()).count() * 10 +
++	        116444736000000000 + ARIB_TIMEZONE_SEC * 10000;
++#endif
+ }
+ 
+ void CTsTime::SetAribTime(const BYTE *pHexData)
+@@ -811,7 +840,21 @@ CTsTime::operator const ULONGLONG () const
+ {
+ 	// FILETIME形式へのキャスト演算子
+ 	ULONGLONG llFileTime = 0;
++#ifdef _WIN32
+ 	::SystemTimeToFileTime(this, (FILETIME *)&llFileTime);
++#else
++	tm t = {};
++	t.tm_year = wYear - 1900;
++	t.tm_mon = wMonth - 1;
++	t.tm_mday = wDay;
++	t.tm_hour = wHour;
++	t.tm_min = wMinute;
++	t.tm_sec = wSecond;
++	time_t tt = ::timegm(&t);
++	if(tt != (time_t)-1){
++		llFileTime = (ULONGLONG)tt * 10000000 + wMilliseconds * 10000 + 116444736000000000;
++		}
++#endif
+ 	
+ 	return llFileTime;
+ }
+diff --git a/B25Decoder/BonProject/TsDescBase.cpp b/B25Decoder/BonProject/TsDescBase.cpp
+index 96e50ec..71d2a47 100644
+--- a/B25Decoder/BonProject/TsDescBase.cpp
++++ b/B25Decoder/BonProject/TsDescBase.cpp
+@@ -105,7 +105,7 @@ const DWORD CDescBlock::ParseDescs(void)
+ 			}
+ 		else{
+ 			// 非対応 or エラー
+-			::BON_ASSERT(false, TEXT("記述子が非対応 or エラー\r\nTag = %02X"), pData[dwPos]);
++			::BON_TRACE(TEXT("記述子が非対応 or エラー\r\nTag = %02X"), pData[dwPos]);
+ 			
+ 			pDescBase->Release();
+ 			}
+diff --git a/B25Decoder/BonProject/TsDescrambler.cpp b/B25Decoder/BonProject/TsDescrambler.cpp
+index 14609ee..28e0709 100644
+--- a/B25Decoder/BonProject/TsDescrambler.cpp
++++ b/B25Decoder/BonProject/TsDescrambler.cpp
+@@ -7,6 +7,11 @@
+ #include "TsDescrambler.h"
+ #include "TsTable.h"
+ #include "TsPacket.h"
++#ifndef _WIN32
++#include "BcasCardReader.h"
++#include <chrono>
++namespace chrono = std::chrono;
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -63,11 +68,17 @@ const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
+ 	IHalDevice *pHalDevice = NULL;
+ 
+ 	try{
++#ifdef _WIN32
+ 		// B-CASカードのインスタンスを生成する
+ 		if(!(pHalDevice = ::BON_SAFE_CREATE<IHalDevice *>(lpszBCId)))throw __LINE__;
+ 
+ 		// デバイスタイプをチェック
+ 		if(pHalDevice->GetDeviceType() != ::BON_NAME_TO_GUID(TEXT("IHalBcasCard")))throw __LINE__;
++#else
++		// 名前解決によるインスタンス生成は未実装なので直接生成する
++		if(::_tcscmp(lpszBCId, TEXT("CBcasCardReader")))throw __LINE__;
++		pHalDevice = new CBcasCardReader(NULL);
++#endif
+ 
+ 		// デバイスの存在をチェック
+ 		if(!pHalDevice->GetTotalDeviceNum())throw __LINE__;
+@@ -459,7 +470,6 @@ void CTsDescrambler::PushUnprocPacket(const ITsPacket *pPacket)
+ {
+ 	// 未処理パケットをバッファにプッシュする
+ 	CTsPacket * const pNewPacket = new CTsPacket(NULL);
+-	::BON_ASSERT(pNewPacket);
+ 
+ 	if(pNewPacket->CopyPacket(pPacket)){	
+ 		m_PacketBuf.push_back(pNewPacket);
+@@ -501,7 +511,13 @@ CTsDescrambler::CEcmProcessor::CEcmProcessor(IBonObject *pOwner)
+ 	: CPsiTableBase(NULL)
+ 	, m_pTsDescrambler(dynamic_cast<CTsDescrambler *>(pOwner))
+ 	, m_pHalBcasCard(m_pTsDescrambler->m_pHalBcasCard)
+-	, m_dwLastRetryTime(::GetTickCount() - BCAS_REFRESH_INTERVAL)
++	, m_dwLastRetryTime(
++#ifdef _WIN32
++		::GetTickCount() - BCAS_REFRESH_INTERVAL
++#else
++		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count() - (DWORD)BCAS_REFRESH_INTERVAL
++#endif
++		)
+ 	, m_dwDescramblingState(IHalBcasCard::EC_NO_ERROR)
+ {
+ 	// MULTI2デコーダを初期化
+@@ -557,14 +573,20 @@ const bool CTsDescrambler::CEcmProcessor::OnTableUpdate(const IPsiSection *pNewS
+ 
+ 	// ECM処理失敗時は一度だけB-CASカードを再初期化する
+ 	if(!pKsData && (m_pHalBcasCard->GetEcmError() != IHalBcasCard::EC_NOT_CONTRACTED)){
+-		if((::GetTickCount() - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
++		DWORD dwTick =
++#ifdef _WIN32
++			::GetTickCount();
++#else
++			(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
++#endif
++		if((dwTick - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
+ 			// 再初期化ガードインターバル経過なら			
+ 			if(m_pHalBcasCard->OpenCard()){
+ 				pKsData = m_pHalBcasCard->GetKsFromEcm(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
+ 				}
+ 				
+ 			// 最終リトライ時間更新
+-			m_dwLastRetryTime = ::GetTickCount();
++			m_dwLastRetryTime = dwTick;
+ 			}
+ 		}
+ 
+diff --git a/B25Decoder/BonProject/TsPacketSync.cpp b/B25Decoder/BonProject/TsPacketSync.cpp
+index 5120f2b..1b0ae34 100644
+--- a/B25Decoder/BonProject/TsPacketSync.cpp
++++ b/B25Decoder/BonProject/TsPacketSync.cpp
+@@ -5,6 +5,10 @@
+ #include "stdafx.h"
+ #include "BonSDK.h"
+ #include "TsPacketSync.h"
++#ifndef _WIN32
++#include <chrono>
++namespace chrono = std::chrono;
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -54,7 +58,12 @@ void CTsPacketSync::ResetStatistics(void)
+ 	m_dwFormatErrNum = 0UL;
+ 	m_dwTransportErrNum = 0UL;
+ 	m_dwContinuityErrNum = 0UL;
+-	m_dwLastUpdateTime = ::GetTickCount();
++	m_dwLastUpdateTime =
++#ifdef _WIN32
++		::GetTickCount();
++#else
++		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
++#endif
+ 	m_dwLastInputPacket = 0UL;
+ 	m_dwLastOutputPacket = 0UL;
+ 	m_dwCurInputPacket = 0UL;
+@@ -277,7 +286,9 @@ const bool CTsPacketSync::ParseTsPacket(void)
+ 		
+ 		default :
+ 			// 例外
++#ifdef _WIN32
+ 			::DebugBreak();
++#endif
+ 			return false;
+ 		}
+ }
+@@ -302,7 +313,12 @@ void CTsPacketSync::OnTsPacket(void)
+ void CTsPacketSync::UpdateBitrate(void)
+ {
+ 	// ビットレート更新
+-	const DWORD dwCurUpdateTime = ::GetTickCount();
++	const DWORD dwCurUpdateTime =
++#ifdef _WIN32
++		::GetTickCount();
++#else
++		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
++#endif
+ 	
+ 	// 更新周期チェック
+ 	if((dwCurUpdateTime - m_dwLastUpdateTime) < BITRATE_PERIOD)return;
+diff --git a/B25Decoder/BonProject/TsSection.cpp b/B25Decoder/BonProject/TsSection.cpp
+index 114ada0..6ebf635 100644
+--- a/B25Decoder/BonProject/TsSection.cpp
++++ b/B25Decoder/BonProject/TsSection.cpp
+@@ -314,7 +314,9 @@ CPsiSectionParser::CPsiSectionParser(IBonObject *pOwner)
+ 	, m_bIsStoring(false)
+ 	, m_dwCrcErrorNum(0UL)
+ {
++#ifdef _WIN32
+ 	if(!m_pHandler)::DebugBreak();
++#endif
+ }
+ 
+ CPsiSectionParser::~CPsiSectionParser(void)
+@@ -409,7 +411,7 @@ const DWORD CPsiSectionParser::CalcCrc(const BYTE *pData, const WORD wDataSize,
+ 		0x89B8FD09UL, 0x8D79E0BEUL, 0x803AC667UL, 0x84FBDBD0UL,	0x9ABC8BD5UL, 0x9E7D9662UL, 0x933EB0BBUL, 0x97FFAD0CUL,	0xAFB010B1UL, 0xAB710D06UL, 0xA6322BDFUL, 0xA2F33668UL,	0xBCB4666DUL, 0xB8757BDAUL, 0xB5365D03UL, 0xB1F740B4UL
+ 		};		
+ 
+-	for(register WORD wPos = 0U ; wPos < wDataSize ; wPos++){
++	for(WORD wPos = 0U ; wPos < wDataSize ; wPos++){
+ 		dwCurCrc = (dwCurCrc << 8) ^ CrcTable[ (dwCurCrc >> 24) ^ pData[wPos] ];
+ 		}
+ 
+diff --git a/B25Decoder/BonProject/TsTable.cpp b/B25Decoder/BonProject/TsTable.cpp
+index dd05d2f..1345a28 100644
+--- a/B25Decoder/BonProject/TsTable.cpp
++++ b/B25Decoder/BonProject/TsTable.cpp
+@@ -156,7 +156,7 @@ const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
+ 
+ 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescBlock.GetDescNum() ; dwIndex++){
+ 		const IDescBase *pDescBase = m_DescBlock.GetDescByIndex(dwIndex);
+-		::BON_TRACE(TEXT("[%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
++		::BON_TRACE(TEXT("[%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+ 		}
+ 
+ 	// ハンドラへ通知
+@@ -270,7 +270,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
+ 
+ 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescBlock.GetDescNum() ; dwIndex++){
+ 		const IDescBase *pDescBase = m_DescBlock.GetDescByIndex(dwIndex);
+-		::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
++		::BON_TRACE(TEXT("    [%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+ 		}
+ 
+ 	// ストリーム情報の開始位置を計算
+@@ -292,7 +292,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
+ 
+ 		for(DWORD dwIndex = 0UL ; dwIndex < PmtItem.pDescBlock->GetDescNum() ; dwIndex++){
+ 			const IDescBase *pDescBase = PmtItem.pDescBlock->GetDescByIndex(dwIndex);
+-			::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
++			::BON_TRACE(TEXT("    [%u] TAG = 0x%02X LEN = %u\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
+ 			}
+ 
+ 		// テーブルに追加する
+diff --git a/B25Decoder/IB25Decoder.h b/B25Decoder/IB25Decoder.h
+index da3b04f..28dd7a8 100644
+--- a/B25Decoder/IB25Decoder.h
++++ b/B25Decoder/IB25Decoder.h
+@@ -69,11 +69,15 @@ public:
+ // From MobileHackerz (http://mobilehackerz.jp/contents/Software/cap_hdus)
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#ifdef _WIN32
+ #ifdef B25SDK_IMPLEMENT
+ 	#define B25DECAPI	__declspec(dllexport)
+ #else
+ 	#define B25DECAPI	__declspec(dllimport)
+ #endif
++#else
++	#define B25DECAPI
++#endif
+ 
+ 
+ extern "C"
+diff --git a/B25Decoder/Makefile b/B25Decoder/Makefile
+new file mode 100644
+index 0000000..53010bc
+--- /dev/null
++++ b/B25Decoder/Makefile
+@@ -0,0 +1,62 @@
++SRCS := \
++  BonProject__BcasCardReader.cpp \
++  BonProject__BonDebug.cpp \
++  BonProject__BonObject.cpp \
++  BonProject__MediaBase.cpp \
++  BonProject__MediaGrabber.cpp \
++  BonProject__Multi2Decoder.cpp \
++  BonProject__MyWinScard.cpp \
++  BonProject__SyncObject.cpp \
++  BonProject__TsDataEncode.cpp \
++  BonProject__TsDescBase.cpp \
++  BonProject__TsDescrambler.cpp \
++  BonProject__TsDescriptor.cpp \
++  BonProject__TsPacket.cpp \
++  BonProject__TsPacketSync.cpp \
++  BonProject__TsPidMapper.cpp \
++  BonProject__TsSection.cpp \
++  BonProject__TsTable.cpp \
++  BonProject__TsTableBase.cpp \
++  B25Decoder.cpp
++
++ALL_H := \
++  $(wildcard ../BonSDK/Include/*.h) \
++  $(wildcard BonProject/*.h) \
++  B25Decoder.h \
++  IB25Decoder.h \
++  stdafx.h
++
++PKG_CONFIG_RESULT := $(shell pkg-config libpcsclite --cflags)
++ifeq ($(PKG_CONFIG_RESULT),)
++  $(error Failed)
++endif
++CPPFLAGS := $(PKG_CONFIG_RESULT) -I. -I../BonSDK/Include -I./BonProject -DNDEBUG -DMINIMIZE_FOR_B25DECODER $(CPPFLAGS)
++CXXFLAGS := -std=c++17 -Wall -pedantic-errors -fPIC -pthread $(CXXFLAGS)
++LDFLAGS2 = -Wl,-s -shared -pthread $(LDFLAGS)
++OPTIMIZE = -O2
++OPTIMIZE_FAST = -O3
++
++ifdef WITH_PCSC_LIBRARY
++  LDLIBS := -l$(WITH_PCSC_LIBRARY) $(LDLIBS)
++else
++  ifdef WITH_PCSC_PACKAGE
++    PKG_CONFIG_RESULT := $(shell pkg-config $(WITH_PCSC_PACKAGE) --libs)
++  else
++    PKG_CONFIG_RESULT := $(shell pkg-config libpcsclite --libs)
++  endif
++  ifeq ($(PKG_CONFIG_RESULT),)
++    $(error Failed)
++  endif
++  LDLIBS := $(PKG_CONFIG_RESULT) $(LDLIBS)
++endif
++
++B25Decoder.so: $(addsuffix .o,$(SRCS))
++	$(CXX) $(LDFLAGS2) $^ $(LDLIBS) -o $@
++BonProject__Multi2Decoder.cpp.o: BonProject/Multi2Decoder.cpp $(ALL_H)
++	$(COMPILE.cpp) $(OPTIMIZE_FAST) $(OUTPUT_OPTION) $<
++BonProject__%.cpp.o: BonProject/%.cpp $(ALL_H)
++	$(COMPILE.cpp) $(OPTIMIZE) $(OUTPUT_OPTION) $<
++%.cpp.o: %.cpp $(ALL_H)
++	$(COMPILE.cpp) $(OPTIMIZE) $(OUTPUT_OPTION) $<
++clean:
++	$(RM) *.o B25Decoder.so
+diff --git a/B25Decoder/stdafx.h b/B25Decoder/stdafx.h
+index ba763e4..a87738e 100644
+--- a/B25Decoder/stdafx.h
++++ b/B25Decoder/stdafx.h
+@@ -5,6 +5,8 @@
+ 
+ #pragma once
+ 
++#ifdef _WIN32
++
+ // 下で指定された定義の前に対象プラットフォームを指定しなければならない場合、以下の定義を変更してください。
+ // 異なるプラットフォームに対応する値に関する最新情報については、MSDN を参照してください。
+ #ifndef WINVER				// Windows XP 以降のバージョンに固有の機能の使用を許可します。
+@@ -35,3 +37,67 @@
+ // 警告の無効設定
+ #pragma warning(disable: 4355) // warning C4355: "'this' : ベース メンバ初期化リストで使用されました。"
+ #pragma warning(disable: 4996) // warning C4996: "This function or variable may be unsafe. Consider using _wsplitpath_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details"
++
++#else
++
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++
++typedef char * LPSTR;
++typedef const char * LPCSTR;
++typedef char TCHAR;
++typedef TCHAR * LPTSTR;
++typedef const TCHAR * LPCTSTR;
++typedef unsigned char BYTE;
++typedef unsigned short WORD;
++typedef unsigned int DWORD;
++typedef unsigned long long ULONGLONG;
++typedef void * PVOID;
++typedef int BOOL;
++
++// intが32ビットであること
++static_assert(sizeof(int) == 4);
++
++#define FALSE 0
++#define TRUE 1
++#define _T(x) x
++#define TEXT(x) x
++#define _tcscpy strcpy
++#define _tcslen strlen
++#define _tcscmp strcmp
++#define _vstprintf vsprintf
++
++struct SYSTEMTIME
++{
++	WORD wYear;
++	WORD wMonth;
++	WORD wDayOfWeek;
++	WORD wDay;
++	WORD wHour;
++	WORD wMinute;
++	WORD wSecond;
++	WORD wMilliseconds;
++};
++
++inline void CopyMemory(void *dest, const void *src, size_t size)
++{
++	::memcpy(dest, src, size);
++}
++
++inline void MoveMemory(void *dest, const void *src, size_t size)
++{
++	::memmove(dest, src, size);
++}
++
++inline void FillMemory(void *dest, size_t size, BYTE filler)
++{
++	::memset(dest, filler, size);
++}
++
++inline void ZeroMemory(void *dest, size_t size)
++{
++	::memset(dest, 0, size);
++}
++
++#endif
+diff --git a/BonSDK/Include/BonBaseIf.h b/BonSDK/Include/BonBaseIf.h
+index 242fc85..e0410d4 100644
+--- a/BonSDK/Include/BonBaseIf.h
++++ b/BonSDK/Include/BonBaseIf.h
+@@ -13,7 +13,9 @@ class IBonObject
+ {
+ public:
+ 	virtual void Release(void) = 0;
++#ifdef _WIN32
+ 	virtual const BONGUID GetGuid(void) = 0;
++#endif
+ };
+ 
+ 
+diff --git a/BonSDK/Include/BonBaseLib.h b/BonSDK/Include/BonBaseLib.h
+index 5e5b0f4..7c861a8 100644
+--- a/BonSDK/Include/BonBaseLib.h
++++ b/BonSDK/Include/BonBaseLib.h
+@@ -11,9 +11,10 @@
+ 
+ #include "BonObject.h"
+ #include "BonDebug.h"
+-#include "ModCatalogBase.h"
+ #include "SyncObject.h"
+-#include "SmartThread.h"
+ #include "MediaBase.h"
+ #include "TsDataEncode.h"
+-
++#ifdef _WIN32
++#include "ModCatalogBase.h"
++#include "SmartThread.h"
++#endif
+diff --git a/BonSDK/Include/BonDebug.h b/BonSDK/Include/BonDebug.h
+index 226cbd6..001b211 100644
+--- a/BonSDK/Include/BonDebug.h
++++ b/BonSDK/Include/BonDebug.h
+@@ -16,6 +16,7 @@
+ 
+ 
+ 
++#ifdef _WIN32
+ /////////////////////////////////////////////////////////////////////////////
+ // 汎用例外クラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -60,6 +61,7 @@ protected:
+ 	LPCSTR m_lpszSourceFile;
+ 	const DWORD m_dwSourceLine;
+ };
++#endif
+ 
+ 
+ /*
+@@ -126,5 +128,7 @@ void BON_TRACE(LPCTSTR lpszFormat, ...);
+ // デバッグ補助マクロ
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#ifdef _WIN32
+ #define BON_EXPECTION	CBonException(__FILE__, __LINE__, GetGuid())
+ #define BON_ASSERT		CBonAssert(__FILE__, __LINE__, GetGuid())
++#endif
+diff --git a/BonSDK/Include/BonGlobal.h b/BonSDK/Include/BonGlobal.h
+index 05bffab..1b28873 100644
+--- a/BonSDK/Include/BonGlobal.h
++++ b/BonSDK/Include/BonGlobal.h
+@@ -9,6 +9,7 @@
+ // グローバル関数宣言 (オブジェクト生成メソッド)
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#ifdef _WIN32
+ #ifdef BONSDK_IMPLEMENT
+ 	#define BONAPI	__declspec(dllexport)
+ #else
+@@ -69,3 +70,4 @@ template <class T> T BON_SAFE_CREATE(LPCTSTR lpszBCId, IBonObject *pOwner = NULL
+ 
+ 	return pDestInterface;
+ }
++#endif
+diff --git a/BonSDK/Include/BonHalIf.h b/BonSDK/Include/BonHalIf.h
+index 0e33b7a..596face 100644
+--- a/BonSDK/Include/BonHalIf.h
++++ b/BonSDK/Include/BonHalIf.h
+@@ -12,7 +12,9 @@
+ class IHalDevice :				public IBonObject
+ {
+ public:
++#ifdef _WIN32
+ 	virtual const BONGUID GetDeviceType(void) = 0;
++#endif
+ 	virtual const DWORD GetDeviceName(LPTSTR lpszName) = 0;
+ 	virtual const DWORD GetTotalDeviceNum(void) = 0;
+ 	virtual const DWORD GetActiveDeviceNum(void) = 0;
+diff --git a/BonSDK/Include/BonObject.h b/BonSDK/Include/BonObject.h
+index 745ceb7..8ab9b38 100644
+--- a/BonSDK/Include/BonObject.h
++++ b/BonSDK/Include/BonObject.h
+@@ -14,7 +14,9 @@ class CBonObject	: public IBonObject
+ public:
+ // IBonObject
+ 	virtual void Release(void);
++#ifdef _WIN32
+ 	virtual const BONGUID GetGuid(void);
++#endif
+ 
+ // CBonObject
+ 	CBonObject(IBonObject *pOwner = NULL);
+@@ -23,7 +25,9 @@ public:
+ 	static IBonObject * CreateInstance(IBonObject *pOwner);
+ 
+ protected:
++#ifdef _WIN32
+ 	static const BONGUID TypeToGuid(const type_info &TypeID);
++#endif
+ 
+ 	IBonObject *m_pOwner;
+ };
+@@ -33,7 +37,13 @@ protected:
+ // IBonObjectインプリメントマクロ
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#ifdef _WIN32
+ #define DECLARE_IBONOBJECT(C)	\
+ 	static IBonObject * CreateInstance(IBonObject *pOwner){return reinterpret_cast<IBonObject *>(new C(pOwner));}\
+ 	virtual void Release(void){CBonObject::Release();}\
+-	virtual const BONGUID GetGuid(void){return CBonObject::TypeToGuid(typeid(C));}
+\ No newline at end of file
++	virtual const BONGUID GetGuid(void){return CBonObject::TypeToGuid(typeid(C));}
++#else
++#define DECLARE_IBONOBJECT(C)	\
++	static IBonObject * CreateInstance(IBonObject *pOwner){return reinterpret_cast<IBonObject *>(new C(pOwner));}\
++	virtual void Release(void){CBonObject::Release();}
++#endif
+diff --git a/BonSDK/Include/SyncObject.h b/BonSDK/Include/SyncObject.h
+index b9ee426..23740b7 100644
+--- a/BonSDK/Include/SyncObject.h
++++ b/BonSDK/Include/SyncObject.h
+@@ -4,6 +4,9 @@
+ 
+ #pragma once
+ 
++#ifndef _WIN32
++#include <mutex>
++#endif
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ // クリティカルセクションラッパークラス
+@@ -19,7 +22,11 @@ public:
+ 	void Unlock(void);
+ 	
+ protected:
++#ifdef _WIN32
+ 	CRITICAL_SECTION m_CriticalSection;
++#else
++	std::recursive_mutex m_mutex;
++#endif
+ };
+ 
+ 
+@@ -37,7 +44,7 @@ protected:
+ 	CSmartLock *m_pSmartLock;
+ };
+ 
+-
++#ifdef _WIN32
+ /////////////////////////////////////////////////////////////////////////////
+ // イベントラッパークラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -85,3 +92,4 @@ public:
+ protected:
+ 	HANDLE m_hMutex;
+ };
++#endif
+-- 
+2.45.2
+

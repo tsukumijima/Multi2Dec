@@ -1,0 +1,115 @@
+From 4af76776bcbd7cfc2fe8c06f6f288e69d6f96f09 Mon Sep 17 00:00:00 2001
+From: unknown <email@example.com>
+Date: Fri, 19 Jul 2024 18:45:21 +0900
+Subject: [PATCH 01/10] Move "include tchar.h" into stdafx.h
+
+---
+ B25Decoder/BonProject/BcasCardReader.cpp | 1 -
+ B25Decoder/BonProject/BonDebug.cpp       | 1 -
+ B25Decoder/BonProject/BonObject.cpp      | 1 -
+ B25Decoder/BonProject/SyncObject.cpp     | 1 -
+ B25Decoder/BonProject/TsDataEncode.cpp   | 1 -
+ B25Decoder/BonProject/TsDescriptor.cpp   | 1 -
+ B25Decoder/BonProject/TsTable.cpp        | 1 -
+ B25Decoder/stdafx.h                      | 1 +
+ 8 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/B25Decoder/BonProject/BcasCardReader.cpp b/B25Decoder/BonProject/BcasCardReader.cpp
+index 8d00b86..5dc5e89 100644
+--- a/B25Decoder/BonProject/BcasCardReader.cpp
++++ b/B25Decoder/BonProject/BcasCardReader.cpp
+@@ -5,7 +5,6 @@
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+ #include <Memory>
+-#include <TChar.h>
+ #include "BcasCardReader.h"
+ 
+ 
+diff --git a/B25Decoder/BonProject/BonDebug.cpp b/B25Decoder/BonProject/BonDebug.cpp
+index a0947d1..f9e42a4 100644
+--- a/B25Decoder/BonProject/BonDebug.cpp
++++ b/B25Decoder/BonProject/BonDebug.cpp
+@@ -4,7 +4,6 @@
+ 
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+-#include <TChar.h>
+ #include <StdLib.h>
+ 
+ 
+diff --git a/B25Decoder/BonProject/BonObject.cpp b/B25Decoder/BonProject/BonObject.cpp
+index da63c23..fff1f59 100644
+--- a/B25Decoder/BonProject/BonObject.cpp
++++ b/B25Decoder/BonProject/BonObject.cpp
+@@ -5,7 +5,6 @@
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+ #include "BonObject.h"
+-#include <TChar.h>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/SyncObject.cpp b/B25Decoder/BonProject/SyncObject.cpp
+index 7eb616a..c025b8b 100644
+--- a/B25Decoder/BonProject/SyncObject.cpp
++++ b/B25Decoder/BonProject/SyncObject.cpp
+@@ -5,7 +5,6 @@
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+ #include "SyncObject.h"
+-#include <TChar.h>
+ 
+ 
+ //////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsDataEncode.cpp b/B25Decoder/BonProject/TsDataEncode.cpp
+index 7f16cb2..876bb4f 100644
+--- a/B25Decoder/BonProject/TsDataEncode.cpp
++++ b/B25Decoder/BonProject/TsDataEncode.cpp
+@@ -3,7 +3,6 @@
+ //////////////////////////////////////////////////////////////////////
+ 
+ #include "StdAfx.h"
+-#include <TChar.h>
+ #include <MbString.h>
+ #include "TsDataEncode.h"
+ 
+diff --git a/B25Decoder/BonProject/TsDescriptor.cpp b/B25Decoder/BonProject/TsDescriptor.cpp
+index fc4821d..051580e 100644
+--- a/B25Decoder/BonProject/TsDescriptor.cpp
++++ b/B25Decoder/BonProject/TsDescriptor.cpp
+@@ -5,7 +5,6 @@
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+ #include "TsDescriptor.h"
+-#include <TChar.h>
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsTable.cpp b/B25Decoder/BonProject/TsTable.cpp
+index 947af52..96a5c76 100644
+--- a/B25Decoder/BonProject/TsTable.cpp
++++ b/B25Decoder/BonProject/TsTable.cpp
+@@ -4,7 +4,6 @@
+ 
+ #include "StdAfx.h"
+ #include "BonSDK.h"
+-#include <TChar.h>
+ #include "TsTable.h"
+ 
+ 
+diff --git a/B25Decoder/stdafx.h b/B25Decoder/stdafx.h
+index 8b108ad..ba763e4 100644
+--- a/B25Decoder/stdafx.h
++++ b/B25Decoder/stdafx.h
+@@ -27,6 +27,7 @@
+ // Windows ヘッダー ファイル:
+ #include <Windows.h>
+ #include <crtdbg.h>
++#include <tchar.h>
+ 
+ 
+ // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
+-- 
+2.45.2
+

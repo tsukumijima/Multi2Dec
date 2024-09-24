@@ -1,0 +1,70 @@
+From 50d84bb111f57952028e787d42668934cd59a4d5 Mon Sep 17 00:00:00 2001
+From: unknown <email@example.com>
+Date: Fri, 19 Jul 2024 18:46:13 +0900
+Subject: [PATCH 03/10] Do not assume local time is the same as ARIB (JST) time
+
+---
+ B25Decoder/BonProject/TsDataEncode.cpp | 12 ++++++------
+ BonSDK/Include/TsDataEncode.h          |  2 ++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/B25Decoder/BonProject/TsDataEncode.cpp b/B25Decoder/BonProject/TsDataEncode.cpp
+index 92f93fb..ae4611b 100644
+--- a/B25Decoder/BonProject/TsDataEncode.cpp
++++ b/B25Decoder/BonProject/TsDataEncode.cpp
+@@ -767,7 +767,9 @@ CTsTime::CTsTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WOR
+ void CTsTime::SetNowTime(void)
+ {
+ 	// 現在時刻をセットする
+-	::GetLocalTime(this);
++	LONGLONG llFileTime;
++	::GetSystemTimeAsFileTime((FILETIME *)&llFileTime);
++	*this = llFileTime + ARIB_TIMEZONE_SEC * 10000;
+ }
+ 
+ void CTsTime::SetAribTime(const BYTE *pHexData)
+@@ -788,9 +790,7 @@ void CTsTime::SetTime(const WORD wYear, const WORD wMonth, const WORD wDay, cons
+ 	this->wSecond = wSecond;
+ 
+ 	// 曜日を求める
+-	FILETIME FileTime;
+-	::SystemTimeToFileTime(this, &FileTime);
+-	::FileTimeToSystemTime(&FileTime, this);
++	wDayOfWeek = CTsTime((ULONGLONG)*this).wDayOfWeek;
+ }
+ 
+ void  CTsTime::ClearTime(void)
+@@ -808,7 +808,7 @@ const bool CTsTime::IsEmpty(void) const
+ CTsTime::operator const ULONGLONG () const
+ {
+ 	// FILETIME形式へのキャスト演算子
+-	ULONGLONG llFileTime;
++	ULONGLONG llFileTime = 0;
+ 	::SystemTimeToFileTime(this, (FILETIME *)&llFileTime);
+ 	
+ 	return llFileTime;
+@@ -825,7 +825,7 @@ const CTsTime & CTsTime::operator = (const SYSTEMTIME &SystemTime)
+ const CTsTime & CTsTime::operator = (const ULONGLONG llFileTime)
+ {
+ 	// FILETIME形式から代入
+-	::FileTimeToSystemTime((FILETIME *)&llFileTime, this);
++	*this = CTsTime((ULONGLONG)*this);
+ 	
+ 	return *this;
+ }
+diff --git a/BonSDK/Include/TsDataEncode.h b/BonSDK/Include/TsDataEncode.h
+index fbf9d2a..a504aba 100644
+--- a/BonSDK/Include/TsDataEncode.h
++++ b/BonSDK/Include/TsDataEncode.h
+@@ -101,6 +101,8 @@ public:
+ class CTsTime : public SYSTEMTIME
+ {
+ public:
++	static const int ARIB_TIMEZONE_SEC = 9 * 3600;
++
+ 	CTsTime();
+ 	CTsTime(const SYSTEMTIME &SystemTime);
+ 	CTsTime(const ULONGLONG llFileTime);
+-- 
+2.45.2
+

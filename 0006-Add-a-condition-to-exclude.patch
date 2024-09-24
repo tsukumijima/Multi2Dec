@@ -1,0 +1,278 @@
+From 9baa4ec5b377c97705475c3d9643640607724cbf Mon Sep 17 00:00:00 2001
+From: unknown <email@example.com>
+Date: Fri, 19 Jul 2024 18:47:02 +0900
+Subject: [PATCH 06/10] Add a condition to exclude unnecessary code for
+ B25Decoder
+
+---
+ B25Decoder/BonProject/BcasCardReader.cpp |  2 ++
+ B25Decoder/BonProject/TsDataEncode.cpp   |  2 ++
+ B25Decoder/BonProject/TsDescBase.cpp     |  2 ++
+ B25Decoder/BonProject/TsDescriptor.cpp   |  2 ++
+ B25Decoder/BonProject/TsDescriptor.h     |  2 ++
+ B25Decoder/BonProject/TsTable.cpp        |  2 ++
+ B25Decoder/BonProject/TsTable.h          |  4 ++++
+ B25Decoder/DllMain.cpp                   | 18 ++++++++++++++++++
+ BonSDK/Include/BonSDK.h                  |  2 ++
+ BonSDK/Include/TsDataEncode.h            |  2 ++
+ 10 files changed, 38 insertions(+)
+
+diff --git a/B25Decoder/BonProject/BcasCardReader.cpp b/B25Decoder/BonProject/BcasCardReader.cpp
+index 2595d32..5aa6a89 100644
+--- a/B25Decoder/BonProject/BcasCardReader.cpp
++++ b/B25Decoder/BonProject/BcasCardReader.cpp
+@@ -8,7 +8,9 @@
+ #include "BcasCardReader.h"
+ 
+ 
++#ifdef _MSC_VER
+ #pragma comment(lib, "WinScard.lib")
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsDataEncode.cpp b/B25Decoder/BonProject/TsDataEncode.cpp
+index ae4611b..101c123 100644
+--- a/B25Decoder/BonProject/TsDataEncode.cpp
++++ b/B25Decoder/BonProject/TsDataEncode.cpp
+@@ -7,6 +7,7 @@
+ #include "TsDataEncode.h"
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ //////////////////////////////////////////////////////////////////////
+ // CAribString クラスの構築/消滅
+ //////////////////////////////////////////////////////////////////////
+@@ -658,6 +659,7 @@ inline const bool CAribString::DesignationDRCS(const BYTE byIndexG, const BYTE b
+ 		default		: return false;		// 不明なグラフィックセット
+ 		}
+ }
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsDescBase.cpp b/B25Decoder/BonProject/TsDescBase.cpp
+index e806fea..96e50ec 100644
+--- a/B25Decoder/BonProject/TsDescBase.cpp
++++ b/B25Decoder/BonProject/TsDescBase.cpp
+@@ -207,6 +207,7 @@ CDescBase * CDescBlock::CreateDesc(const BYTE byTag)
+ 	// タグに対応した記述子のインスタンスを生成する
+ 	switch(byTag){
+ 		case CCaMethodDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CCaMethodDesc::CreateInstance(NULL));
++#ifndef MINIMIZE_FOR_B25DECODER
+ 		case CNetworkNameDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CNetworkNameDesc::CreateInstance(NULL));
+ 		case CServiceListDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CServiceListDesc::CreateInstance(NULL));
+ 		case CServiceDesc::DESC_TAG			: return dynamic_cast<CDescBase *>(CServiceDesc::CreateInstance(NULL));
+@@ -216,6 +217,7 @@ CDescBase * CDescBlock::CreateDesc(const BYTE byTag)
+ 		case CStreamIdDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CStreamIdDesc::CreateInstance(NULL));
+ 		case CContentDesc::DESC_TAG			: return dynamic_cast<CDescBase *>(CContentDesc::CreateInstance(NULL));
+ 		case CAudioComponentDesc::DESC_TAG	: return dynamic_cast<CDescBase *>(CAudioComponentDesc::CreateInstance(NULL));
++#endif
+ 		default :							  return dynamic_cast<CDescBase *>(CDescBase::CreateInstance(NULL));
+ 		}
+ }
+diff --git a/B25Decoder/BonProject/TsDescriptor.cpp b/B25Decoder/BonProject/TsDescriptor.cpp
+index 74e7803..3a3b12e 100644
+--- a/B25Decoder/BonProject/TsDescriptor.cpp
++++ b/B25Decoder/BonProject/TsDescriptor.cpp
+@@ -61,6 +61,7 @@ const bool CCaMethodDesc::ParseData(void)
+ }
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ /////////////////////////////////////////////////////////////////////////////
+ // [0x40] ネットワーク名 記述子インタフェース
+ /////////////////////////////////////////////////////////////////////////////
+@@ -876,3 +877,4 @@ const bool CAudioComponentDesc::ParseData(void)
+ 		return (m_byDescLen >= 9U)? true : false;
+ 		}
+ }
++#endif
+diff --git a/B25Decoder/BonProject/TsDescriptor.h b/B25Decoder/BonProject/TsDescriptor.h
+index 2736dce..c636172 100644
+--- a/B25Decoder/BonProject/TsDescriptor.h
++++ b/B25Decoder/BonProject/TsDescriptor.h
+@@ -35,6 +35,7 @@ protected:
+ };
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ /////////////////////////////////////////////////////////////////////////////
+ // [0x40] ネットワーク名 記述子インタフェース
+ /////////////////////////////////////////////////////////////////////////////
+@@ -294,3 +295,4 @@ protected:
+ // CDescBase
+ 	virtual const bool ParseData(void);
+ };
++#endif
+diff --git a/B25Decoder/BonProject/TsTable.cpp b/B25Decoder/BonProject/TsTable.cpp
+index 65b4919..dd05d2f 100644
+--- a/B25Decoder/BonProject/TsTable.cpp
++++ b/B25Decoder/BonProject/TsTable.cpp
+@@ -307,6 +307,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
+ }
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ /////////////////////////////////////////////////////////////////////////////
+ // [0x40] NITテーブル基底クラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -746,6 +747,7 @@ const bool CEitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
+ 
+ 	return true;
+ }
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/BonProject/TsTable.h b/B25Decoder/BonProject/TsTable.h
+index 9dad8bf..4a86f8a 100644
+--- a/B25Decoder/BonProject/TsTable.h
++++ b/B25Decoder/BonProject/TsTable.h
+@@ -10,7 +10,9 @@
+ #include "TsTableBase.h"
+ #include "TsDescBase.h"
+ #include "TsDescriptor.h"
++#ifndef MINIMIZE_FOR_B25DECODER
+ #include "TsEpgCore.h"
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+@@ -137,6 +139,7 @@ protected:
+ };
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ /////////////////////////////////////////////////////////////////////////////
+ // [0x40] NITテーブル基底クラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -273,6 +276,7 @@ protected:
+ 	IEitTable::IHandler * const m_pHandler;
+ 	CEitItem m_EitItem;
+ };
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/B25Decoder/DllMain.cpp b/B25Decoder/DllMain.cpp
+index 84f96ad..1458b35 100644
+--- a/B25Decoder/DllMain.cpp
++++ b/B25Decoder/DllMain.cpp
+@@ -10,25 +10,33 @@
+ #include "BonClassEnumerator.h"
+ 
+ #include "MediaBase.h"
++#ifndef MINIMIZE_FOR_B25DECODER
+ #include "SmartFile.h"
+ #include "SmartSocket.h"
+ #include "RegCfgStorage.h"
+ #include "IniCfgStorage.h"
++#endif
+ 
+ // bon_MediaDecoder
+ #include "TsPacket.h"
+ #include "TsSection.h"
+ #include "TsDescBase.h"
+ #include "TsPidMapper.h"
++#ifndef MINIMIZE_FOR_B25DECODER
+ #include "TsEpgCore.h"
++#endif
+ #include "TsTable.h"
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ #include "TsSourceTuner.h"
++#endif
+ #include "TsPacketSync.h"
+ #include "TsDescrambler.h"
++#ifndef MINIMIZE_FOR_B25DECODER
+ #include "ProgAnalyzer.h"
+ #include "FileWriter.h"
+ #include "FileReader.h"
++#endif
+ #include "MediaGrabber.h"
+ 
+ // bon_BcasDriver
+@@ -105,10 +113,12 @@ static void RegisterClass(void)
+ 	::BON_REGISTER_CLASS<CBonClassEnumerator>();
+ 
+ 	::BON_REGISTER_CLASS<CMediaData>();
++#ifndef MINIMIZE_FOR_B25DECODER
+ 	::BON_REGISTER_CLASS<CSmartFile>();
+ 	::BON_REGISTER_CLASS<CSmartSocket>();
+ 	::BON_REGISTER_CLASS<CRegCfgStorage>();
+ 	::BON_REGISTER_CLASS<CIniCfgStorage>();
++#endif
+ 
+ 	// bon_MediaDecoder
+ 	::BON_REGISTER_CLASS<CTsPacket>();
+@@ -116,23 +126,31 @@ static void RegisterClass(void)
+ 	::BON_REGISTER_CLASS<CDescBlock>();
+ 	::BON_REGISTER_CLASS<CPsiSectionParser>();
+ 	::BON_REGISTER_CLASS<CTsPidMapper>();
++#ifndef MINIMIZE_FOR_B25DECODER
+ 	::BON_REGISTER_CLASS<CEitItem>();
+ 	::BON_REGISTER_CLASS<CEpgItem>();
++#endif
+ 
+ 	::BON_REGISTER_CLASS<CPatTable>();
+ 	::BON_REGISTER_CLASS<CCatTable>();
+ 	::BON_REGISTER_CLASS<CPmtTable>();
++#ifndef MINIMIZE_FOR_B25DECODER
+ 	::BON_REGISTER_CLASS<CNitTable>();
+ 	::BON_REGISTER_CLASS<CSdtTable>();
+ 	::BON_REGISTER_CLASS<CEitTable>();
++#endif
+ 	::BON_REGISTER_CLASS<CTotTable>();
+ 	
++#ifndef MINIMIZE_FOR_B25DECODER
+ 	::BON_REGISTER_CLASS<CTsSourceTuner>();
++#endif
+ 	::BON_REGISTER_CLASS<CTsPacketSync>();
+ 	::BON_REGISTER_CLASS<CTsDescrambler>();
++#ifndef MINIMIZE_FOR_B25DECODER
+ 	::BON_REGISTER_CLASS<CProgAnalyzer>();
+ 	::BON_REGISTER_CLASS<CFileWriter>();
+ 	::BON_REGISTER_CLASS<CFileReader>();
++#endif
+ 	::BON_REGISTER_CLASS<CMediaGrabber>();
+ 
+ 	// bon_BcasDriver
+diff --git a/BonSDK/Include/BonSDK.h b/BonSDK/Include/BonSDK.h
+index 893532d..afa38d0 100644
+--- a/BonSDK/Include/BonSDK.h
++++ b/BonSDK/Include/BonSDK.h
+@@ -8,8 +8,10 @@
+ // ラインブリリンク (ビルド構成に応じて /BonSDK/Lib/ へパスを通すこと)
+ /////////////////////////////////////////////////////////////////////////////
+ 
++#if !defined(BONSDK_IMPLEMENT) && defined(_MSC_VER)
+ #pragma comment(lib, "BonBaseLib.lib")		// ベースライブラリ
+ #pragma comment(lib, "BonCoreEngine.lib")	// コアエンジン(bon_CoreEngine.dll)
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff --git a/BonSDK/Include/TsDataEncode.h b/BonSDK/Include/TsDataEncode.h
+index a504aba..ee319a4 100644
+--- a/BonSDK/Include/TsDataEncode.h
++++ b/BonSDK/Include/TsDataEncode.h
+@@ -5,6 +5,7 @@
+ #pragma once
+ 
+ 
++#ifndef MINIMIZE_FOR_B25DECODER
+ /////////////////////////////////////////////////////////////////////////////
+ // ARIB STD-B24 Part1文字列処理クラス
+ /////////////////////////////////////////////////////////////////////////////
+@@ -78,6 +79,7 @@ private:
+ 	inline const bool DesignationGSET(const BYTE byIndexG, const BYTE byCode);
+ 	inline const bool DesignationDRCS(const BYTE byIndexG, const BYTE byCode);
+ };
++#endif
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////
+-- 
+2.45.2
+

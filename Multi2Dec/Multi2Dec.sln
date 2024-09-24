@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BonSDK", "BonSDK", "{0992BA15-108C-43C7-BB65-DA5213389908}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Include", "Include", "{61160100-9DA5-4461-B93A-008563C99931}"
+	ProjectSection(SolutionItems) = preProject
+		BonSDK\Include\BonBaseIf.h = BonSDK\Include\BonBaseIf.h
+		BonSDK\Include\BonBaseLib.h = BonSDK\Include\BonBaseLib.h
+		BonSDK\Include\BonConfigIf.h = BonSDK\Include\BonConfigIf.h
+		BonSDK\Include\BonDebug.h = BonSDK\Include\BonDebug.h
+		BonSDK\Include\BonGlobal.h = BonSDK\Include\BonGlobal.h
+		BonSDK\Include\BonGuid.h = BonSDK\Include\BonGuid.h
+		BonSDK\Include\BonHalIf.h = BonSDK\Include\BonHalIf.h
+		BonSDK\Include\BonMacro.h = BonSDK\Include\BonMacro.h
+		BonSDK\Include\BonMediaIf.h = BonSDK\Include\BonMediaIf.h
+		BonSDK\Include\BonObject.h = BonSDK\Include\BonObject.h
+		BonSDK\Include\BonSDK.h = BonSDK\Include\BonSDK.h
+		BonSDK\Include\IoObjectIf.h = BonSDK\Include\IoObjectIf.h
+		BonSDK\Include\MediaBase.h = BonSDK\Include\MediaBase.h
+		BonSDK\Include\MediaDecoderIf.h = BonSDK\Include\MediaDecoderIf.h
+		BonSDK\Include\ModCatalogBase.h = BonSDK\Include\ModCatalogBase.h
+		BonSDK\Include\SmartThread.h = BonSDK\Include\SmartThread.h
+		BonSDK\Include\SyncObject.h = BonSDK\Include\SyncObject.h
+		BonSDK\Include\TsDataEncode.h = BonSDK\Include\TsDataEncode.h
+		BonSDK\Include\TsDescriptorIf.h = BonSDK\Include\TsDescriptorIf.h
+		BonSDK\Include\TsEpgIf.h = BonSDK\Include\TsEpgIf.h
+		BonSDK\Include\TsStreamIf.h = BonSDK\Include\TsStreamIf.h
+		BonSDK\Include\TsTableIf.h = BonSDK\Include\TsTableIf.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{7F06B384-4B2A-433C-9007-02F1FECFA63F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debug", "Debug", "{A9A74156-5D32-48D9-90CD-D7F2026CC9E1}"
+	ProjectSection(SolutionItems) = preProject
+		BonSDK\Lib\Debug\BonBaseLib.lib = BonSDK\Lib\Debug\BonBaseLib.lib
+		BonSDK\Lib\Debug\BonCoreEngine.lib = BonSDK\Lib\Debug\BonCoreEngine.lib
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Release", "Release", "{19ECE097-8A71-4DAB-8856-540B2630D88D}"
+	ProjectSection(SolutionItems) = preProject
+		BonSDK\Lib\Release\BonBaseLib.lib = BonSDK\Lib\Release\BonBaseLib.lib
+		BonSDK\Lib\Release\BonCoreEngine.lib = BonSDK\Lib\Release\BonCoreEngine.lib
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TsConverter", "TsConverter\TsConverter.vcproj", "{DA8B313F-5065-42B5-A80D-FF9B9E951417}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multi2DecWin", "Multi2DecWin\Multi2DecWin.vcproj", "{120A9381-8AF2-4E3C-908C-E6FC789C9C64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417} = {DA8B313F-5065-42B5-A80D-FF9B9E951417}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multi2DecDos", "Multi2DecDos\Multi2DecDos.vcproj", "{277C56FC-12C6-4D3B-9CC3-7967E2C5DCB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417} = {DA8B313F-5065-42B5-A80D-FF9B9E951417}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "B25Decoder", "B25Decoder\B25Decoder.vcproj", "{BBA06C4B-1183-48D1-8F52-7D636E241915}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417}.Debug|Win32.Build.0 = Debug|Win32
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417}.Release|Win32.ActiveCfg = Release|Win32
+		{DA8B313F-5065-42B5-A80D-FF9B9E951417}.Release|Win32.Build.0 = Release|Win32
+		{120A9381-8AF2-4E3C-908C-E6FC789C9C64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{120A9381-8AF2-4E3C-908C-E6FC789C9C64}.Debug|Win32.Build.0 = Debug|Win32
+		{120A9381-8AF2-4E3C-908C-E6FC789C9C64}.Release|Win32.ActiveCfg = Release|Win32
+		{120A9381-8AF2-4E3C-908C-E6FC789C9C64}.Release|Win32.Build.0 = Release|Win32
+		{277C56FC-12C6-4D3B-9CC3-7967E2C5DCB0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{277C56FC-12C6-4D3B-9CC3-7967E2C5DCB0}.Debug|Win32.Build.0 = Debug|Win32
+		{277C56FC-12C6-4D3B-9CC3-7967E2C5DCB0}.Release|Win32.ActiveCfg = Release|Win32
+		{277C56FC-12C6-4D3B-9CC3-7967E2C5DCB0}.Release|Win32.Build.0 = Release|Win32
+		{BBA06C4B-1183-48D1-8F52-7D636E241915}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BBA06C4B-1183-48D1-8F52-7D636E241915}.Debug|Win32.Build.0 = Debug|Win32
+		{BBA06C4B-1183-48D1-8F52-7D636E241915}.Release|Win32.ActiveCfg = Release|Win32
+		{BBA06C4B-1183-48D1-8F52-7D636E241915}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{61160100-9DA5-4461-B93A-008563C99931} = {0992BA15-108C-43C7-BB65-DA5213389908}
+		{7F06B384-4B2A-433C-9007-02F1FECFA63F} = {0992BA15-108C-43C7-BB65-DA5213389908}
+		{A9A74156-5D32-48D9-90CD-D7F2026CC9E1} = {7F06B384-4B2A-433C-9007-02F1FECFA63F}
+		{19ECE097-8A71-4DAB-8856-540B2630D88D} = {7F06B384-4B2A-433C-9007-02F1FECFA63F}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,343 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+    "LANGUAGE 17, 1\r\n"
+    "#pragma code_page(932)\r\n"
+    "#include ""res\\Multi2DecWin.rc2""  // Microsoft Visual C++ 以外で編集されたリソース\r\n"
+    "#include ""afxres.rc""     // 標準コンポーネント\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Multi2DecWin.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "バージョン情報 Multi2DecWin"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Multi2DecWin Version 2.10",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "http://2sen.dip.jp/dtv/",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_MULTI2DECWIN_DIALOG DIALOGEX 0, 0, 514, 278
+STYLE DS_SETFONT | DS_3DLOOK | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_ACCEPTFILES | WS_EX_APPWINDOW
+CAPTION "Multi2DecWin Ver.2.10  http://2sen.dip.jp/dtv/"
+MENU IDR_MENU
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_FILE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,36,24,228,132
+    COMBOBOX        IDC_MODECOMBO,36,168,60,102,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",0x1,108,168,80,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,1,0,0
+ PRODUCTVERSION 2,1,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041103a4"
+        BEGIN
+            VALUE "Comments", "Multi2DecWin"
+            VALUE "CompanyName", "http://2sen.dip.jp/dtv/"
+            VALUE "FileDescription", "MULTI2復号サンプルプログラム"
+            VALUE "FileVersion", "2.1.0.0"
+            VALUE "InternalName", "http://2sen.dip.jp/dtv/"
+            VALUE "LegalCopyright", "http://2sen.dip.jp/dtv/"
+            VALUE "OriginalFilename", "Multi2DecWin.exe"
+            VALUE "ProductName", "http://2sen.dip.jp/dtv/"
+            VALUE "ProductVersion", "2.1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 932
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_MULTI2DECWIN_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 507
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 271
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOLBAR1 TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_CMD_LIST_CLEAR
+    BUTTON      ID_CMD_LIST_ADD
+    SEPARATOR
+    BUTTON      ID_CMD_LIST_REMOVE
+    BUTTON      ID_CMD_LIST_ALLCHECK
+    BUTTON      ID_CMD_LIST_UP
+    BUTTON      ID_CMD_LIST_DOWN
+    SEPARATOR
+    BUTTON      ID_CMD_START
+    BUTTON      ID_CMD_STOP
+    SEPARATOR
+    BUTTON      ID_CMD_LOG
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TOOLBAR1            BITMAP                  "res\\toolbar1.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU MENU 
+BEGIN
+    POPUP "ファイル(&F)"
+    BEGIN
+        MENUITEM "処理開始\t(&S)",                  ID_CMD_START
+        MENUITEM "処理中止\t(&A)",                  ID_CMD_STOP
+        MENUITEM SEPARATOR
+        MENUITEM "ログを開く\t(&L)",                 ID_CMD_LOG
+        MENUITEM SEPARATOR
+        MENUITEM "終了\t(&X)",                    ID_CMD_EXIT
+    END
+    POPUP "編集(&E)"
+    BEGIN
+        MENUITEM "ファイル追加...\t(&O)",             ID_CMD_LIST_ADD
+        MENUITEM "ファイル削除\t(&R)",                ID_CMD_LIST_REMOVE
+        MENUITEM "ファイルクリア\t(&C)",               ID_CMD_LIST_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "全て選択\t(&A)",                  ID_CMD_LIST_ALLSEL
+        MENUITEM SEPARATOR
+        MENUITEM "上へ移動\t(&U)",                  ID_CMD_LIST_UP
+        MENUITEM "下へ移動\t(&D)",                  ID_CMD_LIST_DOWN
+        MENUITEM SEPARATOR
+        MENUITEM "全てチェック\t(&S)",                ID_CMD_LIST_ALLCHECK
+    END
+    POPUP "設定(&S)"
+    BEGIN
+        MENUITEM "スクランブル解除\t(&D)",              ID_CMD_PRE_DESCRAMBLE
+        MENUITEM "TSエラーチェック\t(&C)",             ID_CMD_PRE_ERRCHECK
+        MENUITEM "契約情報更新\t(&U)",                ID_CMD_PRE_EMMUPDATE
+        MENUITEM SEPARATOR
+        POPUP "ユーザ定義\t(&U)"
+        BEGIN
+            MENUITEM "ファイル出力\t(&O)",                ID_CMD_CFG_OUTPUT
+            MENUITEM "B25処理\t(&B)",                 ID_CMD_CFG_B25
+            MENUITEM "EMM処理\t(&M)",                 ID_CMD_CFG_EMM
+            MENUITEM "復号漏れ削除\t(&D)",                ID_CMD_CFG_DISCARD
+            MENUITEM "NULLパケット削除\t(&N)",            ID_CMD_CFG_NULL
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "ログを出力する\t(&L)",               ID_CMD_CFG_LOGENABLE
+        MENUITEM SEPARATOR
+        MENUITEM "指定フォルダに出力\t(&F)",             ID_CMD_CFG_PATHSPEC
+        MENUITEM "出力フォルダ参照...\t(B)",            ID_CMD_CFG_BROWSE, GRAYED
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "バージョン情報...\t(&A)",            ID_CMD_ABOUT
+    END
+END
+
+IDR_LISTMENU MENU 
+BEGIN
+    POPUP "Dummy"
+    BEGIN
+        MENUITEM "ファイル追加...\t(&O)",             ID_CMD_LIST_ADD
+        MENUITEM "ファイル削除\t(&R)",                ID_CMD_LIST_REMOVE
+        MENUITEM "ファイルクリア\t(&C)",               ID_CMD_LIST_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "全て選択\t(&A)",                  ID_CMD_LIST_ALLSEL
+        MENUITEM SEPARATOR
+        MENUITEM "上へ移動\t(&U)",                  ID_CMD_LIST_UP
+        MENUITEM "下へ移動\t(&D)",                  ID_CMD_LIST_DOWN
+        MENUITEM SEPARATOR
+        MENUITEM "全てチェック\t(&S)",                ID_CMD_LIST_ALLCHECK
+        MENUITEM SEPARATOR
+        MENUITEM "ログを開く\t(&L)",                 ID_CMD_LOG
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_MULTI2DECWIN_DIALOG DLGINIT
+BEGIN
+    IDC_MODECOMBO, 0x403, 17, 0
+0x5883, 0x4e83, 0x8983, 0x9383, 0x7583, 0x8b83, 0xf089, 0x9c8f, "\000" 
+    IDC_MODECOMBO, 0x403, 17, 0
+0x5354, 0x4783, 0x8983, 0x5b81, 0x6083, 0x4683, 0x6283, 0x4e83, "\000" 
+    IDC_MODECOMBO, 0x403, 13, 0
+0x5f8c, 0xf196, 0xee8f, 0xf195, 0x588d, 0x5690, "\000" 
+    IDC_MODECOMBO, 0x403, 11, 0
+0x8683, 0x5b81, 0x5583, 0xe892, 0x608b, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "バージョン情報 Multi2DecWin(&A)..."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_CMD_START            "処理開始"
+    ID_CMD_STOP             "処理中止"
+    ID_CMD_LOG              "ログを開く"
+    ID_CMD_LIST_ADD         "ファイル追加"
+    ID_CMD_LIST_REMOVE      "ファイルクリア"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_CMD_LIST_CLEAR       "全ファイルクリア"
+    ID_CMD_LIST_UP          "上に移動"
+    ID_CMD_LIST_DOWN        "下に移動"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_CMD_LIST_ALLCHECK    "全てチェック"
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE 17, 1
+#pragma code_page(932)
+#include "res\Multi2DecWin.rc2"  // Microsoft Visual C++ 以外で編集されたリソース
+#include "afxres.rc"     // 標準コンポーネント
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
