@@ -10,25 +10,33 @@
 #include "BonClassEnumerator.h"
 
 #include "MediaBase.h"
+#ifndef MINIMIZE_FOR_B25DECODER
 #include "SmartFile.h"
 #include "SmartSocket.h"
 #include "RegCfgStorage.h"
 #include "IniCfgStorage.h"
+#endif
 
 // bon_MediaDecoder
 #include "TsPacket.h"
 #include "TsSection.h"
 #include "TsDescBase.h"
 #include "TsPidMapper.h"
+#ifndef MINIMIZE_FOR_B25DECODER
 #include "TsEpgCore.h"
+#endif
 #include "TsTable.h"
 
+#ifndef MINIMIZE_FOR_B25DECODER
 #include "TsSourceTuner.h"
+#endif
 #include "TsPacketSync.h"
 #include "TsDescrambler.h"
+#ifndef MINIMIZE_FOR_B25DECODER
 #include "ProgAnalyzer.h"
 #include "FileWriter.h"
 #include "FileReader.h"
+#endif
 #include "MediaGrabber.h"
 
 // bon_BcasDriver
@@ -105,10 +113,12 @@ static void RegisterClass(void)
 	::BON_REGISTER_CLASS<CBonClassEnumerator>();
 
 	::BON_REGISTER_CLASS<CMediaData>();
+#ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CSmartFile>();
 	::BON_REGISTER_CLASS<CSmartSocket>();
 	::BON_REGISTER_CLASS<CRegCfgStorage>();
 	::BON_REGISTER_CLASS<CIniCfgStorage>();
+#endif
 
 	// bon_MediaDecoder
 	::BON_REGISTER_CLASS<CTsPacket>();
@@ -116,23 +126,31 @@ static void RegisterClass(void)
 	::BON_REGISTER_CLASS<CDescBlock>();
 	::BON_REGISTER_CLASS<CPsiSectionParser>();
 	::BON_REGISTER_CLASS<CTsPidMapper>();
+#ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CEitItem>();
 	::BON_REGISTER_CLASS<CEpgItem>();
+#endif
 
 	::BON_REGISTER_CLASS<CPatTable>();
 	::BON_REGISTER_CLASS<CCatTable>();
 	::BON_REGISTER_CLASS<CPmtTable>();
+#ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CNitTable>();
 	::BON_REGISTER_CLASS<CSdtTable>();
 	::BON_REGISTER_CLASS<CEitTable>();
+#endif
 	::BON_REGISTER_CLASS<CTotTable>();
 	
+#ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CTsSourceTuner>();
+#endif
 	::BON_REGISTER_CLASS<CTsPacketSync>();
 	::BON_REGISTER_CLASS<CTsDescrambler>();
+#ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CProgAnalyzer>();
 	::BON_REGISTER_CLASS<CFileWriter>();
 	::BON_REGISTER_CLASS<CFileReader>();
+#endif
 	::BON_REGISTER_CLASS<CMediaGrabber>();
 
 	// bon_BcasDriver

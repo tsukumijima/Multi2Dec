@@ -61,6 +61,7 @@ const bool CCaMethodDesc::ParseData(void)
 }
 
 
+#ifndef MINIMIZE_FOR_B25DECODER
 /////////////////////////////////////////////////////////////////////////////
 // [0x40] ネットワーク名 記述子インタフェース
 /////////////////////////////////////////////////////////////////////////////
@@ -876,3 +877,4 @@ const bool CAudioComponentDesc::ParseData(void)
 		return (m_byDescLen >= 9U)? true : false;
 		}
 }
+#endif

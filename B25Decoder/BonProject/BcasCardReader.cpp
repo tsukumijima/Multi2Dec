@@ -8,7 +8,9 @@
 #include "BcasCardReader.h"
 
 
+#ifdef _MSC_VER
 #pragma comment(lib, "WinScard.lib")
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////

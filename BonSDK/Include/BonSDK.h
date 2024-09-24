@@ -8,8 +8,10 @@
 // ラインブリリンク (ビルド構成に応じて /BonSDK/Lib/ へパスを通すこと)
 /////////////////////////////////////////////////////////////////////////////
 
+#if !defined(BONSDK_IMPLEMENT) && defined(_MSC_VER)
 #pragma comment(lib, "BonBaseLib.lib")		// ベースライブラリ
 #pragma comment(lib, "BonCoreEngine.lib")	// コアエンジン(bon_CoreEngine.dll)
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////

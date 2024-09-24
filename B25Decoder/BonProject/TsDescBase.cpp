@@ -207,6 +207,7 @@ CDescBase * CDescBlock::CreateDesc(const BYTE byTag)
 	// タグに対応した記述子のインスタンスを生成する
 	switch(byTag){
 		case CCaMethodDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CCaMethodDesc::CreateInstance(NULL));
+#ifndef MINIMIZE_FOR_B25DECODER
 		case CNetworkNameDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CNetworkNameDesc::CreateInstance(NULL));
 		case CServiceListDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CServiceListDesc::CreateInstance(NULL));
 		case CServiceDesc::DESC_TAG			: return dynamic_cast<CDescBase *>(CServiceDesc::CreateInstance(NULL));
@@ -216,6 +217,7 @@ CDescBase * CDescBlock::CreateDesc(const BYTE byTag)
 		case CStreamIdDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CStreamIdDesc::CreateInstance(NULL));
 		case CContentDesc::DESC_TAG			: return dynamic_cast<CDescBase *>(CContentDesc::CreateInstance(NULL));
 		case CAudioComponentDesc::DESC_TAG	: return dynamic_cast<CDescBase *>(CAudioComponentDesc::CreateInstance(NULL));
+#endif
 		default :							  return dynamic_cast<CDescBase *>(CDescBase::CreateInstance(NULL));
 		}
 }
