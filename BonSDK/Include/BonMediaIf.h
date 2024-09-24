@@ -30,7 +30,7 @@ public:
 
 	virtual const DWORD SetSize(const DWORD dwSetSize) = 0;
 	virtual const DWORD SetSize(const DWORD dwSetSize, const BYTE byFiller) = 0;
-	
+
 	virtual void ClearSize(void) = 0;
 };
 

@@ -31,7 +31,7 @@ const bool CRegCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 	// パス名を生成
 	TCHAR szKeyPath[MAX_KEYNAME_LEN] = {TEXT('\0')};
 	::_stprintf(szKeyPath, TEXT("Software\\%s"), (lpszPathName)? lpszPathName : DEF_PATHNAME);
-	
+
 	// レジストリをオープンする
 	if(bCreate){
 		// キーが存在しない場合はキーを作成する
@@ -74,7 +74,7 @@ IConfigStorage * CRegCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 
 	// 新しいインスタンス生成
 	CRegCfgStorage *pNewInstance = new CRegCfgStorage(NULL);
-	
+
 	if(!pNewInstance){
 		::RegCloseKey(hSubKey);
 		return NULL;
@@ -82,7 +82,7 @@ IConfigStorage * CRegCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 
 	// 新しいインスタンスにハンドル設定
 	pNewInstance->m_hRegKey = hSubKey;
-	
+
 	return pNewInstance;
 }
 
@@ -149,14 +149,14 @@ const DWORD CRegCfgStorage::GetItemType(LPCTSTR lpszItem)
 	if(!m_hRegKey)return 0UL;
 
 	DWORD dwType = REG_NONE;
-	
+
 	// エントリの型を取得する
 	if(::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
 	// BOOLとDWORDは区別できない(ユーザの扱いに委ねられる)
 	switch(dwType){
 		case REG_DWORD	: return ITEM_TYPE_INT;
-		case REG_SZ		: return ITEM_TYPE_TEXT;		
+		case REG_SZ		: return ITEM_TYPE_TEXT;
 		default			: return ITEM_TYPE_INVALID;
 		}
 }
@@ -164,7 +164,7 @@ const DWORD CRegCfgStorage::GetItemType(LPCTSTR lpszItem)
 const bool CRegCfgStorage::DeleteItem(LPCTSTR lpszItem)
 {
 	if(!m_hRegKey)return 0UL;
-	
+
 	// エントリを削除する
 	return (::RegDeleteValue(m_hRegKey, lpszItem))? true : false;
 }
@@ -172,9 +172,9 @@ const bool CRegCfgStorage::DeleteItem(LPCTSTR lpszItem)
 const bool CRegCfgStorage::SetBoolItem(LPCTSTR lpszItem, const bool bValue)
 {
 	if(!m_hRegKey)return 0UL;
-	
+
 	const DWORD dwValue = (bValue)? 1UL : 0UL;
-	
+
 	// BOOLをセーブする
 	return (::RegSetValueEx(m_hRegKey, lpszItem, 0UL, REG_DWORD, (const BYTE *)&dwValue, sizeof(dwValue)))? true : false;
 }
@@ -235,10 +235,10 @@ const DWORD CRegCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 
 	DWORD dwType = REG_SZ;
 	DWORD dwSize = 0xFFFFFFFFUL;
-	
+
 	// サイズを取得
 	const LONG lReturn = ::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, NULL, &dwSize);
-	
+
 	if((lReturn != ERROR_SUCCESS) || (dwType != REG_SZ) || (dwMaxLen && (((dwSize / sizeof(lpszValue[0])) - 1UL) > dwMaxLen))){
 		if(lpszDefault){
 			if(lpszValue){
@@ -261,7 +261,7 @@ const DWORD CRegCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 
 		return 0UL;
 		}
-	
+
 	// 格納した文字数を返す
 	return dwSize / sizeof(lpszValue[0]) - 1UL;
 }

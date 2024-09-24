@@ -29,10 +29,10 @@ public:
 // CPsiTableBase
 	CPsiTableBase(IBonObject *pOwner);
 	virtual ~CPsiTableBase(void);
-	
+
 	virtual void Reset(void);
 	const DWORD GetCrcErrorCount(void) const;
-	
+
 protected:
 // IPsiSectionParser::IHandler
 	virtual void OnPsiSection(const IPsiSectionParser *pPsiSectionParser, const IPsiSection *pPsiSection);

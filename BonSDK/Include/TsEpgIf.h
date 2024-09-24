@@ -23,7 +23,7 @@ public:
 	virtual const BYTE GetRunningStatus(void) const = 0;
 	virtual const bool IsScrambled(void) const = 0;
 	virtual const IDescBlock * GetEventDesc(void) const = 0;
-	
+
 	virtual const bool CopyItem(const IEitItem *pSrc) = 0;
 };
 

@@ -29,11 +29,11 @@ public:
 	virtual const bool SetChannel(const DWORD dwSpace, const DWORD dwChannel);
 	virtual const float GetSignalLevel(void);
 	virtual IHalTsTuner * GetHalTsTuner(void);
-	
+
 // CTsSourceTuner
 	CTsSourceTuner(IBonObject *pOwner);
 	virtual ~CTsSourceTuner(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);

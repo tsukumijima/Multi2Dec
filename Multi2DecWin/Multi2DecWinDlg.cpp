@@ -139,7 +139,7 @@ BOOL CMulti2DecWinDlg::OnInitDialog()
 	// プログレスバー設定
 	m_Progress.SetParent(&m_StatusBar);
 	m_Progress.SetRange32(0, 1000);
-	
+
 	// ツールバー作成
 	m_ToolBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_NOALIGN | CBRS_TOOLTIPS | CBRS_FLYBY, AFX_IDW_TOOLBAR);
 	m_ToolBar.LoadToolBar(IDR_TOOLBAR1);
@@ -269,10 +269,10 @@ void CMulti2DecWinDlg::OnDropFiles(HDROP hDropInfo)
 		// ファイルパスを取得
 		if(!::DragQueryFile(hDropInfo, dwPos, csFilePath.GetBuffer(_MAX_PATH), _MAX_PATH))continue;
 		csFilePath.ReleaseBuffer();
-		
+
 		// 拡張子をチェック
 		if(csFilePath.Right(3).MakeLower() != TEXT(".ts"))continue;
-		
+
 		// ファイルリストに追加
 		AddSourceFile(csFilePath);
 		}
@@ -346,7 +346,7 @@ void CMulti2DecWinDlg::UpdateCmdState(void)
 
 	m_ModeCombo.EnableWindow((!m_bIsConvert)? TRUE : FALSE);
 	m_FileList.EnableWindow((!m_bIsConvert)?  TRUE : FALSE);
-	
+
 	// ステータスバー更新
 	m_StatusBar.GetStatusBarCtrl().SetText((m_bIsConvert)? TEXT("処理中．．．") : TEXT("停止中"), 0, 0);
 	if(!m_bIsConvert)m_StatusBar.GetStatusBarCtrl().SetText(TEXT(""), 2, 0);
@@ -489,14 +489,14 @@ const BOOL CMulti2DecWinDlg::StartNextFile(void)
 
 	// ソースファイルのインデックス保存
 	m_dwSrcIndex = (DWORD)iSrcPos;
-	
+
 	if(m_bCfgPathEnable){
 		m_csDstPath = m_csOutputPath + m_csDstPath.Mid(m_csDstPath.ReverseFind(TEXT('\\')) + 1);
 		}
-	
+
 	// コンバート開始
 	const DWORD dwErrorCode = m_pMulti2Converter->StartConvert(m_FileList.GetItemText(iSrcPos, 0), (m_bCfgOutput)? m_csDstPath : NULL, (m_bCfgB25)? true : false, (m_bCfgEmm)? true : false, (m_bCfgNull)? true : false, (m_bCfgDiscard)? true : false);
-	
+
 	switch(dwErrorCode){
 		case IMulti2Converter::EC_FILE_ERROR :
 			m_FileList.SetItemText(m_dwSrcIndex, 2, TEXT("エラー発生"));
@@ -544,7 +544,7 @@ void CMulti2DecWinDlg::UpdateProgress(const DWORD dwProgress)
 
 	csText.Format(TEXT("%lu"), m_pMulti2Converter->GetScramblePacketNum());
 	m_FileList.SetItemText(m_dwSrcIndex, 8, csText);
-	
+
 	csText.Format(TEXT("%lu"), m_pMulti2Converter->GetEmmProcessNum());
 	m_FileList.SetItemText(m_dwSrcIndex, 9, (m_bCfgB25 && m_bCfgEmm)? csText : TEXT("無効"));
 
@@ -567,7 +567,7 @@ const BOOL CMulti2DecWinDlg::OpenBrowseDialog(HWND hWnd, LPTSTR lpszPath, LPCTST
 				if(uMsg == BFFM_INITIALIZED){
 					::SendMessage(hwnd, BFFM_SETSELECTION, (WPARAM)TRUE, lpData);
 					}
-			
+
 				return 0;
 			}
 	};
@@ -603,19 +603,19 @@ const BOOL CMulti2DecWinDlg::OpenBrowseDialog(HWND hWnd, LPTSTR lpszPath, LPCTST
 void CMulti2DecWinDlg::OutputLogFile(void)
 {
 	CString csLog;
-	
+
 	// 入力ファイル情報
 	csLog.AppendFormat(TEXT("Input File: %s\r\n"), m_FileList.GetItemText(m_dwSrcIndex, 0));
 
 	csLog.AppendFormat(TEXT("Length: %12s (%s Byte)\r\n\r\n"),
 		ToUnitedText(m_pMulti2Converter->GetSrcFileLength()),
 		ToCommaText(m_pMulti2Converter->GetSrcFileLength())
-		);		
-	
+		);
+
 	// 出力ファイル情報
 	if(m_bCfgOutput){
 		csLog.AppendFormat(TEXT("Output File: %s\r\n"), m_csDstPath);
-		
+
 		csLog.AppendFormat(TEXT("Length: %12s (%s Byte)\r\n\r\n"),
 			ToUnitedText(m_pMulti2Converter->GetDstFileLength()),
 			ToCommaText(m_pMulti2Converter->GetDstFileLength())
@@ -627,7 +627,7 @@ void CMulti2DecWinDlg::OutputLogFile(void)
 
 	for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 		CString csText;
-		
+
 		if(m_pMulti2Converter->GetInputPacketNum(wPID)){
 			csText.Format(TEXT("%lu"), m_pMulti2Converter->GetInputPacketNum(wPID));
 			if(csText.GetLength() > iInWidth)iInWidth = csText.GetLength();
@@ -681,7 +681,7 @@ void CMulti2DecWinDlg::OutputLogFile(void)
 
 	if(m_bCfgB25){
 		csLog.AppendFormat(TEXT("\r\nECM Process      : %12s\r\n"), ToCommaText(m_pMulti2Converter->GetEcmProcessNum()));
-	
+
 		if(m_bCfgEmm){
 			csLog.AppendFormat(TEXT("EMM Process      : %12s\r\n"), ToCommaText(m_pMulti2Converter->GetEmmProcessNum()));
 			}
@@ -723,14 +723,14 @@ LRESULT CMulti2DecWinDlg::OnConverterEvent(WPARAM wParam, LPARAM lParam)
 			// コンバート開始
 			m_FileList.SetItemText(m_dwSrcIndex, 2, TEXT("処理中．．．"));
 			break;
-		
+
 		case IMulti2Converter::EID_CONV_END:
 			// ログファイル出力
 			if(m_bCfgLogEnable)OutputLogFile();
 
 			// コンバート終了
 			m_pMulti2Converter->EndConvert();
-			
+
 			if(m_bIsConvert){
 				// 次のファイルコンバート開始
 				m_FileList.SetItemText(m_dwSrcIndex, 2, TEXT("完了"));
@@ -776,7 +776,7 @@ void CMulti2DecWinDlg::OnCancel(void)
 		m_bIsConvert = FALSE;
 		m_pMulti2Converter->EndConvert();
 		}
-	
+
 	CDialog::OnCancel();
 }
 
@@ -801,7 +801,7 @@ void CMulti2DecWinDlg::OnCmdStart()
 
 	// ソースファイル数を数える
 	int iSrcCount = 0;
-	
+
 	for(int iPos = 0 ; iPos < m_FileList.GetItemCount() ; iPos++){
 		if(m_FileList.GetCheck(iPos)){
 			m_FileList.SetItemText(iPos, 2, TEXT("処理待ち"));
@@ -836,7 +836,7 @@ void CMulti2DecWinDlg::OnCmdLog()
 	// 選択されているアイテムを取得
 	POSITION pPos = m_FileList.GetFirstSelectedItemPosition();
 	if(!pPos)return;
-	
+
 	int iItem = m_FileList.GetNextSelectedItem(pPos);
 	if(iItem < 0)return;
 
@@ -876,7 +876,7 @@ void CMulti2DecWinDlg::OnCmdListAdd()
 void CMulti2DecWinDlg::OnCmdListRemove()
 {
 	// TODO: ここにコマンド ハンドラ コードを追加します。
-	
+
 	// 選択されている先頭のアイテムを取得
 	POSITION pPos = m_FileList.GetFirstSelectedItemPosition();
 	if(!pPos)return;
@@ -891,7 +891,7 @@ void CMulti2DecWinDlg::OnCmdListRemove()
 
 	// 元の位置のアイテムを選択する
 	if((iItem + 1) >= m_FileList.GetItemCount())iItem = m_FileList.GetItemCount() - 1;
-	m_FileList.SetItemState(iItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);	
+	m_FileList.SetItemState(iItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 }
 
 void CMulti2DecWinDlg::OnCmdListClear()
@@ -910,7 +910,7 @@ void CMulti2DecWinDlg::OnCmdListUp()
 
 	const int iItem = m_FileList.GetNextSelectedItem(pPos);
 	if(iItem <= 0)return;
-	
+
 	// 全アイテムの選択クリアする
 	while(pPos = m_FileList.GetFirstSelectedItemPosition()){
 		m_FileList.SetItemState(m_FileList.GetNextSelectedItem(pPos), 0UL, LVIS_SELECTED | LVIS_FOCUSED);
@@ -927,7 +927,7 @@ void CMulti2DecWinDlg::OnCmdListUp()
 
 	// 移動先アイテムを削除する
 	m_FileList.DeleteItem(iItem - 1);
-	
+
 	// アイテム選択する
 	m_FileList.SetItemState(iItem - 1, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 }
@@ -942,7 +942,7 @@ void CMulti2DecWinDlg::OnCmdListDown()
 
 	const int iItem = m_FileList.GetNextSelectedItem(pPos);
 	if((iItem  + 1) >= m_FileList.GetItemCount())return;
-	
+
 	// 全アイテムの選択クリアする
 	while(pPos = m_FileList.GetFirstSelectedItemPosition()){
 		m_FileList.SetItemState(m_FileList.GetNextSelectedItem(pPos), 0UL, LVIS_SELECTED | LVIS_FOCUSED);
@@ -959,7 +959,7 @@ void CMulti2DecWinDlg::OnCmdListDown()
 
 	// 移動先アイテムを削除する
 	m_FileList.DeleteItem(iItem + 2);
-	
+
 	// アイテム選択する
 	m_FileList.SetItemState(iItem + 1, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 }

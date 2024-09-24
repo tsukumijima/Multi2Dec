@@ -40,7 +40,7 @@ public:
 // CPsiSection
 	CPsiSection(IBonObject *pOwner);
 	virtual ~CPsiSection(void);
-	
+
 protected:
 	struct TAG_PSIHEADER
 	{
@@ -77,7 +77,7 @@ public:
 // CPsiSectionParser
 	CPsiSectionParser(IBonObject *pOwner);
 	virtual ~CPsiSectionParser(void);
-	
+
 protected:
 	const BYTE StoreHeader(const BYTE *pPayload, const BYTE byRemain);
 	const BYTE StorePayload(const BYTE *pPayload, const BYTE byRemain);

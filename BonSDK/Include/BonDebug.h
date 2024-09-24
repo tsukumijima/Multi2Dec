@@ -55,7 +55,7 @@ public:
 
 	void operator( )(const bool bSuccess = false, LPCTSTR lpszFormat = NULL, ...);
 	void operator( )(const void *pPointer, LPCTSTR lpszFormat = NULL, ...);
-	
+
 protected:
 	const BONGUID m_ClassId;
 	LPCSTR m_lpszSourceFile;
@@ -78,7 +78,7 @@ protected:
 			::BON_TRACE(TEXT("CPerfInitializer()\n"));
 			::QueryPerformanceFrequency((LARGE_INTEGER *)&m_llCounterFreq);
 		}
-	
+
 		LONGLONG m_llCounterFreq;
 	};
 
@@ -87,15 +87,15 @@ public:
 	{
 		::QueryPerformanceCounter((LARGE_INTEGER *)&m_llStartTime);
 	}
-	
+
 	~CPerfInspector()
 	{
 		LONGLONG m_llEndTime = m_llStartTime;
 		::QueryPerformanceCounter((LARGE_INTEGER *)&m_llEndTime);
 
 		m_llEndTime = ((m_llEndTime - m_llStartTime) * 1000000LL) / m_PerfCounter.m_llCounterFreq;
-		
-		::BON_TRACE(TEXT("Block Process Time = %luus\n"), (DWORD)m_llEndTime);		
+
+		::BON_TRACE(TEXT("Block Process Time = %luus\n"), (DWORD)m_llEndTime);
 	}
 
 protected:

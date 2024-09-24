@@ -48,7 +48,7 @@ public:
 // CEitItem
 	CEitItem(IBonObject *pOwner);
 	virtual ~CEitItem(void);
-	
+
 protected:
 	WORD m_wEventID;
 	CTsTime m_StartTime;
@@ -110,17 +110,17 @@ protected:
 	CTsTime m_StartTime;
 	DWORD m_dwDuration;
 	bool m_bIsScrambled;
-	
+
 	EpgString m_strEventTitle;
 	EpgString m_strEventInfo;
 	EpgString m_strEventDetail;
-	
+
 	WORD m_wVideoResolution;
 	bool m_bIsVideoProgressive;
 	bool m_bIsVideoAspectWide;
 	bool m_bIsVideoPanAndScan;
 
 	BYTE m_byAudioMode;
-	
+
 	std::vector<BYTE> m_GenreArray;
 };

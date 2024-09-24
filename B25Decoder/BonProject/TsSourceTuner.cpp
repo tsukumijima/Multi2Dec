@@ -37,13 +37,13 @@ const DWORD CTsSourceTuner::OpenTuner(LPCTSTR lpszBCId)
 
 		// デバイスの空きをチェック
 		if(pHalDevice->GetActiveDeviceNum() >= pHalDevice->GetTotalDeviceNum())throw (DWORD)EC_DEVICE_FULL;
-	
+
 		// IHalTsTunerインタフェース取得
 		if(!(m_pHalTsTuner = dynamic_cast<IHalTsTuner *>(pHalDevice)))throw (DWORD)EC_INTERNAL_ERR;
 
 		// TSバッファインスタンス生成
 		if(!(m_pTsBuffer = ::BON_SAFE_CREATE<IMediaData *>(TEXT("CMediaData"))))throw (DWORD)EC_INTERNAL_ERR;
-	
+
 		// TSバッファサイズ確保
 		if(m_pTsBuffer->GetBuffer(TSBUFFER_SIZE) != TSBUFFER_SIZE)throw (DWORD)EC_INTERNAL_ERR;
 
@@ -57,7 +57,7 @@ const DWORD CTsSourceTuner::OpenTuner(LPCTSTR lpszBCId)
 		// エラー発生
 		BON_SAFE_RELEASE(pHalDevice);
 		m_pHalTsTuner = NULL;
-		
+
 		CloseTuner();
 		return dwErrCode;
 		}
@@ -81,7 +81,7 @@ const bool CTsSourceTuner::CloseTuner(void)
 
 	// チューナインスタンス開放
 	BON_SAFE_RELEASE(m_pHalTsTuner);
-	
+
 	return true;
 }
 
@@ -131,7 +131,7 @@ const bool CTsSourceTuner::SetChannel(const DWORD dwSpace, const DWORD dwChannel
 
 	// チャンネルを変更する
 	if(!m_pHalTsTuner->SetChannel(dwSpace, dwChannel))return false;
-	
+
 	// 下位デコーダをリセットする
 	ResetDecoder();
 
@@ -191,7 +191,7 @@ const bool CTsSourceTuner::OnStop(void)
 
 	// ストリームを停止状態にする
 	m_bIsPlaying = false;
-	
+
 	return true;
 }
 
@@ -211,7 +211,7 @@ void CTsSourceTuner::TsRecvThread(CSmartThread<CTsSourceTuner> *pThread, bool &b
 
 	// チューナからTSデータを取り出すスレッド
 	while(!bKillSignal){
-		
+
 		// 処理簡略化のためポーリング方式を採用する
 		do{
 			if(m_pHalTsTuner->GetStream(&pStreamData, &dwStreamSize, &dwRemainNum)){

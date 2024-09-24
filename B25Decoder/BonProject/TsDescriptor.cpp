@@ -298,7 +298,7 @@ const DWORD CExtendEventDesc::GetItemNum(void) const
 		dwPos += (DWORD)pItem[dwPos] + 1UL;
 		dwPos += (DWORD)pItem[dwPos] + 1UL;
 		}
-		
+
 	return dwItem;
 }
 
@@ -317,7 +317,7 @@ const DWORD CExtendEventDesc::GetItemName(LPTSTR lpszDst, const DWORD dwIndex) c
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
 	// バッファに必要な文字数を返す
-	return ::_tcslen(szName);	
+	return ::_tcslen(szName);
 }
 
 const DWORD CExtendEventDesc::GetItemText(BYTE *pDst, const DWORD dwIndex) const
@@ -325,16 +325,16 @@ const DWORD CExtendEventDesc::GetItemText(BYTE *pDst, const DWORD dwIndex) const
 	// アイテムポインタを取得
 	const BYTE *pItem = GetItemPointer(dwIndex);
 	if(!pItem)return 0UL;
-	
+
 	pItem = &pItem[(DWORD)pItem[0] + 1UL];
-	
+
 	if(!pItem[0])return 0UL;
 
 	// バッファにコピー
 	if(pDst)::CopyMemory(pDst, &pItem[1], pItem[0]);
 
 	// バッファに必要なバイト数を返す
-	return pItem[0];	
+	return pItem[0];
 }
 
 const DWORD CExtendEventDesc::GetExtDesc(LPTSTR lpszDst) const
@@ -353,7 +353,7 @@ const DWORD CExtendEventDesc::GetExtDesc(LPTSTR lpszDst) const
 			pItem = &pItem[dwPos];
 			break;
 			}
-		else{			
+		else{
 			dwPos += (DWORD)pItem[dwPos] + 1UL;
 			dwPos += (DWORD)pItem[dwPos] + 1UL;
 			}
@@ -367,7 +367,7 @@ const DWORD CExtendEventDesc::GetExtDesc(LPTSTR lpszDst) const
 	if(lpszDst)::_tcscpy(lpszDst, szDesc);
 
 	// バッファに必要な文字数を返す
-	return ::_tcslen(szDesc);	
+	return ::_tcslen(szDesc);
 }
 
 CExtendEventDesc::CExtendEventDesc(IBonObject *pOwner)
@@ -391,7 +391,7 @@ const BYTE * CExtendEventDesc::GetItemPointer(const DWORD dwIndex) const
 {
 	// 指定したアイテムの先頭ポインタを返す
 	const BYTE *pItem = &m_pDescData[5];
-	
+
 	for(DWORD dwPos = 0UL, dwItem = 0UL ; dwPos < (DWORD)m_pDescData[4] ; ){
 		if((dwPos + (DWORD)pItem[dwPos] + 1U) >= (DWORD)m_pDescData[4])break;
 
@@ -405,7 +405,7 @@ const BYTE * CExtendEventDesc::GetItemPointer(const DWORD dwIndex) const
 			dwPos += (DWORD)pItem[dwPos] + 1UL;
 			}
 		}
-		
+
 	return NULL;
 }
 
@@ -442,7 +442,7 @@ const DWORD CComponentDesc::GetComponentText(LPTSTR lpszDst) const
 {
 	// コンポーネント記述を返す
 	if(m_byDescLen < 7U)return 0UL;
-	
+
 	TCHAR szText[256] = TEXT("\0");
 	CAribString::AribToString(szText, &m_pDescData[6], m_byDescLen - 6UL);
 
@@ -463,11 +463,11 @@ const WORD CComponentDesc::GetVideoResolution(void) const
 {
 	// 解像度(横方向のピクセル数)を返す
 	if(!IsVideoComponent())return 0U;
-	
+
 	switch(GetComponentType() & 0x0FU){
 		case 0x01U :
 		case 0x02U :
-		case 0x03U :				
+		case 0x03U :
 		case 0x04U :
 			switch(GetComponentType() & 0xF0U){
 				case 0xD0U :	// 240p
@@ -476,18 +476,18 @@ const WORD CComponentDesc::GetVideoResolution(void) const
 				case 0x00U :	// 480i
 				case 0xA0U :	// 480p
 					return 480U;
-					
+
 				case 0xC0U :	// 720p
 					return 720U;
-				
+
 				case 0xB0U :	// 1080i
 					return 1080U;
-				
+
 				default :		// 未定義の解像度
 					return 0U;
 				}
 			break;
-		
+
 		default :
 			// 未定義の解像度
 			return 0U;
@@ -498,11 +498,11 @@ const bool CComponentDesc::IsVideoProgressive(void) const
 {
 	// プログレッシブの有無を返す
 	if(!IsVideoComponent())return false;
-	
+
 	switch(GetComponentType() & 0x0FU){
 		case 0x01U :
 		case 0x02U :
-		case 0x03U :				
+		case 0x03U :
 		case 0x04U :
 			switch(GetComponentType() & 0xF0U){
 				case 0x00U :	// 480i
@@ -518,7 +518,7 @@ const bool CComponentDesc::IsVideoProgressive(void) const
 					return false;
 				}
 			break;
-		
+
 		default :
 			// 未定義の解像度
 			return false;
@@ -539,12 +539,12 @@ const bool CComponentDesc::IsVideoAspectWide(void) const
 			switch(GetComponentType() & 0x0FU){
 				case 0x01U :
 					return false;	// 4:3
-				
+
 				case 0x02U :
-				case 0x03U :				
+				case 0x03U :
 				case 0x04U :
 					return true;	// 16:9
-		
+
 				default :
 					// 未定義の解像度
 					return true;
@@ -570,12 +570,12 @@ const bool CComponentDesc::IsVideoPanAndScan(void) const
 			switch(GetComponentType() & 0x0FU){
 				case 0x02U :
 					return true;	// パンベクトルあり
-				
+
 				case 0x01U :
-				case 0x03U :				
+				case 0x03U :
 				case 0x04U :
 					return false;	// パンベクトルなし
-		
+
 				default :
 					// 未定義の解像度
 					return false;
@@ -798,9 +798,9 @@ const bool CAudioComponentDesc::IsEnableCenter(void) const
 		case 0x08U :	// 3/2
 		case 0x09U :	// 3/2+LFE
 			return true;
-		
+
 		default	:
-			return false;		
+			return false;
 		}
 }
 
@@ -816,9 +816,9 @@ const bool CAudioComponentDesc::IsEnableFront(void) const
 		case 0x08U :	// 3/2
 		case 0x09U :	// 3/2+LFE
 			return true;
-		
+
 		default	:
-			return false;		
+			return false;
 		}
 }
 
@@ -832,9 +832,9 @@ const bool CAudioComponentDesc::IsEnableSurround(void) const
 		case 0x08U :	// 3/2
 		case 0x09U :	// 3/2+LFE
 			return true;
-		
+
 		default	:
-			return false;		
+			return false;
 		}
 }
 
@@ -844,9 +844,9 @@ const bool CAudioComponentDesc::IsEnableLFE(void) const
 	switch(GetComponentType()){
 		case 0x09U :	// 3/2+LFE
 			return true;
-		
+
 		default	:
-			return false;		
+			return false;
 		}
 }
 

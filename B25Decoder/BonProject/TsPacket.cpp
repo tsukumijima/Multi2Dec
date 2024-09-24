@@ -22,10 +22,10 @@ const DWORD CTsPacket::ParsePacket(BYTE *pContinuityCounter)
 	m_Header.byTransportScramblingCtrl	= (m_pData[3] & 0xC0U) >> 6;			// +3 bit7-6
 	m_Header.byAdaptationFieldCtrl		= (m_pData[3] & 0x30U) >> 4;			// +3 bit5-4
 	m_Header.byContinuityCounter		= m_pData[3] & 0x0FU;					// +3 bit3-0
-	
+
 	// アダプテーションフィールド解析
 	::ZeroMemory(&m_AdaptationField, sizeof(m_AdaptationField));
-	
+
 	if(m_Header.byAdaptationFieldCtrl & 0x02){
 		// アダプテーションフィールドあり
 		if(m_AdaptationField.byAdaptationFieldLength = m_pData[4]){								// +4
@@ -38,7 +38,7 @@ const DWORD CTsPacket::ParsePacket(BYTE *pContinuityCounter)
 			m_AdaptationField.bSplicingPointFlag		= (m_pData[5] & 0x04U)? true : false;	// +5 bit2
 			m_AdaptationField.bTransportPrivateDataFlag	= (m_pData[5] & 0x02U)? true : false;	// +5 bit1
 			m_AdaptationField.bAdaptationFieldExtFlag	= (m_pData[5] & 0x01U)? true : false;	// +5 bit0
-			
+
 			if(m_pData[4] > 1U){
 				m_AdaptationField.pOptionData			= &m_pData[6];
 				m_AdaptationField.byOptionSize			= m_pData[4] - 1U;
@@ -103,10 +103,10 @@ BYTE * CTsPacket::GetPayloadData(void) const
 	switch(m_Header.byAdaptationFieldCtrl){
 		case 1U :	// ペイロードのみ
 			return &m_pData[4];
-		
+
 		case 3U :	// アダプテーションフィールド、ペイロードあり
 			return &m_pData[m_AdaptationField.byAdaptationFieldLength + 5U];
-		
+
 		default :	// アダプテーションフィールドのみ or 例外
 			return NULL;
 		}
@@ -118,10 +118,10 @@ const BYTE CTsPacket::GetPayloadSize(void) const
 	switch(m_Header.byAdaptationFieldCtrl){
 		case 1U :	// ペイロードのみ
 			return (TS_PACKET_SIZE - 4U);
-		
+
 		case 3U :	// アダプテーションフィールド、ペイロードあり
 			return (TS_PACKET_SIZE - m_AdaptationField.byAdaptationFieldLength - 5U);
-		
+
 		default :	// アダプテーションフィールドのみ or 例外
 			return 0U;
 		}
@@ -130,14 +130,14 @@ const BYTE CTsPacket::GetPayloadSize(void) const
 const bool CTsPacket::CopyPacket(const ITsPacket *pSrc)
 {
 	if(!pSrc)return false;
-	
+
 	// バイナリデータを取得
 	const BYTE *pSrcRawData = pSrc->GetRawData();
 	if(!pSrcRawData)return false;
 
 	// データをコピー
 	SetData(pSrcRawData, TS_PACKET_SIZE);
-	
+
 	// パケット解析
 	ParsePacket();
 
@@ -150,7 +150,7 @@ const bool CTsPacket::ComparePacket(const ITsPacket *pSrc) const
 	if(!pSrc)return false;
 
 	const BYTE *pSrcRawData = pSrc->GetRawData();
-	
+
 	// サイズをチェック
 	if(!pSrcRawData || (m_dwDataSize != TS_PACKET_SIZE))return false;
 
@@ -183,7 +183,7 @@ CTsPacket::CTsPacket(IBonObject *pOwner)
 {
 	// バッファ確保
 	GetBuffer(TS_PACKET_SIZE);
-	
+
 	// ヘッダ情報クリア
 	::ZeroMemory(&m_Header, sizeof(m_Header));
 	::ZeroMemory(&m_AdaptationField, sizeof(m_AdaptationField));

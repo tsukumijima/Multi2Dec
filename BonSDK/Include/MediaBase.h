@@ -35,7 +35,7 @@ public:
 
 	virtual const DWORD SetSize(const DWORD dwSetSize);
 	virtual const DWORD SetSize(const DWORD dwSetSize, const BYTE byFiller);
-	
+
 	virtual void ClearSize(void);
 
 // CMediaData

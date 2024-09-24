@@ -44,11 +44,11 @@ const DWORD CProgAnalyzer::GetProgramNum(void)
 {
 	// 有効なプログラム数を返す
 	DWORD dwNum = 0UL;
-	
+
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
 		if(itProgram->bAvailable)dwNum++;
 		}
-		
+
 	return dwNum;
 }
 
@@ -56,13 +56,13 @@ const WORD CProgAnalyzer::GetProgramID(const DWORD dwIndex)
 {
 	// プログラムIDを返す
 	DWORD dwPos = 0UL;
-	
+
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
 		if(itProgram->bAvailable){
 			if(dwPos++ == dwIndex)return itProgram->wProgramID;
 			}
 		}
-		
+
 	return 0x0000U;
 }
 
@@ -101,7 +101,7 @@ const DWORD CProgAnalyzer::GetServiceName(LPTSTR lpszServiceName, const WORD wPr
 	// サービス名を返す
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	if(!pItem)return 0UL;
-	
+
 	// バッファにコピー
 	if(lpszServiceName)::_tcscpy(lpszServiceName, pItem->szServiceName);
 
@@ -114,13 +114,13 @@ const bool CProgAnalyzer::GetStreamTime(SYSTEMTIME *pStreamTime)
 	// ストリームの時間を返す
 	ITotTable *pTotTable = dynamic_cast<ITotTable *>(m_TsPidMapper.GetMapTarget(0x0014U));
 	::BON_ASSERT(pTotTable != NULL);
-	
+
 	CTsTime StreamTime = pTotTable->GetDateTime();
 	if(StreamTime.IsEmpty())return false;
 
-	// 時間をセット	
+	// 時間をセット
 	if(pStreamTime)*pStreamTime = StreamTime;
-	
+
 	return true;
 }
 
@@ -241,11 +241,11 @@ void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 
 		// PATを検索
 		bool bFound = false;
-	
+
 		for(DWORD dwIndex = 0UL ; (dwIndex < pPatTable->GetProgramNum()) && !bFound; dwIndex++){
 			if(itProgram->wProgramID == pPatTable->GetProgramID(dwIndex)){
 				bFound = true;
-				}			
+				}
 			}
 
 		if(!bFound){
@@ -271,7 +271,7 @@ void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 		for( ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
 			if(itProgram->wProgramID > pPatTable->GetProgramID(dwIndex))break;
 			}
-		
+
 		const PROGRAM_ITEM NewItem =
 		{
 			false,														// bAvailable
@@ -309,7 +309,7 @@ void CProgAnalyzer::OnPmtTable(const IPmtTable *pPmtTable)
 			case 0x02U :	// ITU-T勧告H.262|ISO/IEC 13818-2映像
 				pProgItem->wVideoPID = pPmtTable->GetEsPID(dwIndex);
 				break;
-				
+
 			case 0x0FU :	// ISO/IEC 13818-7音声（ADTSトランスポート構造）
 				pProgItem->wAudioPID = pPmtTable->GetEsPID(dwIndex);
 				break;
@@ -341,7 +341,7 @@ void CProgAnalyzer::OnSdtTable(const ISdtTable *pSdtTable)
 		PROGRAM_ITEM *pProgItem = FindProgramItem(wServiceID);
 		if(!pProgItem)continue;
 
-		// サービス情報更新	
+		// サービス情報更新
 		const IServiceDesc *pServiceDesc = dynamic_cast<const IServiceDesc *>(pSdtTable->GetServiceDesc(wServiceID)->GetDescByTag(IServiceDesc::DESC_TAG));
 		if(!pServiceDesc)continue;
 
@@ -359,7 +359,7 @@ void CProgAnalyzer::OnEitTable(const IEitTable *pEitTable, const IEitItem *pEitI
 	// EPG情報を更新する
 	if(pEitTable->GetOrgNetworkID() != GetNetworkID())return;
 	if(pEitTable->GetTsID() != GetTsID())return;
-	
+
 	PROGRAM_ITEM *pProgItem = FindProgramItem(pEitTable->GetServiceID());
 	if(!pProgItem)return;
 
@@ -388,7 +388,7 @@ void CProgAnalyzer::OnEitTable(const IEitTable *pEitTable, const IEitItem *pEitI
 		}
 	else{
 		// スケジュール済みEPG情報ストア
-		}	
+		}
 }
 
 void CProgAnalyzer::ResetPidMap(void)
@@ -398,7 +398,7 @@ void CProgAnalyzer::ResetPidMap(void)
 		switch(wPID){
 			case 0x0000 :	// PAT
 				break;
-			
+
 			case 0x0010 :	// NIT
 			case 0x0011 :	// SDT
 			case 0x0012 :	// EIT
@@ -406,11 +406,11 @@ void CProgAnalyzer::ResetPidMap(void)
 				// リセット
 				m_TsPidMapper.ResetPid(wPID);
 				break;
-			
+
 			default :
 				// アンマップ
 				m_TsPidMapper.UnmapPid(wPID);
-				break;			
+				break;
 			}
 		}
 }

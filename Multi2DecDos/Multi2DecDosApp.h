@@ -37,7 +37,7 @@ public:
 	virtual ~CMulti2DecDosApp(void);
 
 	const bool Run(const CONFIGSET *pConfigSet);
-	
+
 protected:
 	virtual void OnMulti2ConverterEvent(IMulti2Converter *pMulti2Converter, const DWORD dwEventID, PVOID pParam);
 	void UpdateProgress(const DWORD dwProgress);

@@ -44,7 +44,7 @@ const bool CPsiSection::ParseHeader(const bool bIsExtended)
 		else if(m_Header.wSectionLength < 9U)return false;								// セクション長異常
 		}
 	else{
-		// 標準形式のエラーチェック	
+		// 標準形式のエラーチェック
 		if(bIsExtended)return false;													// 目的のヘッダではない
 		else if(m_Header.wSectionLength < 4U)return false;								// セクション長異常
 		}
@@ -55,7 +55,7 @@ const bool CPsiSection::ParseHeader(const bool bIsExtended)
 void CPsiSection::Reset(void)
 {
 	// データをリセットする
-	ClearSize();	
+	ClearSize();
 	::ZeroMemory(&m_Header, sizeof(m_Header));
 }
 
@@ -159,7 +159,7 @@ const bool CPsiSection::CopySection(const IPsiSection *pSrc)
 
 	// セクションデータコピー
 	if(CMediaData::CopyData(pMediaData) != GetSize())return false;
-	
+
 	// ヘッダコピー
 	m_Header.byTableID					= pSrc->GetTableID();
 	m_Header.bSectionSyntaxIndicator	= pSrc->IsExtendedSection();
@@ -197,7 +197,7 @@ const DWORD CPsiSection::CompareSection(const IPsiSection *pSrc) const
 
 	const BYTE *pSrcData = GetPayloadData();
 	const BYTE *pDstData = pSrc->GetPayloadData();
-	
+
 	// ペイロードバイナリ比較
 	for(DWORD dwPos = 0 ; dwPos < GetPayloadSize() ; dwPos++){
 		if(pSrcData[dwPos] != pDstData[dwPos]){
@@ -205,11 +205,11 @@ const DWORD CPsiSection::CompareSection(const IPsiSection *pSrc) const
 			break;
 			}
 		}
-		
+
 	// CRC比較
 	if(GetSectionCrc() != pSrc->GetSectionCrc())dwReturn |= CR_OTHER_ALL;
-	
-	
+
+
 	// 一致する
 	return dwReturn;
 }
@@ -267,13 +267,13 @@ const bool CPsiSectionParser::StorePacket(const ITsPacket *pTsPacket)
 	if(byUnitStartPos){
 		// [ヘッダ断片 | ペイロード断片] + [スタッフィングバイト] + ヘッダ先頭 + [ヘッダ断片] + [ペイロード断片] + [スタッフィングバイト]
 		BYTE byPos = 1U;
-		
+
 		if(byUnitStartPos > 1U){
 			// ユニット開始位置が先頭ではない場合(断片がある場合)
 			byPos += StoreHeader(&pData[byPos], bySize - byPos);
 			byPos += StorePayload(&pData[byPos], bySize - byPos);
 			}
-		
+
 		// ユニット開始位置から新規セクションのストアを開始する
 		m_bIsStoring = false;
 		m_PsiSection.ClearSize();
@@ -359,13 +359,13 @@ const BYTE CPsiSectionParser::StorePayload(const BYTE *pPayload, const BYTE byRe
 {
 	// セクションのストアを完了する
 	if(!m_bIsStoring)return 0U;
-	
+
 	const WORD wStoreRemain = m_wStoreSize - (WORD)m_PsiSection.GetSize();
 
 	if(wStoreRemain <= (WORD)byRemain){
 		// ストア完了
 		m_PsiSection.AddData(pPayload, wStoreRemain);
-				
+
 		if(!CalcCrc(pPayload, wStoreRemain, m_dwStoreCrc)){
 			// CRC正常、ハンドラにセクションを渡す
 			if(m_pHandler)m_pHandler->OnPsiSection(this, &m_PsiSection);
@@ -374,7 +374,7 @@ const BYTE CPsiSectionParser::StorePayload(const BYTE *pPayload, const BYTE byRe
 			// CRC異常
 			if(m_dwCrcErrorNum < 0xFFFFFFFFUL)m_dwCrcErrorNum++;
 			}
-		
+
 		// 状態を初期化し、次のセクション受信に備える
 		m_PsiSection.Reset();
 		m_bIsStoring = false;
@@ -409,7 +409,7 @@ const DWORD CPsiSectionParser::CalcCrc(const BYTE *pData, const WORD wDataSize, 
 		0x119B4BE9UL, 0x155A565EUL, 0x18197087UL, 0x1CD86D30UL,	0x029F3D35UL, 0x065E2082UL, 0x0B1D065BUL, 0x0FDC1BECUL,	0x3793A651UL, 0x3352BBE6UL, 0x3E119D3FUL, 0x3AD08088UL,	0x2497D08DUL, 0x2056CD3AUL, 0x2D15EBE3UL, 0x29D4F654UL,
 		0xC5A92679UL, 0xC1683BCEUL, 0xCC2B1D17UL, 0xC8EA00A0UL,	0xD6AD50A5UL, 0xD26C4D12UL, 0xDF2F6BCBUL, 0xDBEE767CUL,	0xE3A1CBC1UL, 0xE760D676UL, 0xEA23F0AFUL, 0xEEE2ED18UL,	0xF0A5BD1DUL, 0xF464A0AAUL, 0xF9278673UL, 0xFDE69BC4UL,
 		0x89B8FD09UL, 0x8D79E0BEUL, 0x803AC667UL, 0x84FBDBD0UL,	0x9ABC8BD5UL, 0x9E7D9662UL, 0x933EB0BBUL, 0x97FFAD0CUL,	0xAFB010B1UL, 0xAB710D06UL, 0xA6322BDFUL, 0xA2F33668UL,	0xBCB4666DUL, 0xB8757BDAUL, 0xB5365D03UL, 0xB1F740B4UL
-		};		
+		};
 
 	for(WORD wPos = 0U ; wPos < wDataSize ; wPos++){
 		dwCurCrc = (dwCurCrc << 8) ^ CrcTable[ (dwCurCrc >> 24) ^ pData[wPos] ];

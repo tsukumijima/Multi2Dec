@@ -173,7 +173,7 @@ const bool CTsPacketSync::OnReset(void)
 
 	// 統計データリセット
 	ResetStatistics();
-	
+
 	return true;
 }
 
@@ -189,7 +189,7 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 			// 同期バイト待ち中
 			do{
 				m_dwCurStrideSize++;
-				
+
 				if(pStream[dwCurPos++] == 0x47U){
 					// 同期バイト発見
 					m_TsPacket.AddByte(0x47U);
@@ -205,7 +205,7 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 				m_TsPacket.AddData(&pStream[dwCurPos], TS_PACKET_SIZE - dwCurSize);
 				m_dwCurStrideSize += (TS_PACKET_SIZE - dwCurSize);
 				dwCurPos += (TS_PACKET_SIZE - dwCurSize);
-				
+
 				// ヘッダ解析
 				if(ParseTsPacket()){
 					// パケット正常
@@ -239,14 +239,14 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 
 				// パケットサイズクリア
 				m_TsPacket.ClearSize();
-				m_dwCurStrideSize = 0UL;			
-				}	
+				m_dwCurStrideSize = 0UL;
+				}
 			else{
 				// 残りのデータはパケットサイズに満たない
 				m_TsPacket.AddData(&pStream[dwCurPos], dwSize - dwCurPos);
 				m_dwCurStrideSize += (dwSize - dwCurPos);
 				dwCurPos += (dwSize - dwCurPos);
-				}			
+				}
 			}
 		}
 }
@@ -267,13 +267,13 @@ const bool CTsPacketSync::ParseTsPacket(void)
 			CLIPED_INCREMENT(m_dwFormatErrNum);
 			SendDecoderEvent(EID_FORMAT_ERR, reinterpret_cast<PVOID>(m_dwFormatErrNum));
 			return false;
-		
+
 		case ITsPacket::EC_TRANSPORT :
 			// トランスポートエラー異常
 			CLIPED_INCREMENT(m_dwTransportErrNum);
 			SendDecoderEvent(EID_TRANSPORT_ERR, reinterpret_cast<PVOID>(m_dwTransportErrNum));
 			return false;
-	
+
 		case ITsPacket::EC_CONTINUITY :
 			// 連続性異常(ドロップ)　※パケットの破棄はしない
 			CLIPED_INCREMENT(m_dwInputPacketNum);
@@ -283,7 +283,7 @@ const bool CTsPacketSync::ParseTsPacket(void)
 			CLIPED_INCREMENT(m_dwCurInputPacket);
 			SendDecoderEvent(EID_CONTINUITY_ERR, reinterpret_cast<PVOID>(m_dwContinuityErrNum));
 			return true;
-		
+
 		default :
 			// 例外
 #ifdef _WIN32
@@ -305,7 +305,7 @@ void CTsPacketSync::OnTsPacket(void)
 	CLIPED_INCREMENT(m_dwOutputPacketNum);
 	CLIPED_INCREMENT(m_adwOutputPacketNum[wPID]);
 	CLIPED_INCREMENT(m_dwCurOutputPacket);
-	
+
 	// 下位デコーダにデータ出力
 	OutputMedia(&m_TsPacket);
 }
@@ -319,7 +319,7 @@ void CTsPacketSync::UpdateBitrate(void)
 #else
 		(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
 #endif
-	
+
 	// 更新周期チェック
 	if((dwCurUpdateTime - m_dwLastUpdateTime) < BITRATE_PERIOD)return;
 
@@ -330,7 +330,7 @@ void CTsPacketSync::UpdateBitrate(void)
 	// カウンタリセット
 	m_dwCurInputPacket = 0UL;
 	m_dwCurOutputPacket = 0UL;
-	
+
 	// 周期更新
 	m_dwLastUpdateTime = dwCurUpdateTime;
 }

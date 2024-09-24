@@ -140,7 +140,7 @@ static void RegisterClass(void)
 	::BON_REGISTER_CLASS<CEitTable>();
 #endif
 	::BON_REGISTER_CLASS<CTotTable>();
-	
+
 #ifndef MINIMIZE_FOR_B25DECODER
 	::BON_REGISTER_CLASS<CTsSourceTuner>();
 #endif

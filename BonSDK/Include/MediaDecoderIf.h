@@ -24,7 +24,7 @@ public:
 		EC_OPEN_FAILED	= 0x00000003UL,		// オープン失敗
 		EC_INTERNAL_ERR	= 0x00000004UL		// 内部エラー
 	};
-	
+
 	virtual const DWORD OpenTuner(LPCTSTR lpszBCId) = 0;
 	virtual const bool CloseTuner(void) = 0;
 
@@ -32,13 +32,13 @@ public:
 
 	virtual const DWORD GetTuningSpaceName(const DWORD dwSpace, LPTSTR lpszName) = 0;
 	virtual const DWORD GetChannelName(const DWORD dwSpace, const DWORD dwChannel, LPTSTR lpszName) = 0;
-	
+
 	virtual const DWORD GetCurSpace(void) = 0;
 	virtual const DWORD GetCurChannel(void) = 0;
 
 	virtual const bool SetChannel(const DWORD dwSpace, const DWORD dwChannel) = 0;
 	virtual const float GetSignalLevel(void) = 0;
-	
+
 	virtual IHalTsTuner * GetHalTsTuner(void) = 0;
 };
 
@@ -114,7 +114,7 @@ public:
 	virtual const DWORD GetScramblePacketNum(const WORD wPID = TS_INVALID_PID) = 0;
 	virtual const DWORD GetEcmProcessNum(void) = 0;
 	virtual const DWORD GetEmmProcessNum(void) = 0;
-	
+
 	virtual IHalBcasCard * GetHalBcasCard(void) = 0;
 };
 
@@ -157,10 +157,10 @@ public:
 	{
 		EID_BUFF_OVERFLOW	= 0x00000000UL		// バッファオーバフロー			N/A
 	};
-	
+
 	virtual const bool OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite = false, const DWORD dwBuffSize = 0UL) = 0;
 	virtual bool CloseFile(void) = 0;
-	
+
 	virtual const ULONGLONG GetFileLength(void) = 0;
 };
 
@@ -179,15 +179,15 @@ public:
 		EID_PRE_READ	= 0x00000002UL,			// リード前						N/A
 		EID_POST_READ	= 0x00000003UL			// リード後						N/A
 	};
-	
+
 	virtual const bool OpenFile(LPCTSTR lpszFileName, const bool bAsyncRead = false, const DWORD dwBuffSize = 0UL) = 0;
 	virtual bool CloseFile(void) = 0;
 
 	virtual const DWORD ReadSync(const DWORD dwReadSize) = 0;
-	
+
 	virtual const bool SetReadPos(const ULONGLONG llPos) = 0;
 	virtual const ULONGLONG GetReadPos(void) = 0;
-	
+
 	virtual const ULONGLONG GetFileLength(void) = 0;
 };
 

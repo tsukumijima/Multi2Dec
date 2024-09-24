@@ -34,15 +34,15 @@ const bool CSmartSocket::Connect(LPCTSTR lpszHostName, const WORD wPort, const D
 		m_dwLastError = EC_INVALID_PARAM;
 		return false;
 		}
-		
+
 	// アドレス名からIPアドレス取得
 	const DWORD dwIP = HostNameToIPAddr(lpszHostName);
 
 	if(dwIP == INVALID_IPADDR){
 		m_dwLastError = EC_SOCK_ERROR;
-		return false;		
+		return false;
 		}
-	
+
 	// コネクト
 	return Connect(dwIP, wPort, dwTimeout);
 }
@@ -55,7 +55,7 @@ const bool CSmartSocket::Connect(const DWORD dwIP, const WORD wPort, const DWORD
 	// ソケット作成
 	if((m_Socket = ::socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET){
 		m_dwLastError = EC_SOCK_ERROR;
-		return false;		
+		return false;
 		}
 
 	// アドレス設定
@@ -69,9 +69,9 @@ const bool CSmartSocket::Connect(const DWORD dwIP, const WORD wPort, const DWORD
 		if(::connect(m_Socket, (PSOCKADDR)&SockAddr, sizeof(sockaddr))){
 			Close();
 			m_dwLastError = EC_SOCK_ERROR;
-			return false;		
+			return false;
 			}
-	
+
 		m_dwLastError = EC_NO_ERROR;
 		return true;
 		}
@@ -112,11 +112,11 @@ const bool CSmartSocket::Listen(const WORD wPort)
 {
 	// 一旦クローズ
 	Close();
-	
+
 	// ソケット作成
 	if((m_Socket = ::socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET){
 		m_dwLastError = EC_SOCK_ERROR;
-		return false;		
+		return false;
 		}
 
 	// アドレス設定
@@ -148,7 +148,7 @@ const bool CSmartSocket::Listen(const WORD wPort)
 ISmartSocket * CSmartSocket::Accept(const DWORD dwTimeout)
 {
 	VERIFY_TCPSOCK(NULL);
-	
+
 	SOCKADDR_IN AddrIn;
 	::ZeroMemory(&AddrIn, sizeof(AddrIn));
 	int iAddrLen = sizeof(AddrIn);
@@ -172,7 +172,7 @@ ISmartSocket * CSmartSocket::Accept(const DWORD dwTimeout)
 
 	CSmartSocket *pNewSock = new CSmartSocket(NULL);
 	::BON_ASSERT(pNewSock != NULL);
-	
+
 	pNewSock->m_Socket = SockIn;
 	pNewSock->m_SockType = SOCKTYPE_TCP;
 
@@ -229,13 +229,13 @@ const DWORD CSmartSocket::SendOnce(const BYTE *pData, const DWORD dwLen, const D
 		m_dwLastError = EC_INVALID_PARAM;
 		return false;
 		}
-	
+
 	// タイムアウト設定
 	if(!SetSendTimeout(dwTimeout)){
 		m_dwLastError = EC_SOCK_ERROR;
 		return 0UL;
 		}
-	
+
 	// 送信
 	const int iReturn = ::send(m_Socket, (const char *)pData, dwLen, 0);
 
@@ -249,16 +249,16 @@ const DWORD CSmartSocket::SendOnce(const BYTE *pData, const DWORD dwLen, const D
 			return 0UL;
 			}
 		}
-		
+
 	m_dwLastError = EC_NO_ERROR;
-		
+
 	return (DWORD)iReturn;
 }
 
 const DWORD CSmartSocket::RecvOnce(BYTE *pData, const DWORD dwLen, const DWORD dwTimeout)
 {
 	VERIFY_TCPSOCK(false);
-	
+
 	if(!pData || !dwLen){
 		m_dwLastError = EC_INVALID_PARAM;
 		return FALSE;
@@ -283,9 +283,9 @@ const DWORD CSmartSocket::RecvOnce(BYTE *pData, const DWORD dwLen, const DWORD d
 			return 0UL;
 			}
 		}
-		
+
 	m_dwLastError = EC_NO_ERROR;
-		
+
 	return (DWORD)iReturn;
 }
 
@@ -295,7 +295,7 @@ const bool CSmartSocket::GetLocalAddr(DWORD *pdwIP, WORD *pwPort)
 
 	struct sockaddr_in LocalAddr;
 	int iAddrLen = sizeof(LocalAddr);
-	
+
 	// ローカルアドレス取得
 	if(::getsockname(m_Socket, (struct sockaddr *)&LocalAddr, &iAddrLen) == SOCKET_ERROR){
 		m_dwLastError = EC_SOCK_ERROR;
@@ -316,7 +316,7 @@ const bool CSmartSocket::GetPeerAddr(DWORD *pdwIP, WORD *pwPort)
 
 	struct sockaddr_in PeerAddr;
 	int iAddrLen = sizeof(PeerAddr);
-	
+
 	// ピアアドレス取得
 	if(::getpeername(m_Socket, (struct sockaddr *)&PeerAddr, &iAddrLen) == SOCKET_ERROR){
 		m_dwLastError = EC_SOCK_ERROR;
@@ -357,7 +357,7 @@ const bool CSmartSocket::Bind(const WORD wPort)
 
 	m_dwLastError = EC_NO_ERROR;
 	m_SockType = SOCKTYPE_UDP;
-	
+
 	return true;
 }
 
@@ -384,10 +384,10 @@ const DWORD CSmartSocket::SendTo(const DWORD dwIP, const WORD wPort, const BYTE 
 			return 0UL;
 			}
 		}
-		
+
 	// 送信
 	int iReturn = sendto(m_Socket, (const char *)pData, dwLen, 0, (struct sockaddr *)&SockAddr, sizeof(SockAddr));
-	
+
 	if(iReturn == SOCKET_ERROR){
 		m_dwLastError = EC_SOCK_ERROR;
 		return 0UL;
@@ -406,15 +406,15 @@ const DWORD CSmartSocket::SendTo(LPCTSTR lpszHostName, const WORD wPort, const B
 		m_dwLastError = EC_INVALID_PARAM;
 		return 0UL;
 		}
-		
+
 	// アドレス名からIPアドレス取得
 	const DWORD dwIP = HostNameToIPAddr(lpszHostName);
 
 	if(dwIP == INVALID_IPADDR){
 		m_dwLastError = EC_SOCK_ERROR;
-		return 0UL;		
+		return 0UL;
 		}
-	
+
 	return SendTo(dwIP, wPort, pData, dwLen);
 }
 
@@ -472,7 +472,7 @@ void CSmartSocket::Close(void)
 		::closesocket(m_Socket);
 		m_Socket = INVALID_SOCKET;
 		}
-	
+
 	m_SockType = SOCKTYPE_NON;
 	m_dwLastError = EC_NO_ERROR;
 }
@@ -493,7 +493,7 @@ const DWORD CSmartSocket::HostNameToIPAddr(LPCTSTR lpszHostName)
 
 	if(dwIP == INADDR_NONE){
 		struct hostent *pHost = ::gethostbyname(szHostName);
-		if(!pHost){		
+		if(!pHost){
 			return INVALID_IPADDR;
 			}
 		else return *((DWORD *)pHost->h_addr_list[0]);
@@ -595,7 +595,7 @@ const bool CSmartSocket::WaitAsyncTimeout(const bool bIsRead, const DWORD dwTime
 		// Write
 		::BON_ASSERT((iReturn = ::select(32, NULL, &FdSet, NULL, &TimeVal)) != SOCKET_ERROR);
 		}
-	
+
 	// タイムアウト判定
 	return (!iReturn)? true : false;
 }
@@ -610,7 +610,7 @@ const bool CSmartSocket::SetSendTimeout(const DWORD dwTimeout)
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
 		}
-	
+
 	if(iValue != (int)dwTimeout){
 		if(::setsockopt(m_Socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&iValue, sizeof(int))){
 			Close();

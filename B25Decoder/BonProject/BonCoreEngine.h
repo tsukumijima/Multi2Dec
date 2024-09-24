@@ -72,7 +72,7 @@ protected:
 		HINSTANCE hModule;						// DLLインスタンス
 		std::vector<BONGUID> ClassList;			// クラスリスト
 	};
-	
+
 	// Bonクラス情報
 	struct BON_CLASS_INFO
 	{

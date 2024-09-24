@@ -24,16 +24,16 @@ public:
 
 // CMediaDecoder
 	virtual const bool InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex = 0UL);
-	
+
 // IFileWriter
 	virtual const bool OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite = false, const DWORD dwBuffSize = 0UL);
 	virtual bool CloseFile(void);
 	virtual const ULONGLONG GetFileLength(void);
-	
+
 // CFileWriter
 	CFileWriter(IBonObject *pOwner);
 	virtual ~CFileWriter(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);

@@ -75,7 +75,7 @@ const BOOL CB25Decoder::Decode(BYTE *pSrcBuf, const DWORD dwSrcSize, BYTE **ppDs
 
 	// メディアデータセット
 	m_InputBuff.SetData(pSrcBuf, dwSrcSize);
-	
+
 	// デコーダに入力する
 	if(!m_TsPacketSync.InputMedia(&m_InputBuff)){
 		// デコーダグラフでエラー発生
@@ -110,10 +110,10 @@ const BOOL CB25Decoder::Reset(void)
 
 	// 一旦デコーダグラフ停止
 	m_TsPacketSync.StopDecoder();
-	
+
 	// パケット同期デコーダ設定
 	m_TsPacketSync.DiscardNullPacket(false);
-	
+
 	// デスクランブラデコーダオープン
 	if(!m_TsDescrambler.OpenDescrambler(TEXT("CBcasCardReader")))return FALSE;
 
@@ -228,9 +228,9 @@ const DWORD CB25Decoder::GetEmmProcessNum(void)
 const DWORD CB25Decoder::OnDecoderEvent(IMediaDecoder *pDecoder, const DWORD dwEventID, PVOID pParam)
 {
 	if(pDecoder == dynamic_cast<IMediaDecoder *>(&m_MediaGrabber)){
-		if(dwEventID == IMediaGrabber::EID_ON_MEDIADATA){	
+		if(dwEventID == IMediaGrabber::EID_ON_MEDIADATA){
 			// 出力バッファにデータを追加
-			m_OutputBuff.AddData(reinterpret_cast<IMediaData *>(pParam));		
+			m_OutputBuff.AddData(reinterpret_cast<IMediaData *>(pParam));
 			}
 		}
 

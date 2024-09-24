@@ -22,7 +22,7 @@ class CMulti2Decoder
 public:
 	CMulti2Decoder(void);
 	~CMulti2Decoder(void);
-	
+
 	void Initialize(const BYTE *pSystemKey, const BYTE *pInitialCbc);
 	const bool SetScrambleKey(const BYTE *pScrambleKey);
 	// dwExtraSizeはdwSizeを越えてオーバーラン可能なサイズ。最適化のため16以上を推奨
@@ -34,16 +34,16 @@ private:
 	public:
 		inline void SetHexData(const BYTE *pHexData);
 		inline void GetHexData(BYTE *pHexData) const;
-		
+
 		DWORD dwRight, dwLeft;
 	};
-	
+
 	class SYSKEY	// System Key(Sk), Expanded Key(Wk) 256bit
 	{
 	public:
 		void SetHexData(const BYTE *pHexData);
 		void SetKey(int nIndex, DWORD dwKey);
-	
+
 		DWORD dwKeys[8];
 #if defined(MULTI2_SIMD_SSE2) || defined(MULTI2_SIMD_NEON)
 		// アラインのために16バイトだけ余分にとる
@@ -70,7 +70,7 @@ private:
 	DATKEY m_InitialCbc;
 	SYSKEY m_SystemKey;
 	SYSKEY m_WorkKeyOdd, m_WorkKeyEven;
-	
+
 	bool m_bIsSysKeyValid;
 	bool m_bIsWorkKeyValid;
 };

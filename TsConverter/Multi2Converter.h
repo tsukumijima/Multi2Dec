@@ -39,7 +39,7 @@ public:
 // CMulti2Converter
 	CMulti2Converter(IBonObject * const pOwner);
 	virtual ~CMulti2Converter(void);
-	
+
 protected:
 	virtual const DWORD OnDecoderEvent(IMediaDecoder *pDecoder, const DWORD dwEventID, PVOID pParam);
 	virtual void CloseDecoder(void);

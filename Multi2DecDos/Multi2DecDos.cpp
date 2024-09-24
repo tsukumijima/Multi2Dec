@@ -29,7 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	if(!ParseParam(&ConfigSet, argc, argv)){
 		// パラメータが不正
 		PrintUsage();
-		return -1;	
+		return -1;
 		}
 
 	// ファイル名を生成
@@ -91,7 +91,7 @@ static const bool ParseParam(CMulti2DecDosApp::CONFIGSET * const pConfigSet, con
 			// ファイル名がない
 			::printf("エラー: 入力ファイルが指定されていません。\n");
 			return false;
-			}		
+			}
 		}
 	else if(iParamNum >= 2){
 		if(aszParam[1][0] != TEXT('/')){
@@ -103,7 +103,7 @@ static const bool ParseParam(CMulti2DecDosApp::CONFIGSET * const pConfigSet, con
 			// ファイル名がない
 			::printf("エラー: 入力ファイル名が指定されていません。\n");
 			return false;
-			}		
+			}
 		}
 	else{
 		// パラメータが1つもない
@@ -116,7 +116,7 @@ static const bool ParseParam(CMulti2DecDosApp::CONFIGSET * const pConfigSet, con
 
 	// プリセットパラメータを解析
 	int iPresetNum = 0;
-		
+
 	if(FindParam(iParamNum, aszParam, TEXT("/D"))){
 		// /D
 		iPresetNum++;
@@ -172,7 +172,7 @@ static LPCTSTR FindParam(const int iParamNum, LPTSTR aszParam[], LPCTSTR lpszFin
 	for(int i = 1 ; i < iParamNum ; i++){
 		if(!::lstrcmpi(aszParam[i], lpszFind)){
 			return aszParam[i];
-			}		
+			}
 		}
 
 	return NULL;
@@ -187,7 +187,7 @@ static const bool ParsePath(CMulti2DecDosApp::CONFIGSET * const pConfigSet)
 		::printf("エラー: 入力ファイル名が短すぎます。\n");
 		return false;
 		}
-		
+
 	// ファイルパスをチェックする
 	if(::lstrcmpi(&pConfigSet->szInputPath[iInputLen - 3], TEXT(".ts"))){
 		::printf("エラー: 入力ファイルの拡張子がTSファイルではありません。\n");

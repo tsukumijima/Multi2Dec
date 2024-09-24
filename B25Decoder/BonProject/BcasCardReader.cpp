@@ -47,11 +47,11 @@ const DWORD CBcasCardReader::GetTotalDeviceNum(void)
 
 	// スマートカードリーダ列挙
 	if(!EnumBcasCardReader())return 0UL;
-	
+
 	SCARDHANDLE hBcasCard;
 	DWORD dwBcasCardNum = 0UL;
 	DWORD dwActiveProtocol;
-	
+
 	// 初期化試行
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
@@ -69,7 +69,7 @@ const DWORD CBcasCardReader::GetTotalDeviceNum(void)
 					}
 				}
 			// カードリーダ切断
-			::SCardDisconnect(hBcasCard, SCARD_LEAVE_CARD);	
+			::SCardDisconnect(hBcasCard, SCARD_LEAVE_CARD);
 			}
 		}
 
@@ -91,7 +91,7 @@ const bool CBcasCardReader::OpenCard(void)
 	if(!EnumBcasCardReader())return false;
 
 	DWORD dwActiveProtocol;
-	
+
 	// 初期化試行
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
@@ -191,8 +191,8 @@ const BYTE * CBcasCardReader::GetKsFromEcm(const BYTE *pEcmData, const DWORD dwE
 		::ZeroMemory(&m_EcmStatus, sizeof(m_EcmStatus));
 		m_dwEcmError = EC_TRANSMIT_ERROR;
 		return NULL;
-		}	
-	
+		}
+
 	// レスポンス解析
 	::CopyMemory(m_EcmStatus.KsData, &RecvData[6], sizeof(m_EcmStatus.KsData));
 
@@ -202,13 +202,13 @@ const BYTE * CBcasCardReader::GetKsFromEcm(const BYTE *pEcmData, const DWORD dwE
 		case 0x0200U :	// 後払いPPV
 		case 0x0400U :	// 前払いPPV
 		case 0x0800U :	// ティア
-		
+
 		// 購入可: プレビュー中
 		case 0x4480U :	// 後払いPPV
 		case 0x4280U :	// 前払いPPV
 			m_dwEcmError = EC_NO_ERROR;
 			return m_EcmStatus.KsData;
-		
+
 		// 上記以外(視聴不可)
 		default :
 			m_dwEcmError = EC_NOT_CONTRACTED;
@@ -249,7 +249,7 @@ const bool CBcasCardReader::SendEmmSection(const BYTE *pEmmData, const DWORD dwE
 
 	// サイズチェック
 	if(dwRecvSize != 8UL)return false;
-	
+
 	// リターンコード解析
 	switch(((WORD)RecvData[4] << 8) | (WORD)RecvData[5]){
 		case 0x2100U :	// 正常終了
@@ -258,7 +258,7 @@ const bool CBcasCardReader::SendEmmSection(const BYTE *pEmmData, const DWORD dwE
 		case 0xA102U :	// 非運用(運用外プロトコル番号)
 		case 0xA107U :	// セキュリティエラー(EMM改ざんエラー)
 			return false;
-		
+
 		// 上記以外(例外)
 		default :
 			return false;
@@ -281,7 +281,7 @@ const WORD CBcasCardReader::GetPowerCtrlInfo(POWERCTRLINFO *pPowerCtrlInfo)
 	if(!TransmitCommand(m_hBcasCard, abyReqPowerCtrlCmd, sizeof(abyReqPowerCtrlCmd), RecvData, sizeof(RecvData), &dwRecvSize))return 0U;
 
 	// 受信サイズチェック
-	if(dwRecvSize != 20UL)return 0U;		
+	if(dwRecvSize != 20UL)return 0U;
 
 	// リターンコード解析
 	if((((WORD)RecvData[4] << 8) | (WORD)RecvData[5]) != 0x2100U)return 0U;
@@ -300,11 +300,11 @@ const WORD CBcasCardReader::GetPowerCtrlInfo(POWERCTRLINFO *pPowerCtrlInfo)
 		if(!TransmitCommand(m_hBcasCard, abyReqPowerCtrlCmd, sizeof(abyReqPowerCtrlCmd), RecvData, sizeof(RecvData), &dwRecvSize))return 0U;
 
 		// 受信サイズチェック
-		if(dwRecvSize != 20UL)return 0U;		
+		if(dwRecvSize != 20UL)return 0U;
 
 		// リターンコード解析
 		if((((WORD)RecvData[4] << 8) | (WORD)RecvData[5]) != 0x2100U)return 0U;
-		
+
 		// レスポンス解析
 		TsTime.ClearTime();
 		CAribTime::SplitAribMjd(((WORD)RecvData[9] << 8) | (WORD)RecvData[10], &TsTime.wYear, &TsTime.wMonth, &TsTime.wDay, &TsTime.wDayOfWeek);
@@ -346,7 +346,7 @@ const bool CBcasCardReader::EnumBcasCardReader(void)
 {
 	// カードリーダを列挙する
 	DWORD dwBuffSize = 0UL;
-	
+
 	// バッファサイズ取得
 	if(::SCardListReaders(m_ScardContext, NULL, NULL, &dwBuffSize) != SCARD_S_SUCCESS)return false;
 
@@ -359,7 +359,7 @@ const bool CBcasCardReader::EnumBcasCardReader(void)
 	// カードリーダ名保存
 	LPTSTR lpszCurReader = szReaders.get();
 	m_CardReaderArray.clear();
-			
+
 	while(*lpszCurReader){
 		m_CardReaderArray.push_back(lpszCurReader);
 		lpszCurReader += m_CardReaderArray.back().length() + 1UL;
@@ -374,7 +374,7 @@ const bool CBcasCardReader::TransmitCommand(const SCARDHANDLE hBcasCard, const B
 
 	// データ送受信
 	DWORD dwReturn = ::SCardTransmit(hBcasCard, SCARD_PCI_T1, pSendData, dwSendSize, NULL, pRecvData, &dwRecvSize);
-	
+
 	// 受信サイズ格納
 	if(pdwRecvSize)*pdwRecvSize = dwRecvSize;
 
@@ -392,12 +392,12 @@ const bool CBcasCardReader::InitialSetting(const SCARDHANDLE hBcasCard)
 	DWORD dwRecvSize = 0UL;
 	BYTE RecvData[1024];
 	::ZeroMemory(RecvData, sizeof(RecvData));
-	
+
 	// コマンド送信
 	if(!TransmitCommand(hBcasCard, abyInitSettingCmd, sizeof(abyInitSettingCmd), RecvData, sizeof(RecvData), &dwRecvSize))return false;
 
 	// 受信サイズチェック
-	if(dwRecvSize < 57UL)return false;		
+	if(dwRecvSize < 57UL)return false;
 
 	// レスポンス解析
 	::CopyMemory(m_BcasCardInfo.BcasCardID, &RecvData[8],   6UL);	// +8	Card ID

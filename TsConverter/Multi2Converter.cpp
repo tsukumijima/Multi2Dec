@@ -25,7 +25,7 @@ const DWORD CMulti2Converter::StartConvert(LPCTSTR lpszSrcFile, LPCTSTR lpszDstF
 
 	// 全デコーダを閉じる
 	CloseDecoder();
-	
+
 	// デコーダグラフを構築する
 	IMediaDecoder * const pFileReaderDecoder	= dynamic_cast<IMediaDecoder *>(m_pFileReader    );
 	IMediaDecoder * const pTsPacketSyncDecoder	= dynamic_cast<IMediaDecoder *>(m_pTsPacketSync  );
@@ -67,7 +67,7 @@ const DWORD CMulti2Converter::StartConvert(LPCTSTR lpszSrcFile, LPCTSTR lpszDstF
 		CloseDecoder();
 		return dwErrorCode;
 		}
-	
+
 	return EC_NO_ERROR;
 }
 
@@ -75,7 +75,7 @@ void CMulti2Converter::EndConvert(void)
 {
 	// デコーダグラフを停止する
 	if(m_pFileReader){
-		dynamic_cast<IMediaDecoder *>(m_pFileReader)->StopDecoder();		
+		dynamic_cast<IMediaDecoder *>(m_pFileReader)->StopDecoder();
 		}
 
 	// デコーダグラフを閉じる
@@ -182,12 +182,12 @@ const DWORD CMulti2Converter::OnDecoderEvent(IMediaDecoder *pDecoder, const DWOR
 				// コンバート開始
 				SendConverterEvent(EID_CONV_START, reinterpret_cast<PVOID>(0UL));
 				return 0UL;
-				
+
 			case IFileReader::EID_READ_END :
 				// コンバート終了
 				SendConverterEvent(EID_CONV_END, reinterpret_cast<PVOID>((DWORD)(m_pFileReader->GetReadPos() * 1000ULL / m_pFileReader->GetFileLength())));
 				return 0UL;
-			
+
 			case IFileReader::EID_POST_READ :
 				// コンバート進捗
 				SendConverterEvent(EID_CONV_PROGRESS, reinterpret_cast<PVOID>((DWORD)(m_pFileReader->GetReadPos() * 1000ULL / m_pFileReader->GetFileLength())));

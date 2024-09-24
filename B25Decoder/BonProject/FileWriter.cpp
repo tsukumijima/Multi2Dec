@@ -38,7 +38,7 @@ const bool CFileWriter::OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite, c
 		// バッファサイズ計算
 		DWORD dwWriteSize;
 		DWORD dwWriteNum;
-		
+
 		if(!bAsyncWrite){
 			// 同期書き込み
 			dwWriteSize = (dwBuffSize)? dwBuffSize : DEF_BUFFSIZE;
@@ -49,7 +49,7 @@ const bool CFileWriter::OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite, c
 			dwWriteSize = DEF_BUFFSIZE;
 			dwWriteNum = (dwBuffSize)? dwBuffSize : DEF_BUFFNUM;
 			}
-	
+
 		// スマートファイルインスタンス生成
 		if(!(m_pFile = ::BON_SAFE_CREATE<ISmartFile *>(TEXT("CSmartFile"))))throw __LINE__;
 
@@ -62,13 +62,13 @@ const bool CFileWriter::OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite, c
 			m_MediaPool.resize(dwWriteNum);
 			if(m_MediaPool.size() < dwWriteNum)throw __LINE__;
 			::ZeroMemory(&m_MediaPool[0], sizeof(IMediaData *) * dwWriteNum);
-			
+
 			// メディアデータインスタンス確保
 			for(DWORD dwIndex = 0UL ; dwIndex < dwWriteNum ; dwIndex++){
 				m_MediaPool[dwIndex] = ::BON_SAFE_CREATE<IMediaData *>(TEXT("CMediaData"));
 				if(!m_MediaPool[dwIndex])throw __LINE__;
 				}
-			
+
 			// メディアプール先頭イテレータセット
 			m_itFreeMedia = m_MediaPool.begin();
 			}
@@ -78,7 +78,7 @@ const bool CFileWriter::OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite, c
 		CloseFile();
 		return false;
 		}
-		
+
 	return true;
 }
 
@@ -97,9 +97,9 @@ bool CFileWriter::CloseFile(void)
 
 	// メディアデータインスタンス開放
 	for(DWORD dwIndex = 0UL ; dwIndex < m_MediaPool.size() ; dwIndex++){
-		BON_SAFE_RELEASE(m_MediaPool[dwIndex]);		
+		BON_SAFE_RELEASE(m_MediaPool[dwIndex]);
 		}
-	
+
 	// メディアプール開放
 	m_MediaPool.clear();
 
@@ -131,7 +131,7 @@ const bool CFileWriter::OnPlay(void)
 
 	// メディアキュークリア
 	while(!m_MediaQue.empty())m_MediaQue.pop();
-	
+
 	// メディアプール先頭イテレータセット
 	m_itFreeMedia = m_MediaPool.begin();
 
@@ -159,7 +159,7 @@ const bool CFileWriter::WriteSync(const IMediaData *pMediaData)
 		CloseFile();
 		return false;
 		}
-	
+
 	return true;
 }
 
@@ -175,7 +175,7 @@ const bool CFileWriter::WriteAsync(const IMediaData *pMediaData)
 	// アイドルキュー数取得
 	m_pLock->Lock();
 	dwIdleNum = m_MediaPool.size() - m_MediaQue.size();
-	m_pLock->Unlock();	
+	m_pLock->Unlock();
 
 	// キューがフルの場合の処理
 	if(!dwIdleNum){
@@ -188,16 +188,16 @@ const bool CFileWriter::WriteAsync(const IMediaData *pMediaData)
 				// ポーリング
 				m_pLock->Lock();
 				dwIdleNum = m_MediaPool.size() - m_MediaQue.size();
-				m_pLock->Unlock();	
+				m_pLock->Unlock();
 				}
-			while(!dwIdleNum);			
+			while(!dwIdleNum);
 			}
 		else{
 			// デフォルトの処理、古いデータを捨てる
 			m_pLock->Lock();
-			m_MediaQue.pop();		
+			m_MediaQue.pop();
 			m_pLock->Unlock();
-			}		
+			}
 		}
 
 	// データコピー
@@ -207,7 +207,7 @@ const bool CFileWriter::WriteAsync(const IMediaData *pMediaData)
 	m_pLock->Lock();
 	m_MediaQue.push(*m_itFreeMedia);
 	if(++m_itFreeMedia == m_MediaPool.end())m_itFreeMedia = m_MediaPool.begin();
-	m_pLock->Unlock();	
+	m_pLock->Unlock();
 
 	// 書き込みキューレジューム
 	m_WriteThread.ResumeThread();
@@ -234,7 +234,7 @@ void CFileWriter::WriteThread(CSmartThread<CFileWriter> *pThread, bool &bKillSig
 			// キュー取り出し
 			m_pLock->Lock();
 			m_MediaQue.pop();
-			m_pLock->Unlock();	
+			m_pLock->Unlock();
 			}
 
 		// キューにデータが到着するまでサスペンド

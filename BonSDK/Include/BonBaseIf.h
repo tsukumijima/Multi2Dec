@@ -83,7 +83,7 @@ class IBonClassEnumerator : public IBonObject
 public:
 	virtual const DWORD EnumBonClass(LPCTSTR lpszBIId) = 0;
 	virtual const DWORD GetBonClassNum(void) = 0;
-	
+
 	virtual const DWORD GetBonModuleName(DWORD dwIndex, LPTSTR lpszModuleName) = 0;
 	virtual const DWORD GetBonClassName(DWORD dwIndex, LPTSTR lpszClassName) = 0;
 	virtual const DWORD GetBonClassDesc(DWORD dwIndex, LPTSTR lpszDescription) = 0;

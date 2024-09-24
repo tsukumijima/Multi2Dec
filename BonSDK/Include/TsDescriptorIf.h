@@ -18,7 +18,7 @@ class ICaMethodDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x09U};
-	
+
 	virtual const WORD GetCaMethodID(void) const = 0;
 	virtual const WORD GetCaPID(void) const = 0;
 	virtual const BYTE * GetPrivateData(void) const = 0;
@@ -34,7 +34,7 @@ class INetworkNameDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x40U};
-	
+
 	virtual const DWORD GetNetworkName(LPTSTR lpszDst) const = 0;
 };
 
@@ -47,7 +47,7 @@ class IServiceListDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x41U};
-	
+
 	virtual const DWORD GetServiceNum(void) const = 0;
 	virtual const WORD GetServiceID(const DWORD dwIndex) const = 0;
 	virtual const BYTE GetServiceType(const DWORD dwIndex) const = 0;
@@ -62,7 +62,7 @@ class IServiceDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x48U};
-	
+
 	virtual const BYTE GetServiceType(void) const = 0;
 	virtual const DWORD GetProviderName(LPTSTR lpszDst) const = 0;
 	virtual const DWORD GetServiceName(LPTSTR lpszDst) const = 0;
@@ -77,7 +77,7 @@ class IShortEventDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x4DU};
-	
+
 	virtual const DWORD GetLanguageCode(void) const = 0;
 	virtual const DWORD GetEventName(LPTSTR lpszDst) const = 0;
 	virtual const DWORD GetEventDesc(LPTSTR lpszDst) const = 0;
@@ -92,7 +92,7 @@ class IExtendEventDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x4EU};
-	
+
 	virtual const BYTE GetDescNumber(void) const = 0;
 	virtual const BYTE GetLastDescNumber(void) const = 0;
 	virtual const DWORD GetLanguageCode(void) const = 0;
@@ -113,13 +113,13 @@ class IComponentDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x50U};
-	
+
 	virtual const BYTE GetStreamContent(void) const = 0;
 	virtual const BYTE GetComponentType(void) const = 0;
 	virtual const BYTE GetComponentTag(void) const = 0;
 	virtual const DWORD GetLanguageCode(void) const = 0;
 	virtual const DWORD GetComponentText(LPTSTR lpszDst) const = 0;
-	
+
 	virtual const bool IsVideoComponent(void) const = 0;
 	virtual const WORD GetVideoResolution(void) const = 0;
 	virtual const bool IsVideoProgressive(void) const = 0;
@@ -136,7 +136,7 @@ class IStreamIdDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x52U};
-	
+
 	virtual const BYTE GetComponentTag(void) const = 0;
 };
 
@@ -149,7 +149,7 @@ class IContentDesc :	public IBonObject
 {
 public:
 	enum {DESC_TAG = 0x54U};
-	
+
 	virtual const DWORD GetGenreNum(void) const = 0;
 	virtual const BYTE GetGenreLevel1(const DWORD dwIndex = 0UL) const = 0;
 	virtual const BYTE GetGenreLevel2(const DWORD dwIndex = 0UL) const = 0;

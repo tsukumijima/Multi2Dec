@@ -24,7 +24,7 @@ const bool CEitItem::ParseItem(void)
 	m_dwDuration = CAribTime::AribBcdToSecond(&m_pData[7]);
 	m_byRunningStatus = m_pData[10] >> 5;
 	m_bIsScrambled = (m_pData[10] & 0x10U)? true : false;
-	
+
 	const WORD wDescLen = ((WORD)(m_pData[10] & 0x0FU) << 8) | (WORD)m_pData[11];
 	m_EventDesc.SetData(&m_pData[12], wDescLen);
 	m_EventDesc.ParseDescs();
@@ -76,7 +76,7 @@ const bool CEitItem::CopyItem(const IEitItem *pSrc)
 
 	// アイテムデータコピー
 	if(CMediaData::CopyData(pMediaData) != GetSize())return false;
-	
+
 	// データ解析
 	return ParseItem();
 }
@@ -134,7 +134,7 @@ const BYTE CEpgItem::StoreEitItem(const IEitItem *pEitItem)
 
 //	for(DWORD dwIndex = 0UL ; dwIndex < pDescBlock->GetDescNum() ; dwIndex++){
 //		const IDescBase *pDesc = pDescBlock->GetDescByIndex(dwIndex);
-//		::BON_TRACE(TEXT("[%lu] TAG = %02X, LEN = %u\n"), dwIndex, pDesc->GetTag(), pDesc->GetLength());		
+//		::BON_TRACE(TEXT("[%lu] TAG = %02X, LEN = %u\n"), dwIndex, pDesc->GetTag(), pDesc->GetLength());
 //		}
 //
 //	::BON_TRACE(TEXT("\n"));
@@ -174,9 +174,9 @@ void CEpgItem::Reset(void)
 	m_bIsVideoProgressive = false;
 	m_bIsVideoAspectWide = true;
 	m_bIsVideoPanAndScan = false;
-	
+
 	m_byAudioMode = ADM_UNDEFINED;
-	
+
 	m_GenreArray.clear();
 }
 
@@ -313,7 +313,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 	else{
 		m_strEventTitle = TEXT("");
 		}
-		
+
 	// 番組の情報をコピー
 	if(dwLength = pSrc->GetEventInfo(NULL)){
 		szTempString.resize(dwLength + 1UL);
@@ -324,7 +324,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 		m_strEventInfo = TEXT("");
 		}
 
-	// 番組の詳細をコピー				
+	// 番組の詳細をコピー
 	if(dwLength = pSrc->GetEventDetail(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pSrc->GetEventDetail(&szTempString[0]);
@@ -337,7 +337,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 	// ジャンルをコピー
 	const DWORD dwGenreNum = pSrc->GetGenreNum();
 	m_GenreArray.resize(dwGenreNum);
-	
+
 	for(DWORD dwIndex = 0UL ; dwIndex < dwGenreNum ; dwIndex++){
 		m_GenreArray[dwIndex] = (pSrc->GetGenreLevel1() << 4) | (pSrc->GetGenreLevel2() & 0x0FU);
 		}
@@ -433,7 +433,7 @@ const BYTE CEpgItem::StoreExtendDesc(const IDescBlock *pDescBlock)
 						m_strEventDetail += szTempString;
 						m_strEventDetail += TEXT("\r\n\r\n");
 						}
-						
+
 					dwLength = 0UL;
 					}
 
@@ -474,7 +474,7 @@ const BYTE CEpgItem::StoreComponentDesc(const IDescBlock *pDescBlock)
 			m_bIsVideoProgressive = pComponentDesc->IsVideoProgressive();
 			m_bIsVideoAspectWide = pComponentDesc->IsVideoAspectWide();
 			m_bIsVideoPanAndScan = pComponentDesc->IsVideoPanAndScan();
-			
+
 			return SST_VIDEO_INFO;
 			}
 		}
@@ -489,12 +489,12 @@ const BYTE CEpgItem::StoreAudioComponentDesc(const IDescBlock *pDescBlock)
 	// 音声コンポーネント記述子をストア
 	const IAudioComponentDesc *pAudioComponentDesc = dynamic_cast<const IAudioComponentDesc *>(pDescBlock->GetDescByTag(IAudioComponentDesc::DESC_TAG));
 	if(!pAudioComponentDesc)return SST_EMPTY;
-	
+
 	switch(pAudioComponentDesc->GetComponentType()){
 		case 0x01U :	// 1/0モード（シングルモノ）
 			m_byAudioMode = ADM_MONO;
 			break;
-			
+
 		case 0x02U :	// 1/0＋1/0モード（デュアルモノ）
 			m_byAudioMode = ADM_DUAL;
 			break;
@@ -530,7 +530,7 @@ const BYTE CEpgItem::StoreContentDesc(const IDescBlock *pDescBlock)
 
 	const DWORD dwGenreNum = pContentDesc->GetGenreNum();
 	m_GenreArray.resize(dwGenreNum);
-	
+
 	for(DWORD dwIndex = 0UL ; dwIndex < dwGenreNum ; dwIndex++){
 		m_GenreArray[dwIndex] = (pContentDesc->GetGenreLevel1() << 4) | (pContentDesc->GetGenreLevel2() & 0x0FU);
 		}

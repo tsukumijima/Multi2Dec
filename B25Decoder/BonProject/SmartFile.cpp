@@ -20,7 +20,7 @@
 const bool CSmartFile::Open(LPCTSTR lpszFileName, const DWORD dwModeFlags, const DWORD dwBuffSize)
 {
 	Close();
-	
+
 	TCHAR szOpenMode[16] = {TEXT('\0')};
 	int iShareFlags = 0;
 
@@ -30,19 +30,19 @@ const bool CSmartFile::Open(LPCTSTR lpszFileName, const DWORD dwModeFlags, const
 			::_tcscpy(szOpenMode, TEXT("rb"));
 			iShareFlags = _SH_DENYNO;
 			break;
-			
+
 		case MF_WRITE :
 			::_tcscpy(szOpenMode, TEXT("wb"));
-			iShareFlags = _SH_DENYWR;		
+			iShareFlags = _SH_DENYWR;
 			break;
-		
+
 		default :
 			return false;
 		}
 
 	// ファイルストリームオープン
 	if(!(m_pFileStream = ::_tfsopen(lpszFileName, szOpenMode, iShareFlags)))return false;
-	
+
 	// バッファサイズ設定
 	if(::setvbuf(m_pFileStream, NULL, _IOFBF, (dwBuffSize)? dwBuffSize : DEF_BUFFSIZE)){
 		Close();
@@ -56,7 +56,7 @@ void CSmartFile::Close(void)
 {
 	// データフラッシュ
 	FlushData();
-	
+
 	// ファイルクローズ
 	if(m_pFileStream){
 		::fclose(m_pFileStream);
@@ -67,10 +67,10 @@ void CSmartFile::Close(void)
 const DWORD CSmartFile::ReadData(BYTE *pBuff, const DWORD dwLen)
 {
 	if(!m_pFileStream || !pBuff || !dwLen)return 0UL;
-	
+
 	// ファイル読み取り
 	const DWORD dwReturn = ::_fread_nolock(pBuff, 1UL, dwLen, m_pFileStream);
-	
+
 	// エラーorファイル終端チェック
 	if(dwReturn != dwLen){
 		if(::ferror(m_pFileStream)){
@@ -147,14 +147,14 @@ const ULONGLONG CSmartFile::GetPos(void)
 const ULONGLONG CSmartFile::GetLength(void)
 {
 	if(!m_pFileStream)return 0ULL;
-	
+
 	// 現在のファイルポジション取得
 	const __int64 iCurPos = ::_ftelli64(m_pFileStream);
 	if(iCurPos == -1LL)return 0ULL;
 
 	// ファイルポジションを終端に移動
 	if(::_fseeki64(m_pFileStream, 0LL, SEEK_END))return 0ULL;
-	
+
 	// 終端のファイルポジション取得
 	const __int64 iEndPos = ::_ftelli64(m_pFileStream);
 

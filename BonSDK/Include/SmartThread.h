@@ -24,9 +24,9 @@ public:
 		, m_bKillSignal(true)
 		, m_bSyncSignal(false)
 	{
-	
+
 	}
-	
+
 	~CSmartThread(void)
 	{
 		EndThread();
@@ -35,19 +35,19 @@ public:
 	const bool StartThread(T *pOwner, TAGET_FUNC pTargetFunc, PVOID pThreadParam = NULL, const bool bStart = true)
 	{
 		if(!pOwner || !pTargetFunc)return false;
-		
+
 		// 開放されていない場合は開放する
 		if(m_hThread)::CloseHandle(m_hThread);
-	
+
 		// 関数ポインタ、パラメータ保存
 		m_pThreadOwner = pOwner;
 		m_pTargetFunc = pTargetFunc;
 		m_pThreadParam = pThreadParam;
-		
+
 		// シグナルクリア
 		m_bSyncSignal = false;
 		m_bKillSignal = false;
-		
+
 		// スレッド起動
 		if(!(m_hThread = ::CreateThread(NULL, 0UL, CSmartThread::ThreadFunc, static_cast<LPVOID>(this), (bStart)? 0UL : CREATE_SUSPENDED, &m_dwThreadID))){
 			// スレッド起動失敗
@@ -57,7 +57,7 @@ public:
 		// スレッド起動完了待ち
 		if(bStart){
 			while(!m_bSyncSignal)::Sleep(0);
-			}	
+			}
 
 		return true;
 	}
@@ -65,13 +65,13 @@ public:
 	const bool EndThread(const bool bPumpMessage = false)
 	{
 		if(!m_hThread)return false;
-	
+
 		// 終了シグナルセット
 		m_bKillSignal = true;
 
 		// スレッドの中から呼び出した場合は開放しない
 		if(::GetCurrentThreadId() == m_dwThreadID)return true;
-	
+
 		// サスペンド状態のときはレジューム
 		::ResumeThread(m_hThread);
 
@@ -85,35 +85,35 @@ public:
 		::CloseHandle(m_hThread);
 		m_hThread = NULL;
 
-		return true;	
+		return true;
 	}
-	
+
 	const bool SuspendThread(void)
 	{
 		if(!m_hThread)false;
 
 		// スレッドサスペンド
 		::SuspendThread(m_hThread);
-	
-		return true;	
+
+		return true;
 	}
-	
+
 	const bool ResumeThread(void)
 	{
 		if(!m_hThread)false;
 
 		// スレッドレジューム
 		::ResumeThread(m_hThread);
-	
-		return true;	
+
+		return true;
 	}
 
 	const HANDLE GetThreadHandle(void) const
 	{
 		// スレッドハンドルを返す
-		return m_hThread;	
+		return m_hThread;
 	}
-	
+
 	const DWORD GetThreadID(void) const
 	{
 		// スレッドIDを返す
@@ -125,7 +125,7 @@ public:
 		// スレッド実行中有無を返す
 		return m_bSyncSignal;
 	}
-	
+
 protected:
 	static DWORD WINAPI ThreadFunc(LPVOID pParam)
 	{
@@ -134,7 +134,7 @@ protected:
 		// サスペンド状態で終了
 		if(pThis->m_bKillSignal){
 			pThis->m_bSyncSignal = false;
-			return 0UL;	
+			return 0UL;
 			}
 
 		// 起動シグナルセット
@@ -146,7 +146,7 @@ protected:
 		// 起動シグナルクリア
 		pThis->m_bSyncSignal = false;
 
-		return 0UL;	
+		return 0UL;
 	}
 
 	static void PumpMessage(void)

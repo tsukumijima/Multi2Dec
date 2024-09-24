@@ -31,7 +31,7 @@ public:
 
 // CMediaDecoder
 	virtual const bool InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex = 0UL);
-	
+
 // ITsDescrambler
 	virtual const bool OpenDescrambler(LPCTSTR lpszBCId);
 	virtual const bool CloseDescrambler(void);
@@ -50,7 +50,7 @@ public:
 // CTsDescrambler
 	CTsDescrambler(IBonObject *pOwner);
 	virtual ~CTsDescrambler(void);
-	
+
 protected:
 	class CEcmProcessor;
 	class CEmmProcessor;
@@ -85,7 +85,7 @@ protected:
 
 	CTsPidMapper m_TsInputMap;
 	CTsPidMapper m_TsOutputMap;
-	
+
 	IHalBcasCard *m_pHalBcasCard;
 
 	bool m_bDiscardScramblePacket;
@@ -104,7 +104,7 @@ protected:
 	DWORD m_dwEmmProcessNum;
 
 	WORD m_wLastTsID;
-	
+
 	enum
 	{
 		BDS_INITIAL,
@@ -112,7 +112,7 @@ protected:
 		BDS_STORING_ECM,
 		BDS_RUNNING
 	} m_DecBufState;
-	
+
 	std::vector<ITsPacket *> m_PacketBuf;
 	DWORD m_dwPmtWaitCount;
 };

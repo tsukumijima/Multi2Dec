@@ -29,11 +29,11 @@ public:
 	virtual const bool SetReadPos(const ULONGLONG llPos);
 	virtual const ULONGLONG GetReadPos(void);
 	virtual const ULONGLONG GetFileLength(void);
-	
+
 // CFileReader
 	CFileReader(IBonObject *pOwner);
 	virtual ~CFileReader(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);
@@ -42,7 +42,7 @@ protected:
 // CFileReader
 	void ReadThread(CSmartThread<CFileReader> *pThread, bool &bKillSignal, PVOID pParam);
 	void OutputThread(CSmartThread<CFileReader> *pThread, bool &bKillSignal, PVOID pParam);
-	
+
 	virtual const DWORD ReadAsync(const DWORD dwReadSize);
 
 	ISmartFile *m_pFile;

@@ -28,7 +28,7 @@ public:
 // CTsPidMapper
 	CTsPidMapper(IBonObject *pOwner);
 	virtual ~CTsPidMapper(void);
-	
+
 protected:
 	ITsPidMapTarget * m_apMapTarget[0x2000];
 	WORD m_wMapTargetNum;

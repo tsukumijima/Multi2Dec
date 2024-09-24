@@ -296,7 +296,7 @@ public:
 // ITotTable
 	virtual const SYSTEMTIME & GetDateTime(void) const;
 	virtual const IDescBlock * GetTotDesc(void) const;
-	
+
 // CTotTable
 	CTotTable(IBonObject *pOwner);
 	virtual ~CTotTable(void);

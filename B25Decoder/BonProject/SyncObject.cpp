@@ -46,12 +46,12 @@ void CSmartLock::Unlock(void)
 	m_mutex.unlock();
 #endif
 }
-	
-	
+
+
 //////////////////////////////////////////////////////////////////////
 // ブロックスコープロッククラス
 //////////////////////////////////////////////////////////////////////
-	
+
 CBlockLock::CBlockLock(CSmartLock *pSmartLock)
 	: m_pSmartLock(pSmartLock)
 {
@@ -136,27 +136,27 @@ const bool CSmartMutex::Create(LPCTSTR lpszName)
 
 	// 既にオープン済みの場合はエラー
 	if(m_hMutex)return false;
-	
+
 	// Mutex作成
 	if(!(m_hMutex = ::CreateMutex(NULL, TRUE, lpszName)))return false;
-	
+
 	// 他のプロセスでオープンされている場合はエラー
 	if(::GetLastError() == ERROR_ALREADY_EXISTS){
 		Close();
 		return false;
 		}
-	
+
 	return true;
 }
 
 const bool CSmartMutex::Close(void)
 {
 	if(!m_hMutex)return false;
-	
+
 	// Mutexを閉じる
 	const BOOL bReturn = ::CloseHandle(m_hMutex);
 	m_hMutex = NULL;
-	
+
 	return (bReturn)? true : false;
 }
 
@@ -164,7 +164,7 @@ const bool CSmartMutex::IsExist(LPCTSTR lpszName)
 {
 	// 指定した名前のMutexをオープンする
 	HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, lpszName);
-	
+
 	if(hMutex){
 		// 既にMutexは存在する
 		::CloseHandle(hMutex);
@@ -173,6 +173,6 @@ const bool CSmartMutex::IsExist(LPCTSTR lpszName)
 	else{
 		// Mutexは存在しない
 		return false;
-		}	
+		}
 }
 #endif

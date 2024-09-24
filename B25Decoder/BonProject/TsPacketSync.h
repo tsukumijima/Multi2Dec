@@ -24,7 +24,7 @@ public:
 
 // CMediaDecoder
 	virtual const bool InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex = 0UL);
-	
+
 // ITspacketSync
 	virtual void DiscardNullPacket(const bool bEnable = true);
 	virtual void ResetStatistics(void);
@@ -37,11 +37,11 @@ public:
 	virtual const DWORD GetFormatErrNum(void);
 	virtual const DWORD GetTransportErrNum(void);
 	virtual const DWORD GetContinuityErrNum(const WORD wPID = TS_INVALID_PID);
-	
+
 // CTsPacketSync
 	CTsPacketSync(IBonObject *pOwner);
 	virtual ~CTsPacketSync(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);
@@ -52,7 +52,7 @@ protected:
 	virtual const bool ParseTsPacket(void);
 	virtual void OnTsPacket(void);
 	virtual void UpdateBitrate(void);
-	
+
 	CTsPacket m_TsPacket;
 
 	BYTE m_abyContCounter[0x2000];

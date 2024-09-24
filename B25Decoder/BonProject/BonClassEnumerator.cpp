@@ -29,7 +29,7 @@ const DWORD CBonClassEnumerator::EnumBonClass(LPCTSTR lpszBIId)
 
 	DWORD dwModIndex = 0UL;
 	TCHAR szModName[BON_MAX_MODULE_NAME] = TEXT("");
-	
+
 	// モジュール列挙
 	while(pCoreEngine->GetBonModuleName(pCoreEngine->EnumBonModule(dwModIndex++), szModName)){
 		// モジュールカタログインスタンス生成
@@ -42,7 +42,7 @@ const DWORD CBonClassEnumerator::EnumBonClass(LPCTSTR lpszBIId)
 	// クラスを列挙
 	for(dwModIndex = 0UL ; dwModIndex < m_CatalogList.size() ; dwModIndex++){
 		DWORD dwClassIndex = 0UL;
-		
+
 		while(m_CatalogList[dwModIndex]->EnumClass(lpszBIId, dwClassIndex) != BCID_NULL){
 			// クラスリストに追加
 			CLASS_CAT_INFO NewInfo = {m_CatalogList[dwModIndex], dwClassIndex++};
@@ -115,7 +115,7 @@ void CBonClassEnumerator::ReleaseCatalog(void)
 
 	// クラスリストクリア
 	m_ClassList.clear();
-	
+
 	// カタログインスタンス開放
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CatalogList.size() ; dwIndex++){
 		m_CatalogList[dwIndex]->Release();

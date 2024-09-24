@@ -30,10 +30,10 @@ class IHalTsTuner :				public IBonObject
 public:
 	virtual const bool OpenTuner(void) = 0;
 	virtual void CloseTuner(void) = 0;
-	
+
 	virtual const DWORD EnumTuningSpace(const DWORD dwSpace, LPTSTR lpszSpace) = 0;
 	virtual const DWORD EnumChannelName(const DWORD dwSpace, const DWORD dwChannel, LPTSTR lpszChannel) = 0;
-	
+
 	virtual const DWORD GetCurSpace(void) = 0;
 	virtual const DWORD GetCurChannel(void) = 0;
 
@@ -73,20 +73,20 @@ public:
 		WORD wNtID;				// 受信ネットワーク
 		WORD wTsID;				// 受信TS
 	} POWERCTRLINFO;
-	
+
 	virtual const bool OpenCard(void) = 0;
 	virtual void CloseCard(void) = 0;
-	
+
 	virtual const bool IsInteractive(void) = 0;
-	
+
 	virtual const BYTE * GetBcasCardID(void) = 0;	// 6バイト
 	virtual const BYTE * GetInitialCbc(void) = 0;	// 8バイト
 	virtual const BYTE * GetSystemKey(void) = 0;	// 32バイト
-	
+
 	virtual const BYTE * GetKsFromEcm(const BYTE *pEcmData, const DWORD dwEcmSize) = 0;
 	virtual const DWORD GetEcmError(void) = 0;
 
 	virtual const bool SendEmmSection(const BYTE *pEmmData, const DWORD dwEmmSize) = 0;
-	
+
 	virtual const WORD GetPowerCtrlInfo(POWERCTRLINFO *pPowerCtrlInfo) = 0;
 };

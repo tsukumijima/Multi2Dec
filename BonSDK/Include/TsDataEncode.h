@@ -14,7 +14,7 @@ class CAribString
 {
 public:
 	static const DWORD AribToString(TCHAR *lpszDst, const BYTE *pSrcData, const DWORD dwSrcLen);
-	
+
 private:
 	enum CODE_SET
 	{
@@ -48,15 +48,15 @@ private:
 	CODE_SET *m_pLockingGL;
 	CODE_SET *m_pLockingGR;
 	CODE_SET *m_pSingleGL;
-	
+
 	FONT_SIZE m_FontSize;
-	
+
 	BYTE m_byEscSeqCount;
 	BYTE m_byEscSeqIndex;
 	bool m_bIsEscSeqDrcs;
-	
+
 	CAribString(void);
-	
+
 	const DWORD AribToStringInternal(TCHAR *lpszDst, const BYTE *pSrcData, const DWORD dwSrcLen);
 	inline const DWORD ProcessCharCode(TCHAR *lpszDst, const WORD wCode, const CODE_SET CodeSet);
 
@@ -71,7 +71,7 @@ private:
 	inline const DWORD ProcessCtrlC1(TCHAR *lpszDst, const BYTE *pCode, DWORD &dwSrcPos);
 
 	inline void ProcessEscapeSeq(const BYTE byCode);
-	
+
 	inline void LockingShiftGL(const BYTE byIndexG);
 	inline void LockingShiftGR(const BYTE byIndexG);
 	inline void SingleShiftGL(const BYTE byIndexG);
@@ -110,7 +110,7 @@ public:
 	CTsTime(const ULONGLONG llFileTime);
 	CTsTime(const BYTE *pHexData);
 	CTsTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WORD wHour = 0U, const WORD wMinute = 0U, const WORD wSecond = 0U);
-	
+
 	void SetNowTime(void);
 	void SetAribTime(const BYTE *pHexData);
 	void SetTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WORD wHour = 0U, const WORD wMinute = 0U, const WORD wSecond = 0U);

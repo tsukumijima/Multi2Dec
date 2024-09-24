@@ -17,10 +17,10 @@ class CSmartLock
 public:
 	CSmartLock();
 	virtual ~CSmartLock();
-	
+
 	void Lock(void);
 	void Unlock(void);
-	
+
 protected:
 #ifdef _WIN32
 	CRITICAL_SECTION m_CriticalSection;
@@ -39,7 +39,7 @@ class CBlockLock
 public:
 	CBlockLock(CSmartLock *pSmartLock);
 	virtual ~CBlockLock();
-		
+
 protected:
 	CSmartLock *m_pSmartLock;
 };

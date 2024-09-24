@@ -42,7 +42,7 @@ const DWORD CAribString::AribToString(TCHAR *lpszDst, const BYTE *pSrcData, cons
 {
 	// ARIB STD-B24 Part1 → Shift-JIS / Unicode変換
 	CAribString WorkObject;
-	
+
 	return WorkObject.AribToStringInternal(lpszDst, pSrcData, dwSrcLen);
 }
 
@@ -80,11 +80,11 @@ const DWORD CAribString::AribToStringInternal(TCHAR *lpszDst, const BYTE *pSrcDa
 				// GL領域
 				const CODE_SET CurCodeSet = (m_pSingleGL)? *m_pSingleGL : *m_pLockingGL;
 				m_pSingleGL = NULL;
-				
+
 				if(abCharSizeTable[CurCodeSet]){
 					// 2バイトコード
 					if((dwSrcLen - dwSrcPos) < 2UL)break;
-					
+
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], ((WORD)pSrcData[dwSrcPos + 0] << 8) | (WORD)pSrcData[dwSrcPos + 1], CurCodeSet);
 					dwSrcPos += 2;
 					}
@@ -101,11 +101,11 @@ const DWORD CAribString::AribToStringInternal(TCHAR *lpszDst, const BYTE *pSrcDa
 			else if(pSrcData[dwSrcPos] <= 0xFEU){
 				// GR領域
 				const CODE_SET CurCodeSet = *m_pLockingGR;
-				
+
 				if(abCharSizeTable[CurCodeSet]){
 					// 2バイトコード
 					if((dwSrcLen - dwSrcPos) < 2UL)break;
-					
+
 					dwDstLen += ProcessCharCode(&lpszDst[dwDstLen], ((WORD)(pSrcData[dwSrcPos + 0] & 0x7FU) << 8) | (WORD)(pSrcData[dwSrcPos + 1] & 0x7FU), CurCodeSet);
 					dwSrcPos += 2;
 					}
@@ -239,7 +239,7 @@ inline const DWORD CAribString::PutHiraganaChar(TCHAR *lpszDst, const WORD wCode
 		TEXT("ばぱひびぴふぶぷへべぺほぼぽまみ")
 		TEXT("むめもゃやゅゆょよらりるれろゎわ")
 		TEXT("ゐゑをん　　　ゝゞー。「」、・　");
-	
+
 #ifdef _UNICODE
 	lpszDst[0] = acHiraganaTable[wCode];
 
@@ -264,7 +264,7 @@ inline const DWORD CAribString::PutKatakanaChar(TCHAR *lpszDst, const WORD wCode
 		TEXT("バパヒビピフブプヘベペホボポマミ")
 		TEXT("ムメモャヤュユョヨラリルレロヮワ")
 		TEXT("ヰヱヲンヴヵヶヽヾー。「」、・　");
-	
+
 #ifdef _UNICODE
 	lpszDst[0] = acKatakanaTable[wCode];
 
@@ -299,7 +299,7 @@ inline const DWORD CAribString::PutJisKatakanaChar(TCHAR *lpszDst, const WORD wC
 		TEXT("ﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ")
 		TEXT("                ")
 		TEXT("                ");
-	
+
 #ifdef _UNICODE
 	lpszDst[0] = (m_FontSize == SIZE_SMALL)? acJisKatakanaHalfTable[wCode] : acJisKatakanaFullTable[wCode];
 	return 1UL;
@@ -405,12 +405,12 @@ inline const DWORD CAribString::ProcessCtrlC0(TCHAR *lpszDst, const BYTE *pCode,
 			lpszDst[1] = TEXT('\n');
 			dwSrcPos++;
 			return 2UL;
-			
+
 		case 0x0EU	:	// LS1
 			LockingShiftGL(1U);
 			dwSrcPos++;
 			return 0UL;
-			
+
 		case 0x0FU	:	// LS0
 			LockingShiftGL(0U);
 			dwSrcPos++;
@@ -419,12 +419,12 @@ inline const DWORD CAribString::ProcessCtrlC0(TCHAR *lpszDst, const BYTE *pCode,
 		case 0x16U	:	// PAPF　※未対応のため読み飛ばすだけ
 			dwSrcPos += 2UL;
 			return 0UL;
-			
+
 		case 0x19U	:	// SS2
 			SingleShiftGL(2U);
 			dwSrcPos++;
 			return 0UL;
-			
+
 		case 0x1BU	:	// ESC
 			m_byEscSeqCount = 1U;
 			dwSrcPos++;
@@ -433,12 +433,12 @@ inline const DWORD CAribString::ProcessCtrlC0(TCHAR *lpszDst, const BYTE *pCode,
 		case 0x1CU	:	// APS　※未対応のため読み飛ばすだけ
 			dwSrcPos += 3UL;
 			return 0UL;
-			
+
 		case 0x1DU	:	// SS3
 			SingleShiftGL(3U);
 			dwSrcPos++;
 			return 0UL;
-			
+
 		case 0x20U	:	// SP
 			dwSrcPos++;
 			if(m_FontSize == SIZE_SMALL){
@@ -456,7 +456,7 @@ inline const DWORD CAribString::ProcessCtrlC0(TCHAR *lpszDst, const BYTE *pCode,
 				return 2UL;
 #endif
 				}
-			
+
 		default		:	// 非対応の制御コード
 			dwSrcPos++;
 			return 0UL;
@@ -517,7 +517,7 @@ inline const DWORD CAribString::ProcessCtrlC1(TCHAR *lpszDst, const BYTE *pCode,
 		case 0x9DU	:	// TIME	※未対応のため読み飛ばすだけ
 			dwSrcPos += 3UL;
 			return 0UL;
-			
+
 		default		:	// 非対応の制御コード
 			dwSrcPos++;
 			return 0UL;
@@ -539,7 +539,7 @@ inline void CAribString::ProcessEscapeSeq(const BYTE byCode)
 				case 0x7CU	: LockingShiftGR(3U);	m_byEscSeqCount = 0U;	return;		// LS3R
 
 				// Designation of graphic sets
-				case 0x24U	:	
+				case 0x24U	:
 				case 0x28U	: m_byEscSeqIndex = 0U;		break;
 				case 0x29U	: m_byEscSeqIndex = 1U;		break;
 				case 0x2AU	: m_byEscSeqIndex = 2U;		break;
@@ -554,7 +554,7 @@ inline void CAribString::ProcessEscapeSeq(const BYTE byCode)
 				m_byEscSeqCount = 0U;
 				return;
 				}
-			
+
 			switch(byCode){
 				case 0x20	: m_bIsEscSeqDrcs = true;	break;
 				case 0x28	: m_bIsEscSeqDrcs = true;	m_byEscSeqIndex = 0U;	break;
@@ -807,7 +807,7 @@ void CTsTime::SetAribTime(const BYTE *pHexData)
 {
 	// ARIB MJD+JTC 形式から生成
 	::ZeroMemory(this, sizeof(CTsTime));
-	CAribTime::AribToSystemTime(this, pHexData);	
+	CAribTime::AribToSystemTime(this, pHexData);
 }
 
 void CTsTime::SetTime(const WORD wYear, const WORD wMonth, const WORD wDay, const WORD wHour, const WORD wMinute, const WORD wSecond)
@@ -855,7 +855,7 @@ CTsTime::operator const ULONGLONG () const
 		llFileTime = (ULONGLONG)tt * 10000000 + wMilliseconds * 10000 + 116444736000000000;
 		}
 #endif
-	
+
 	return llFileTime;
 }
 
@@ -863,7 +863,7 @@ const CTsTime & CTsTime::operator = (const SYSTEMTIME &SystemTime)
 {
 	// SYSTEM構造体から代入
 	SetTime(SystemTime.wYear, SystemTime.wMonth, SystemTime.wDay, SystemTime.wHour, SystemTime.wMinute, SystemTime.wSecond);
-	
+
 	return *this;
 }
 
@@ -871,7 +871,7 @@ const CTsTime & CTsTime::operator = (const ULONGLONG llFileTime)
 {
 	// FILETIME形式から代入
 	*this = CTsTime((ULONGLONG)*this);
-	
+
 	return *this;
 }
 

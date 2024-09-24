@@ -34,7 +34,7 @@ CBonException & CBonException::operator( )(LPCTSTR lpszFormat, ...)
 	va_start(Args ,lpszFormat);
 	::_vstprintf(m_szDescription, lpszFormat, Args);
 	va_end(Args);
-	
+
 	return *this;
 }
 
@@ -43,20 +43,20 @@ void CBonException::Notify(const bool bEnable)
 	// 例外を通知する
 	TCHAR szOutput[1024] = TEXT("");
 	TCHAR szSource[1024] = TEXT("不明なソースファイル");
-	
+
 	// ソースファイル名を取得
 	GetSourceFile(szSource);
-	
+
 	if(m_ClassId != ::GetGuid()){
 		TCHAR szModuleName[BON_MAX_MODULE_NAME] = TEXT("不明な");
 		TCHAR szClassName[BON_MAX_CLASS_NAME]	= TEXT("不明な");
-		
+
 		// クラス名を取得
 		::GET_BON_CLASS_NAME(m_ClassId, szClassName);
-		
+
 		// モジュール名を取得
 		::GET_BON_MODULE_NAME(::GET_BON_CLASS_MODULE(m_ClassId), szModuleName);
-		
+
 		// デバッグ出力文字列生成
 		::_stprintf(szOutput, TEXT("[例外イベント]\r\n　・場所\t： %sモジュール　%sクラス\r\n　・ソース\t： %s　%lu 行目\r\n　・説明\t： %s\r\n"), szModuleName, szClassName, szSource, m_dwSourceLine, m_szDescription);
 		}
@@ -117,7 +117,7 @@ const DWORD CBonException::GetSourceFile(LPTSTR lpszSourceFile)
 
 	// ファイル名を抽出
 	::_tsplitpath(szPathName, NULL, NULL, szFileName, szExtName);
-	::_tmakepath(szPathName, NULL, NULL, szFileName, szExtName);	
+	::_tmakepath(szPathName, NULL, NULL, szFileName, szExtName);
 
 	if(lpszSourceFile)::_tcscpy(lpszSourceFile, szPathName);
 
@@ -150,7 +150,7 @@ void CBonAssert::operator( )(const bool bSuccess, LPCTSTR lpszFormat, ...)
 	if(!bSuccess){
 		// 例外オブジェクト生成
 		CBonException Exception(m_lpszSourceFile, m_dwSourceLine, m_ClassId);
-		
+
 		if(lpszFormat){
 			TCHAR szDescription[1024] = TEXT("");
 
@@ -173,7 +173,7 @@ void CBonAssert::operator( )(const void *pPointer, LPCTSTR lpszFormat, ...)
 	if(!pPointer){
 		// 例外オブジェクト生成
 		CBonException Exception(m_lpszSourceFile, m_dwSourceLine, m_ClassId);
-		
+
 		if(lpszFormat){
 			TCHAR szDescription[1024] = TEXT("");
 

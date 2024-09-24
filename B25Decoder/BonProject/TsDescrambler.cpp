@@ -85,13 +85,13 @@ const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
 
 		// デバイスの空きをチェック
 		if(pHalDevice->GetActiveDeviceNum() >= pHalDevice->GetTotalDeviceNum())throw __LINE__;
-	
+
 		// IHalBcasCardインタフェース取得
 		if(!(m_pHalBcasCard = dynamic_cast<IHalBcasCard *>(pHalDevice)))throw __LINE__;
 
 		// B-CASカードをオープン
 		if(!m_pHalBcasCard->OpenCard())throw __LINE__;
-		
+
 		// 全状態リセット
 		OnReset();
 		}
@@ -99,7 +99,7 @@ const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
 		// エラー発生
 		BON_SAFE_RELEASE(pHalDevice);
 		m_pHalBcasCard = NULL;
-		
+
 		CloseDescrambler();
 		return false;
 		}
@@ -141,7 +141,7 @@ void CTsDescrambler::ResetStatistics(void)
 	m_dwScramblePacketNum = 0UL;
 	m_dwEcmProcessNum = 0UL;
 	m_dwEmmProcessNum = 0UL;
-	
+
 	::ZeroMemory(m_adwInputPacketNum, sizeof(m_adwInputPacketNum));
 	::ZeroMemory(m_adwOutputPacketNum, sizeof(m_adwOutputPacketNum));
 	::ZeroMemory(m_adwScramblePacketNum, sizeof(m_adwScramblePacketNum));
@@ -152,19 +152,19 @@ const DWORD CTsDescrambler::GetDescramblingState(const WORD wProgramID)
 	// PATテーブルを取得
 	const IPatTable *pPatTable = dynamic_cast<const IPatTable *>(m_TsInputMap.GetMapTarget(0x0000U));
 	if(!pPatTable)return IHalBcasCard::EC_BADARGUMENT;
-		
+
 	// 引数に一致するPMTのPIDを検索
 	for(WORD wIndex = 0U ; wIndex < pPatTable->GetProgramNum() ; wIndex++){
 		if(pPatTable->GetProgramID(wIndex) == wProgramID){
-			
+
 			// PMTテーブルを取得
 			const IPmtTable *pPmtTable = dynamic_cast<const IPmtTable *>(m_TsInputMap.GetMapTarget(pPatTable->GetPmtPID(wIndex)));
 			if(!pPmtTable)return IHalBcasCard::EC_BADARGUMENT;
-			
+
 			// ECMのPIDを取得
 			const IDescBlock * const pDescBlock = pPmtTable->GetPmtDesc();
 			if(!pDescBlock)return IHalBcasCard::EC_BADARGUMENT;
-	
+
 			const ICaMethodDesc * const pCaMethodDesc = dynamic_cast<const ICaMethodDesc *>(pDescBlock->GetDescByTag(ICaMethodDesc::DESC_TAG));
 			if(!pCaMethodDesc)return IHalBcasCard::EC_BADARGUMENT;
 
@@ -174,10 +174,10 @@ const DWORD CTsDescrambler::GetDescramblingState(const WORD wProgramID)
 			// ECMプロセッサを取得
 			const CEcmProcessor *pEcmProcessor = dynamic_cast<const CEcmProcessor *>(m_TsInputMap.GetMapTarget(pPatTable->GetPmtPID(wEcmPID)));
 			if(!pEcmProcessor)return IHalBcasCard::EC_BADARGUMENT;
-			
+
 			// 復号状態を返す
 			return pEcmProcessor->m_dwDescramblingState;
-			}		
+			}
 		}
 
 	return IHalBcasCard::EC_BADARGUMENT;
@@ -248,7 +248,7 @@ CTsDescrambler::~CTsDescrambler(void)
 {
 	// B-CASカードクローズ
 	CloseDescrambler();
-	
+
 	// バッファ開放
 	ClearUnprocPacket();
 }
@@ -298,7 +298,7 @@ void CTsDescrambler::OnPatTable(const IPatTable *pPatTable)
 			FlushUnprocPacket();
 			m_DecBufState = BDS_INITIAL;
 			m_dwPmtWaitCount = 0UL;
-			
+
 			// PIDマップリセット
 			ResetPidMap();
 			}
@@ -322,7 +322,7 @@ void CTsDescrambler::OnCatTable(const ICatTable *pCatTable)
 	// EMMのPIDを取得する
 	const IDescBlock * const pDescBlock = pCatTable->GetCatDesc();
 	if(!pDescBlock)return;
-	
+
 	const ICaMethodDesc * const pCaMethodDesc = dynamic_cast<const ICaMethodDesc *>(pDescBlock->GetDescByTag(ICaMethodDesc::DESC_TAG));
 	if(!pCaMethodDesc)return;
 
@@ -338,7 +338,7 @@ void CTsDescrambler::OnPmtTable(const IPmtTable *pPmtTable)
 	// ECMのPIDを取得する
 	const IDescBlock * const pDescBlock = pPmtTable->GetPmtDesc();
 	if(!pDescBlock)return;
-	
+
 	const ICaMethodDesc * const pCaMethodDesc = dynamic_cast<const ICaMethodDesc *>(pDescBlock->GetDescByTag(ICaMethodDesc::DESC_TAG));
 	if(!pCaMethodDesc)return;
 
@@ -389,7 +389,7 @@ void CTsDescrambler::BufManagement(ITsPacket * const pPacket)
 		// ECMストア状態モニタ
 		if(dynamic_cast<CEcmProcessor *>(m_TsInputMap.GetMapTarget(pPacket->GetPID()))){
 			bool bNotStored = false;
-		
+
 			for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 				const CEcmProcessor *pEcmProcessor = dynamic_cast<CEcmProcessor *>(m_TsInputMap.GetMapTarget(wPID));
 				if(pEcmProcessor){
@@ -402,7 +402,7 @@ void CTsDescrambler::BufManagement(ITsPacket * const pPacket)
 
 			if(!bNotStored){
 				m_DecBufState = BDS_RUNNING;
-			
+
 				// 未処理パケット出力
 				FlushUnprocPacket();
 				}
@@ -423,7 +423,7 @@ void CTsDescrambler::OutputPacket(ITsPacket * const pPacket)
 		CLIPED_INCREMENT(m_adwScramblePacketNum[wPID]);
 
 		SendDecoderEvent(EID_CANT_DESCRAMBLE, reinterpret_cast<PVOID>(m_dwScramblePacketNum));
-		
+
 		// 復号漏れパケット破棄有効時は下位デコーダに出力しない
 		if(m_bDiscardScramblePacket)return;
 		}
@@ -442,7 +442,7 @@ void CTsDescrambler::ResetPidMap(void)
 	for(WORD wPID = 0x0002U ; wPID < 0x2000U ; wPID++){
 		if(wPID != 0x0014U){
 			m_TsInputMap.UnmapPid(wPID);
-			}	
+			}
 		}
 
 	// CATリセット
@@ -450,7 +450,7 @@ void CTsDescrambler::ResetPidMap(void)
 
 	// TOTリセット
 	m_TsInputMap.ResetPid(0x0014U);
-	
+
 	// ESプロセッサリセット
 	m_TsOutputMap.ClearPid();
 }
@@ -471,7 +471,7 @@ void CTsDescrambler::PushUnprocPacket(const ITsPacket *pPacket)
 	// 未処理パケットをバッファにプッシュする
 	CTsPacket * const pNewPacket = new CTsPacket(NULL);
 
-	if(pNewPacket->CopyPacket(pPacket)){	
+	if(pNewPacket->CopyPacket(pPacket)){
 		m_PacketBuf.push_back(pNewPacket);
 		}
 }
@@ -482,7 +482,7 @@ void CTsDescrambler::ClearUnprocPacket(void)
 	for(DWORD dwIndex = 0UL ; dwIndex < m_PacketBuf.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_PacketBuf[dwIndex]);
 		}
-	
+
 	m_PacketBuf.clear();
 }
 
@@ -496,14 +496,14 @@ void CTsDescrambler::CEcmProcessor::OnPidReset(ITsPidMapper *pTsPidMapper, const
 	// キークリアする(誤ったキーによる破損を防止するため)
 	m_Multi2Decoder.SetScrambleKey(NULL);
 	m_dwDescramblingState = IHalBcasCard::EC_NO_ERROR;
-	
+
 	CPsiTableBase::OnPidReset(pTsPidMapper, wPID);
 }
 
 void CTsDescrambler::CEcmProcessor::Reset(void)
 {
 	m_bIsEcmReceived = false;
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -528,7 +528,7 @@ CTsDescrambler::CEcmProcessor::~CEcmProcessor(void)
 {
 	// このインスタンスを参照しているCEsProcessorをアンマップする
 	CEsProcessor *pEsProcessor;
-	
+
 	for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 		if(pEsProcessor = dynamic_cast<CEsProcessor *>(m_pTsDescrambler->m_TsOutputMap.GetMapTarget(wPID))){
 			if(pEsProcessor->m_pEcmProcessor == this){
@@ -559,7 +559,7 @@ const bool CTsDescrambler::CEcmProcessor::DescramblePacket(ITsPacket * const pTs
 			return true;
 			}
 		}
-	
+
 	return false;
 }
 
@@ -580,11 +580,11 @@ const bool CTsDescrambler::CEcmProcessor::OnTableUpdate(const IPsiSection *pNewS
 			(DWORD)chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
 #endif
 		if((dwTick - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
-			// 再初期化ガードインターバル経過なら			
+			// 再初期化ガードインターバル経過なら
 			if(m_pHalBcasCard->OpenCard()){
 				pKsData = m_pHalBcasCard->GetKsFromEcm(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 				}
-				
+
 			// 最終リトライ時間更新
 			m_dwLastRetryTime = dwTick;
 			}
@@ -633,9 +633,9 @@ const bool CTsDescrambler::CEmmProcessor::OnTableUpdate(const IPsiSection *pNewS
 	// セクションを解析
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
-	
+
 	WORD wPos = 0U;
-	
+
 	while((wDataSize - wPos) >= 17U){
 		// EMMサイズをチェック
 		const WORD wEmmSize = (WORD)pHexData[wPos + 6U] + 7U;
@@ -643,7 +643,7 @@ const bool CTsDescrambler::CEmmProcessor::OnTableUpdate(const IPsiSection *pNewS
 
 		// ハンドラ呼び出し
 		if(OnEmmBody(&pHexData[wPos], wEmmSize))break;
-		
+
 		// 解析位置更新
 		wPos += wEmmSize;
 		}
@@ -665,14 +665,14 @@ const bool CTsDescrambler::CEmmProcessor::OnEmmBody(const BYTE *pEmmData, const 
 	CTsTime ValidTime;
 	ValidTime.SetNowTime();									// 現在時刻を取得
 	ValidTime -= EMM_VALID_PERIOD * 24UL * 60UL * 60UL;		// 有効期間だけ過去に戻す
-	
+
 	const ITotTable *pTotTable = dynamic_cast<const ITotTable *>(m_pTsDescrambler->m_TsInputMap.GetMapTarget(0x0014U));
 	if(!pTotTable)return true;
 	CTsTime EmmTime = pTotTable->GetDateTime();				// TOTから時刻を取得
-	
+
 	// 有効期間より過去のEMMデータは処理しない
 	if(EmmTime < ValidTime)return true;
-	
+
 	// B-CASカードにEMMデータ送信
 	if(!m_pHalBcasCard->SendEmmSection(pEmmData, wEmmSize)){
 		// リトライ

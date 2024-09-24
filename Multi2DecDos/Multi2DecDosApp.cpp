@@ -85,17 +85,17 @@ void CMulti2DecDosApp::OnMulti2ConverterEvent(IMulti2Converter *pMulti2Converter
 			::printf("0%%                                50%%                                100%%\n");
 			::printf("|-----+------+------+------+------|------+------+------+------+------|\n");
 			break;
-		
+
 		case IMulti2Converter::EID_CONV_END:
 			// ログ出力
 			::printf("\n\n");
 			PrintLogFile(stdout);
 
 			// ログファイル出力
-			if(!m_ConfigSet.bNoLog){					
+			if(!m_ConfigSet.bNoLog){
 				OutputLogFile();
 				}
-			
+
 			// 完了イベントセット
 			m_ConvertEvent.SetEvent();
 			break;
@@ -151,7 +151,7 @@ void CMulti2DecDosApp::PrintLogFile(FILE * const pStream)
 	// ログ出力
 	TCHAR szText[1024];
 	char szMbText[_MAX_PATH];
-		
+
 	// 入力ファイル情報
 	::ZeroMemory(szMbText, sizeof(szMbText));
 	::WideCharToMultiByte(CP_OEMCP, WC_COMPOSITECHECK, m_ConfigSet.szInputPath, ::lstrlen(m_ConfigSet.szInputPath), szMbText, sizeof(szMbText), NULL, NULL);
@@ -159,7 +159,7 @@ void CMulti2DecDosApp::PrintLogFile(FILE * const pStream)
 	::_ftprintf(pStream, TEXT("Length: %12s (%s Byte)\n\n"),
 		ToUnitedText(m_pMulti2Converter->GetSrcFileLength()),
 		ToCommaText(m_pMulti2Converter->GetSrcFileLength())
-		);		
+		);
 
 	// 出力ファイル情報
 	if(m_ConfigSet.bOutput){

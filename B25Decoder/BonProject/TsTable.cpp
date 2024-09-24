@@ -15,7 +15,7 @@ void CPatTable::Reset(void)
 {
 	// 状態をクリアする
 	m_wTsID = 0x0000U;
-	
+
 	m_NitPIDArray.clear();
 	m_PmtPIDArray.clear();
 
@@ -147,7 +147,7 @@ CCatTable::~CCatTable(void)
 const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
 {
 	if(pNewSection->GetTableID() != ICatTable::TABLE_ID)return false;	// テーブルIDが不正
-	
+
 	// テーブルを解析する
 	m_DescBlock.SetData(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 	m_DescBlock.ParseDescs();
@@ -182,7 +182,7 @@ void CPmtTable::Reset(void)
 		}
 
 	m_EsInfoArray.clear();
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -250,14 +250,14 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
 	if(pNewSection->GetTableID() != IPmtTable::TABLE_ID)return false;	// テーブルIDが不正
-	
+
 	// ES情報をクリアする
 	for(DWORD dwIndex = 0UL ; dwIndex < m_EsInfoArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_EsInfoArray[dwIndex].pDescBlock);
 		}
 
 	m_EsInfoArray.clear();
-	
+
 	// テーブルを解析する
 	m_wProgramID = pNewSection->GetTableIdExtension();
 	m_wPcrPID = ((WORD)(pHexData[0] & 0x1FU) << 8) | (WORD)pHexData[1];
@@ -280,7 +280,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	// ES情報を解析
 	while(wPos < wDataSize){
 		PmtItem.byStreamTypeID = pHexData[wPos + 0U];													// +0
-		PmtItem.wEsPID = ((WORD)(pHexData[wPos + 1U] & 0x1FU) << 8) | (WORD)pHexData[wPos + 2U];		// +1,2	
+		PmtItem.wEsPID = ((WORD)(pHexData[wPos + 1U] & 0x1FU) << 8) | (WORD)pHexData[wPos + 2U];		// +1,2
 		wDescLen = ((WORD)(pHexData[wPos + 3U] & 0x0FU) << 8) | (WORD)pHexData[wPos + 4U];				// +3,4
 
 		// 記述子ブロック
@@ -323,7 +323,7 @@ void CNitTable::Reset(void)
 		}
 
 	m_TsInfoArray.clear();
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -384,14 +384,14 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
 	if(pNewSection->GetTableID() != INitTable::TABLE_ID)return false;	// テーブルIDが不正
-	
+
 	// TS情報をクリアする
 	for(DWORD dwIndex = 0UL ; dwIndex < m_TsInfoArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_TsInfoArray[dwIndex].pDescBlock);
 		}
 
 	m_TsInfoArray.clear();
-	
+
 	// テーブルを解析する
 	m_wNetworkID = pNewSection->GetTableIdExtension();
 
@@ -400,7 +400,7 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	m_NwDescBlock.ParseDescs();
 
 	::BON_TRACE(TEXT("\n------- NIT Table -------\nNetwork ID = %04X\n"), m_wNetworkID);
-	
+
 	TCHAR szTemp[256];
 	::_tcscpy(szTemp, TEXT("Unknown"));
 	if(m_NwDescBlock.GetDescByTag(INetworkNameDesc::DESC_TAG)){
@@ -464,7 +464,7 @@ void CSdtTable::Reset(void)
 		}
 
 	m_SdtItemArray.clear();
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -548,14 +548,14 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
 	if(pNewSection->GetTableID() != ISdtTable::TABLE_ID)return false;	// テーブルIDが不正
-	
+
 	// サービス情報をクリアする
 	for(DWORD dwIndex = 0UL ; dwIndex != m_SdtItemArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_SdtItemArray[dwIndex].pDescBlock);
 		}
 
 	m_SdtItemArray.clear();
-	
+
 	// テーブルを解析する
 	m_wTsID = pNewSection->GetTableIdExtension();
 	m_wOrgNetworkID = ((WORD)pHexData[0] << 8) | (WORD)pHexData[1];
@@ -564,7 +564,7 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 	WORD wPos = 3U;
 	TAG_SDTITEM SdtItem;
-	
+
 	// サービス情報を解析
 	while(wPos < wDataSize){
 		SdtItem.wServiceID = ((WORD)pHexData[wPos + 0U] << 8) | (WORD)pHexData[wPos + 1U];
@@ -615,7 +615,7 @@ const DWORD CSdtTable::GetIndexByServiceID(const WORD wServiceID) const
 {
 	// サービスIDからインデックスを取得する
 	DWORD dwIndex;
-	
+
 	for(dwIndex = 0UL ; dwIndex < m_SdtItemArray.size() ; dwIndex++){
 		if(m_SdtItemArray[dwIndex].wServiceID == wServiceID)break;
 		}
@@ -632,7 +632,7 @@ void CEitTable::Reset(void)
 {
 	// 状態をクリアする
 	m_EitItem.ClearSize();
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -732,18 +732,18 @@ const bool CEitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 	// アイテム毎にハンドラに通知
 	if(!m_pHandler)return true;
-	
+
 	for(WORD wPos = 6U ; (wPos < wDataSize) && ((wDataSize - wPos) >= 12U) ; ){
 		// アイテムサイズ計算
 		const WORD wItemLen = (((WORD)(pHexData[wPos + 10] & 0x0FU) << 8) | (WORD)pHexData[wPos + 11]) + 12U;
 		m_EitItem.SetData(&pHexData[wPos], wItemLen);
 		wPos += wItemLen;
-		
+
 		// ハンドラへ通知
 		if(m_EitItem.ParseItem()){
 			m_pHandler->OnEitTable(this, &m_EitItem);
 			}
-		}	
+		}
 
 	return true;
 }
@@ -759,7 +759,7 @@ void CTotTable::Reset(void)
 	// 状態をクリアする
 	m_DateTime.ClearTime();
 	m_DescBlock.Reset();
-	
+
 	CPsiTableBase::Reset();
 }
 
@@ -798,7 +798,7 @@ const bool CTotTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 	// テーブルを解析する
 	m_DateTime.SetAribTime(pHexData);
-	
+
 	const WORD wDescLen = ((WORD)(pHexData[5] & 0x0FU) << 8) | (WORD)pHexData[6];
 	m_DescBlock.SetData(&pHexData[7], wDescLen);
 	m_DescBlock.ParseDescs();

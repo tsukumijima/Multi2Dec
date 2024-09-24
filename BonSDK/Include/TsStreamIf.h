@@ -109,7 +109,7 @@ public:
 	virtual const BYTE GetSectionNumber(void) const = 0;
 	virtual const BYTE GetLastSectionNumber(void) const = 0;
 	virtual const DWORD GetSectionCrc(void) const = 0;
-	
+
 	virtual const bool CopySection(const IPsiSection *pSrc) = 0;
 	virtual const DWORD CompareSection(const IPsiSection *pSrc) const = 0;
 };
@@ -160,11 +160,11 @@ class IDescBlock :	public IBonObject
 public:
 	virtual const DWORD ParseDescs(void) = 0;
 	virtual void Reset(void) = 0;
-	
+
 	virtual const DWORD GetDescNum(void) const = 0;
 	virtual const IDescBase * GetDescByTag(const BYTE byTag, const DWORD dwIndex = 0UL) const = 0;
 	virtual const IDescBase * GetDescByIndex(const DWORD dwIndex = 0UL) const = 0;
-	
+
 	virtual const bool CopyDescBlock(const IDescBlock *pSrc) = 0;
 };
 

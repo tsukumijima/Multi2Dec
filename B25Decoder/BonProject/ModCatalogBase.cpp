@@ -48,11 +48,11 @@ const WORD CModCatalogBase::GetVersion(void)
 		LPTSTR lpszBuffer;
 		::_stprintf(szSubBlock, TEXT("\\StringFileInfo\\%04x%04x\\ProductVersion"), LOWORD(*pdwLang), HIWORD(*pdwLang));
 		if(!::VerQueryValue(Buffer.GetData(), szSubBlock, (void **)&lpszBuffer, (PUINT)&dwLength))throw ::BON_EXPECTION();
-		
+
 		// 整形する
 		DWORD adwVers[4] = {0UL, 0UL, 0UL, 0UL};
 		::_stscanf(lpszBuffer, TEXT("%lu,%lu,%lu,%lu"), &adwVers[0], &adwVers[1], &adwVers[2], &adwVers[3]);
-		
+
 		wVersion = (WORD)(((adwVers[0] & 0xFUL) << 12) | ((adwVers[1] & 0xFUL) << 8) | ((adwVers[2] & 0xFUL) << 4) | ((adwVers[3] & 0xFUL) << 0));
 		}
 	catch(CBonException &Exception){
@@ -93,7 +93,7 @@ const BONGUID CModCatalogBase::EnumClass(LPCTSTR lpszBIId, const DWORD dwIndex)
 			if(dwClassPos++ == dwIndex){
 				return ::BON_NAME_TO_GUID(m_pClassInfo[dwInfoPos].szBCId);
 				}
-			}	
+			}
 		}
 
 	return BCID_NULL;

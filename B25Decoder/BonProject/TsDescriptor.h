@@ -75,7 +75,7 @@ public:
 	virtual const DWORD GetServiceNum(void) const;
 	virtual const WORD GetServiceID(const DWORD dwIndex) const;
 	virtual const BYTE GetServiceType(const DWORD dwIndex) const;
-	
+
 // CServiceListDesc
 	CServiceListDesc(IBonObject *pOwner);
 	virtual ~CServiceListDesc(void);
@@ -165,7 +165,7 @@ public:
 protected:
 // CDescBase
 	virtual const bool ParseData(void);
-	
+
 // CExtendedEventDesc
 	virtual const BYTE * GetItemPointer(const DWORD dwIndex) const;
 };
@@ -246,7 +246,7 @@ public:
 	virtual const BYTE GetGenreLevel2(const DWORD dwIndex = 0UL) const;
 	virtual const BYTE GetUserGenre1(const DWORD dwIndex = 0UL) const;
 	virtual const BYTE GetUserGenre2(const DWORD dwIndex = 0UL) const;
-	
+
 // CContentDesc
 	CContentDesc(IBonObject *pOwner);
 	virtual ~CContentDesc(void);

@@ -32,7 +32,7 @@ public:
 
 // CMediaDecoder
 	virtual const bool InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex = 0UL);
-	
+
 // IProgAnalyzer
 	virtual const WORD GetNetworkID(void);
 	virtual const WORD GetTsID(void);
@@ -48,11 +48,11 @@ public:
 	virtual const bool SetCurrentProgramID(const WORD wProgramID = 0x0000U);
 	virtual const IEpgItem * GetCurrentEpgInfo(const WORD wProgramID = 0x0000U);
 	virtual const IEpgItem * GetNextEpgInfo(const WORD wProgramID = 0x0000U);
-	
+
 // CProgAnalyzer
 	CProgAnalyzer(IBonObject *pOwner);
 	virtual ~CProgAnalyzer(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);

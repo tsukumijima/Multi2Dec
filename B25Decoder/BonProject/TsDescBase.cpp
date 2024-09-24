@@ -83,7 +83,7 @@ const DWORD CDescBlock::ParseDescs(void)
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_DescArray[dwIndex]);
 		}
-	
+
 	m_DescArray.clear();
 
 	// データポインタ取得
@@ -106,14 +106,14 @@ const DWORD CDescBlock::ParseDescs(void)
 		else{
 			// 非対応 or エラー
 			::BON_TRACE(TEXT("記述子が非対応 or エラー\r\nTag = %02X"), pData[dwPos]);
-			
+
 			pDescBase->Release();
 			}
 
 		// 解析位置更新
 		dwPos += (pData[dwPos + 1UL] + 2UL);
 		}
-		
+
 	return m_DescArray.size();
 }
 
@@ -123,7 +123,7 @@ void CDescBlock::Reset(void)
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_DescArray[dwIndex]);
 		}
-	
+
 	m_DescArray.clear();
 
 	// データクリア
@@ -143,9 +143,9 @@ const IDescBase * CDescBlock::GetDescByTag(const BYTE byTag, const DWORD dwIndex
 		if(m_DescArray[dwPos]){
 			if(m_DescArray[dwPos]->GetTag() == byTag){
 				if(dwCount++ == dwIndex){
-					return m_DescArray[dwPos];	
+					return m_DescArray[dwPos];
 					}
-				}		
+				}
 			}
 		}
 
@@ -162,14 +162,14 @@ const bool CDescBlock::CopyDescBlock(const IDescBlock *pSrc)
 {
 	// IMediaDataインタフェースを取得
 	const IMediaData * const pMediaData = dynamic_cast<const IMediaData *>(pSrc);
-	if(!pMediaData)return false;	
-	
+	if(!pMediaData)return false;
+
 	// 保持データリセット
 	Reset();
-	
+
 	// データコピー、解析
 	if(CMediaData::CopyData(pMediaData)){
-		return (ParseDescs())? true : false;		
+		return (ParseDescs())? true : false;
 		}
 
 	return false;

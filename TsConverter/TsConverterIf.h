@@ -38,7 +38,7 @@ public:
 
 	virtual const DWORD StartConvert(LPCTSTR lpszSrcFile, LPCTSTR lpszDstFile, const bool bB25 = true, const bool bEMM = false, const bool bNULL = false, const bool bDiscard = false) = 0;
 	virtual void EndConvert(void) = 0;
-	
+
 	virtual const DWORD GetPacketStride(void) const = 0;
 	virtual const DWORD GetInputPacketNum(const WORD wPID = TS_INVALID_PID) const = 0;
 	virtual const DWORD GetOutputPacketNum(const WORD wPID = TS_INVALID_PID) const = 0;
@@ -49,7 +49,7 @@ public:
 	virtual const DWORD GetScramblePacketNum(const WORD wPID = TS_INVALID_PID) const = 0;
 	virtual const DWORD GetEcmProcessNum(void) const = 0;
 	virtual const DWORD GetEmmProcessNum(void) const = 0;
-	
+
 	virtual const ULONGLONG GetSrcFileLength(void) const = 0;
 	virtual const ULONGLONG GetDstFileLength(void) const = 0;
 };

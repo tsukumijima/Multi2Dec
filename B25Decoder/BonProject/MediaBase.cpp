@@ -51,7 +51,7 @@ const DWORD CMediaData::SetData(const BYTE *pData, const DWORD dwDataSize)
 
 	// サイズセット
 	m_dwDataSize = dwDataSize;
-	
+
 	return m_dwDataSize;
 }
 
@@ -61,13 +61,13 @@ const DWORD CMediaData::AddData(const BYTE *pData, const DWORD dwDataSize)
 
 	// バッファ確保
 	GetBuffer(m_dwDataSize + dwDataSize);
-	
+
 	// データ追加
 	::CopyMemory(&m_pData[m_dwDataSize], pData, dwDataSize);
 
 	// サイズセット
 	m_dwDataSize += dwDataSize;
-	
+
 	return m_dwDataSize;
 }
 
@@ -80,7 +80,7 @@ const DWORD CMediaData::AddByte(const BYTE byData)
 {
 	// バッファ確保
 	GetBuffer(m_dwDataSize + 1UL);
-	
+
 	// データ追加
 	m_pData[m_dwDataSize] = byData;
 
@@ -98,7 +98,7 @@ const DWORD CMediaData::TrimHead(const DWORD dwTrimSize)
 		}
 	else if(dwTrimSize >= m_dwDataSize){
 		// 全体を切り詰める
-		m_dwDataSize = 0UL;		
+		m_dwDataSize = 0UL;
 		}
 	else{
 		// データを移動する
@@ -117,7 +117,7 @@ const DWORD CMediaData::TrimTail(const DWORD dwTrimSize)
 		}
 	else if(dwTrimSize >= m_dwDataSize){
 		// 全体を切り詰める
-		m_dwDataSize = 0UL;		
+		m_dwDataSize = 0UL;
 		}
 	else{
 		// データ末尾を切り詰める
@@ -156,7 +156,7 @@ const DWORD CMediaData::GetBuffer(const DWORD dwGetSize)
 		if(m_dwDataSize){
 			::CopyMemory(pNewBuffer, m_pData, m_dwDataSize);
 			}
-		
+
 		// 旧バッファ開放
 		delete [] m_pData;
 
@@ -176,7 +176,7 @@ const DWORD CMediaData::SetSize(const DWORD dwSetSize)
 
 	// サイズセット
 	m_dwDataSize = dwSetSize;
-	
+
 	return m_dwDataSize;
 }
 
@@ -184,12 +184,12 @@ const DWORD CMediaData::SetSize(const DWORD dwSetSize, const BYTE byFiller)
 {
 	// サイズセット
 	SetSize(dwSetSize);
-	
+
 	// データセット
 	if(dwSetSize){
 		::FillMemory(m_pData, dwSetSize, byFiller);
 		}
-		
+
 	return m_dwDataSize;
 }
 
@@ -299,7 +299,7 @@ const bool CMediaDecoder::PlayDecoder(void)
 			}
 		return false;
 		}
-	
+
 	// 最後に自デコーダを再生する
 	return OnPlay();
 }

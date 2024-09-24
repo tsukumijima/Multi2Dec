@@ -243,7 +243,7 @@ void CMulti2Decoder::Initialize(const BYTE *pSystemKey, const BYTE *pInitialCbc)
 
 	// Descrambling System Keyセット
 	m_SystemKey.SetHexData(pSystemKey);
-	
+
 	// Descrambler CBC Initial Valueセット
 	m_InitialCbc.SetHexData(pInitialCbc);
 }
@@ -251,7 +251,7 @@ void CMulti2Decoder::Initialize(const BYTE *pSystemKey, const BYTE *pInitialCbc)
 const bool CMulti2Decoder::SetScrambleKey(const BYTE *pScrambleKey)
 {
 	if(!m_bIsSysKeyValid)return false;
-	
+
 	if(!pScrambleKey){
 		// キーが設定されない場合はデコード不能にする(不正な復号による破損防止のため)
 		m_bIsWorkKeyValid = false;
@@ -260,7 +260,7 @@ const bool CMulti2Decoder::SetScrambleKey(const BYTE *pScrambleKey)
 
 	// Scramble Key Odd/Even をセットする
 	DATKEY ScrKeyOdd, ScrKeyEven;
-	
+
 	// バイトオーダー変換
 	ScrKeyOdd.SetHexData(&pScrambleKey[0]);
 	ScrKeyEven.SetHexData(&pScrambleKey[8]);
@@ -268,9 +268,9 @@ const bool CMulti2Decoder::SetScrambleKey(const BYTE *pScrambleKey)
 	// キースケジュール
 	KeySchedule(m_WorkKeyOdd, m_SystemKey, ScrKeyOdd);
 	KeySchedule(m_WorkKeyEven, m_SystemKey, ScrKeyEven);
-	
+
 	m_bIsWorkKeyValid = true;
-	
+
 	return true;
 }
 
@@ -499,10 +499,10 @@ void CMulti2Decoder::KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, DATKEY &
 
 	RoundFuncPi4(DataKey, SysKey.dwKeys[3]);					// π4
 	WorkKey.SetKey(2, DataKey.dwLeft);
-	
+
 	RoundFuncPi1(DataKey);									// π1
 	WorkKey.SetKey(3, DataKey.dwRight);
-	
+
 	RoundFuncPi2(DataKey, SysKey.dwKeys[4]);					// π2
 	WorkKey.SetKey(4, DataKey.dwLeft);
 

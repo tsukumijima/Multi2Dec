@@ -68,7 +68,7 @@ CConfigData::CConfigFile::~CConfigFile(void)
 LPCTSTR CConfigData::CConfigFile::GetPath(void)
 {
 	// 設定ファイルのパスを返す
-	return m_szConfigPath;	
+	return m_szConfigPath;
 }
 
 LPCTSTR CConfigData::CConfigFile::GetSection(const UINT nSection)
@@ -249,7 +249,7 @@ void CConfigString::Save(void)
 {
 	// データセーブ
 	*this = Left(m_dwLengthMax);
-	
+
 	::WritePrivateProfileString(m_ConfigFile.GetSection(m_nSection), m_csKeyName, (CString &)*this, m_ConfigFile.GetPath());
 }
 

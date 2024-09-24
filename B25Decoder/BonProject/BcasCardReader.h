@@ -49,7 +49,7 @@ public:
 // CBcasCardReader
 	CBcasCardReader(IBonObject *pOwner);
 	virtual ~CBcasCardReader(void);
-	
+
 protected:
 	const bool EnumBcasCardReader(void);
 	const bool TransmitCommand(const SCARDHANDLE hBcasCard, const BYTE *pSendData, const DWORD dwSendSize, BYTE *pRecvData, const DWORD dwMaxRecv, DWORD *pdwRecvSize = NULL);
@@ -58,7 +58,7 @@ protected:
 	SCARDCONTEXT m_ScardContext;
 	SCARDHANDLE m_hBcasCard;
 
-#ifdef _UNICODE	
+#ifdef _UNICODE
 	std::vector<std::wstring> m_CardReaderArray;
 #else
 	std::vector<std::string> m_CardReaderArray;
@@ -70,11 +70,11 @@ protected:
 		BYTE SystemKey[32];		// Descrambling system key
 		BYTE InitialCbc[8];		// Descrambler CBC initial value
 	} m_BcasCardInfo;
-	
+
 	struct TAG_ECMSTATUS
 	{
-		BYTE KsData[16];		// Ks Odd + Even	
+		BYTE KsData[16];		// Ks Odd + Even
 	} m_EcmStatus;
-	
+
 	DWORD m_dwEcmError;
 };

@@ -20,7 +20,7 @@
 
 #ifndef _WIN32_WINNT		// Windows XP 以降のバージョンに固有の機能の使用を許可します。                   
 #define _WIN32_WINNT 0x0501	// これを Windows の他のバージョン向けに適切な値に変更してください。
-#endif						
+#endif
 
 #ifndef _WIN32_WINDOWS		// Windows 98 以降のバージョンに固有の機能の使用を許可します。
 #define _WIN32_WINDOWS 0x0410 // これを Windows Me またはそれ以降のバージョン向けに適切な値に変更してください。

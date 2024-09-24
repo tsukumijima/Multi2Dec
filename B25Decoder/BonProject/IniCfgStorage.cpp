@@ -39,7 +39,7 @@ const bool CIniCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 
 	if(!::GetModuleFileName(NULL, m_szFileName, sizeof(m_szFileName) - 1))return false;
 	::_tsplitpath(m_szFileName, szDrive, szDir, szFile, NULL);
-	::_tmakepath(m_szFileName, szDrive, szDir, szFile, TEXT("ini"));	
+	::_tmakepath(m_szFileName, szDrive, szDir, szFile, TEXT("ini"));
 
 	// セクション名を設定
 	::_tcscpy(m_szSectName, (lpszPathName)? lpszPathName : ROOT_SECTNAME);
@@ -78,13 +78,13 @@ IConfigStorage * CIniCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 	// 新しいインスタンス生成
 	CIniCfgStorage *pNewInstance = new CIniCfgStorage(NULL);
 	if(!pNewInstance)return NULL;
-		
+
 	// ファイル名を設定
 	::_tcscpy(pNewInstance->m_szFileName, m_szFileName);
 
 	// 新しいインスタンスにセクション名設定
 	GetSectionPath(pNewInstance->m_szSectName, lpszSection);
-		
+
 	return pNewInstance;
 }
 
@@ -105,7 +105,7 @@ const DWORD CIniCfgStorage::GetSectionNum(void)
 	while(*lpszFindPos){
 		// セクション数インクリメント
 		if(IsSubSectionPath(lpszFindPos))dwSectNum++;
-		
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
@@ -138,7 +138,7 @@ const DWORD CIniCfgStorage::EnumSection(const DWORD dwIndex, LPTSTR lpszSection)
 
 			dwSectNum++;
 			}
-		
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
@@ -178,7 +178,7 @@ const DWORD CIniCfgStorage::GetItemNum(void)
 	while(*lpszFindPos){
 		// アイテム数インクリメント
 		dwItemNum++;
-		
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
@@ -207,8 +207,8 @@ const DWORD CIniCfgStorage::EnumItem(const DWORD dwIndex, LPTSTR lpszItem)
 			// インデックス一致
 			if(lpszItem)::_tcscpy(lpszItem, lpszFindPos);
 			return ::_tcslen(lpszFindPos);
-			}		
-		
+			}
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		dwItemNum++;
@@ -236,7 +236,7 @@ const bool CIniCfgStorage::DeleteItem(LPCTSTR lpszItem)
 const bool CIniCfgStorage::SetBoolItem(LPCTSTR lpszItem, const bool bValue)
 {
 	if(!m_szFileName[0] || !lpszItem)return false;
-	
+
 	// BOOLをセーブする
 	return (::WritePrivateProfileString(m_szSectName, lpszItem, (bValue)? TEXT("1") : TEXT("0"), m_szFileName))? true : false;
 }
@@ -274,7 +274,7 @@ const DWORD CIniCfgStorage::GetIntItem(LPCTSTR lpszItem, const DWORD dwDefault, 
 
 	// DWORDをロードする
 	const DWORD dwValue = (DWORD)::GetPrivateProfileInt(m_szSectName, lpszItem, dwDefault, m_szFileName);
-	
+
 	// 範囲をチェック
 	return ((dwValue >= dwMin) && (dwValue <= dwMax))? dwValue : dwDefault;
 }
@@ -293,10 +293,10 @@ const DWORD CIniCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 	if(dwRet > dwMaxLen){
 		::_tcscpy(szValue, (lpszDefault)? lpszDefault : TEXT(""));
 		}
-		
+
 	// バッファにコピー
 	if(lpszValue)::_tcscpy(lpszValue, szValue);
-	
+
 	// 文字数を返す
 	return ::_tcslen(szValue);
 }
@@ -359,7 +359,7 @@ const bool CIniCfgStorage::IsSectionExist(LPCTSTR lpszSection) const
 			// セクション名一致
 			return true;
 			}
-		
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
@@ -382,7 +382,7 @@ const bool CIniCfgStorage::IsSubSectionPath(LPCTSTR lpszPath) const
 		if((DWORD)::_tcslen(lpszPath) > dwParentLen){
 			// 親セクション名より長い
 			if(!::_tcsnicmp(lpszPath, m_szSectName, dwParentLen)){
-				// 検索セクション名で始まる					
+				// 検索セクション名で始まる
 				if(!::_tcschr(&lpszPath[dwParentLen], TEXT('\\')))return true;
 				}
 			}
@@ -406,7 +406,7 @@ const bool CIniCfgStorage::IsItemExist(LPCTSTR lpszItem) const
 
 	while(*lpszFindPos){
 		if(!::_tcsicmp(lpszFindPos, lpszItem))return true;
-		
+
 		// 検索位置更新
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}

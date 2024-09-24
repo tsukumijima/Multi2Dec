@@ -16,9 +16,9 @@ const BONGUID CBonCoreEngine::BonNameToGuid(LPCTSTR lpszName)
 {
 	// モジュール/クラス名をBONGUIDに変換する
 	if(!lpszName)return BCID_NULL;
-	
+
 	const DWORD dwNameLen = ::_tcslen(lpszName);
-	
+
 	if(!dwNameLen || (dwNameLen >= BON_MAX_CLASS_NAME))return BCID_NULL;
 
 	return CalcCrc(reinterpret_cast<const BYTE *>(lpszName), dwNameLen * sizeof(lpszName[0]));
@@ -30,7 +30,7 @@ IBonObject * CBonCoreEngine::BonCreateInstance(LPCTSTR lpszClassName, IBonObject
 
 	// 要求されたクラスのインスタンスを生成する
 	const BonClassMap::iterator itClass = m_ClassMap.find(BonNameToGuid(lpszClassName));
-	
+
 	return (itClass != m_ClassMap.end())? (itClass->second.pfnClassFactory)(pOwner) : NULL;
 }
 
@@ -63,7 +63,7 @@ const bool CBonCoreEngine::RegisterBonModule(LPCTSTR lpszModulePath)
 	do{
 		// ファイル名の長さをチェック
 		if(::_tcslen(FindData.cFileName) < 9)continue;
-	
+
 		// モジュール名設定(「bon_」サフィックスを除去したもの)
 		::_tsplitpath(&FindData.cFileName[4], NULL, NULL, szPath, NULL);
 		m_CurModuleInfo.strModuleName = szPath;
@@ -76,16 +76,16 @@ const bool CBonCoreEngine::RegisterBonModule(LPCTSTR lpszModulePath)
 		m_CurModuleInfo.ClassList.clear();
 
 		// DLLを開く
-		::_tmakepath(szPath, szDrive, szDir, FindData.cFileName, NULL);	
+		::_tmakepath(szPath, szDrive, szDir, FindData.cFileName, NULL);
 		if(!(m_CurModuleInfo.hModule = ::LoadLibrary(szPath)))continue;
-		
+
 		// 登録されたファクトリー数を確認
 		if(m_ClassMap.size() == dwLastClassNum){
 			// 1つも登録されなかったので開放する
 			::FreeLibrary(m_CurModuleInfo.hModule);
 			continue;
 			}
-	
+
 		// マップに追加
 		m_ModuleMap[BonNameToGuid(m_CurModuleInfo.strModuleName.c_str())] = m_CurModuleInfo;
 		}
@@ -123,7 +123,7 @@ const BONGUID CBonCoreEngine::EnumBonModule(const DWORD dwIndex)
 	// インデックス位置の要素を取得
 	BonModuleMap::iterator itModule = m_ModuleMap.begin();
 	for(DWORD dwPos = 0UL ; dwPos < dwIndex ; dwPos++)itModule++;
-	
+
 	// モジュールのGUIDを返す
 	return itModule->first;
 }
@@ -131,14 +131,14 @@ const BONGUID CBonCoreEngine::EnumBonModule(const DWORD dwIndex)
 const DWORD CBonCoreEngine::GetBonModuleName(const BONGUID ModuleId, LPTSTR lpszModuleName)
 {
 	CBlockLock AutoLock(&m_Lock);
-	
+
 	// モジュールを検索
 	const BonModuleMap::iterator itModule = m_ModuleMap.find(ModuleId);
 	if(itModule == m_ModuleMap.end())return 0UL;
-	
+
 	// モジュール名を格納
 	if(lpszModuleName)::_tcscpy(lpszModuleName, itModule->second.strModuleName.c_str());
-	
+
 	// モジュール名長を返す
 	return itModule->second.strModuleName.length();
 }
@@ -146,11 +146,11 @@ const DWORD CBonCoreEngine::GetBonModuleName(const BONGUID ModuleId, LPTSTR lpsz
 const BONGUID CBonCoreEngine::EnumBonModuleClass(const BONGUID ModuleId, const DWORD dwIndex)
 {
 	CBlockLock AutoLock(&m_Lock);
-	
+
 	// モジュールを検索
 	const BonModuleMap::iterator itModule = m_ModuleMap.find(ModuleId);
 	if(itModule == m_ModuleMap.end())return BCID_NULL;
-	
+
 	// インデックス位置のクラスのGUIDを返す
 	return (dwIndex < itModule->second.ClassList.size())? itModule->second.ClassList[dwIndex] : BCID_NULL;
 }
@@ -207,7 +207,7 @@ const BONGUID CBonCoreEngine::EnumBonClass(const DWORD dwIndex)
 	// インデックス位置の要素を取得
 	BonClassMap::iterator itClass = m_ClassMap.begin();
 	for(DWORD dwPos = 0UL ; dwPos < dwIndex ; dwPos++)itClass++;
-	
+
 	// クラスのGUIDを返す
 	return itClass->first;
 }
@@ -215,14 +215,14 @@ const BONGUID CBonCoreEngine::EnumBonClass(const DWORD dwIndex)
 const DWORD CBonCoreEngine::GetBonClassName(const BONGUID ClassId, LPTSTR lpszClassName)
 {
 	CBlockLock AutoLock(&m_Lock);
-	
+
 	// クラスを検索
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return 0UL;
-	
+
 	// クラス名を格納
 	if(lpszClassName)::_tcscpy(lpszClassName, itClass->second.strClassName.c_str());
-	
+
 	// クラス名長を返す
 	return itClass->second.strClassName.length();
 }
@@ -230,11 +230,11 @@ const DWORD CBonCoreEngine::GetBonClassName(const BONGUID ClassId, LPTSTR lpszCl
 const DWORD CBonCoreEngine::GetBonClassPriority(const BONGUID ClassId)
 {
 	CBlockLock AutoLock(&m_Lock);
-	
+
 	// クラスを検索
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return 0xFFFFFFFFUL;
-	
+
 	// インデックス位置のクラスのGUIDを返す
 	return itClass->second.dwPriority;
 }
@@ -242,11 +242,11 @@ const DWORD CBonCoreEngine::GetBonClassPriority(const BONGUID ClassId)
 const BONGUID CBonCoreEngine::GetBonClassModule(const BONGUID ClassId)
 {
 	CBlockLock AutoLock(&m_Lock);
-	
+
 	// クラスを検索
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return BMID_NULL;
-	
+
 	// インデックス位置のクラスのGUIDを返す
 	return itClass->second.ModuleId;
 }
@@ -257,7 +257,7 @@ IBonObject * CBonCoreEngine::GetStockInstance(LPCTSTR lpszClassName)
 
 	// 要求されたクラスのインスタンスを返す
 	const BonInstanceMap::iterator itInstance = m_InstanceMap.find(BonNameToGuid(lpszClassName));
-	
+
 	return (itInstance != m_InstanceMap.end())? itInstance->second.pInstance : NULL;
 }
 
@@ -268,12 +268,12 @@ const bool CBonCoreEngine::RegisterStockInstance(LPCTSTR lpszClassName, IBonObje
 	// クラス名からGUID計算
 	const BONGUID ClassId = BonNameToGuid(lpszClassName);
 	if(ClassId == BCID_NULL)return false;
-	
+
 	// マップに追加
 	BON_INSTANCE_INFO InstanceInfo;
 	InstanceInfo.strClassName = lpszClassName;
 	InstanceInfo.pInstance = pInstance;
-	
+
 	m_InstanceMap[ClassId] = InstanceInfo;
 
 	return true;
@@ -305,7 +305,7 @@ const DWORD CBonCoreEngine::EnumStockInstance(const DWORD dwIndex, LPTSTR lpszCl
 
 	// クラス名を格納
 	if(lpszClassName)::_tcscpy(lpszClassName, itInstance->second.strClassName.c_str());
-	
+
 	// クラス名長を返す
 	return itInstance->second.strClassName.length();
 }
@@ -332,7 +332,7 @@ void CBonCoreEngine::Startup(const HINSTANCE hInstance)
 	m_hInstance = hInstance;
 	m_CurModuleInfo.hModule = hInstance;
 	m_CurModuleInfo.strModuleName = TEXT("CoreEngine");
-	
+
 	// 自インスタンスをストックマップに登録
 	RegisterStockInstance(TEXT("CBonCoreEngine"), static_cast<CBonObject *>(this));
 }
@@ -351,7 +351,7 @@ void CBonCoreEngine::Shutdown(void)
 		}
 
 	m_InstanceMap.clear();
-		
+
 	// クラスマップクリア
 	m_ClassMap.clear();
 
@@ -359,9 +359,9 @@ void CBonCoreEngine::Shutdown(void)
 	for(BonModuleMap::iterator itModule = m_ModuleMap.begin() ; itModule != m_ModuleMap.end() ; itModule++){
 		::FreeLibrary(itModule->second.hModule);
 		}
-	
+
 	m_ModuleMap.clear();
-	
+
 	// 状態初期化
 	m_CurModuleInfo.hModule = NULL;
 }
@@ -386,7 +386,7 @@ const DWORD CBonCoreEngine::CalcCrc(const BYTE *pData, const DWORD dwDataSize)
 		0x119B4BE9UL, 0x155A565EUL, 0x18197087UL, 0x1CD86D30UL,	0x029F3D35UL, 0x065E2082UL, 0x0B1D065BUL, 0x0FDC1BECUL,	0x3793A651UL, 0x3352BBE6UL, 0x3E119D3FUL, 0x3AD08088UL,	0x2497D08DUL, 0x2056CD3AUL, 0x2D15EBE3UL, 0x29D4F654UL,
 		0xC5A92679UL, 0xC1683BCEUL, 0xCC2B1D17UL, 0xC8EA00A0UL,	0xD6AD50A5UL, 0xD26C4D12UL, 0xDF2F6BCBUL, 0xDBEE767CUL,	0xE3A1CBC1UL, 0xE760D676UL, 0xEA23F0AFUL, 0xEEE2ED18UL,	0xF0A5BD1DUL, 0xF464A0AAUL, 0xF9278673UL, 0xFDE69BC4UL,
 		0x89B8FD09UL, 0x8D79E0BEUL, 0x803AC667UL, 0x84FBDBD0UL,	0x9ABC8BD5UL, 0x9E7D9662UL, 0x933EB0BBUL, 0x97FFAD0CUL,	0xAFB010B1UL, 0xAB710D06UL, 0xA6322BDFUL, 0xA2F33668UL,	0xBCB4666DUL, 0xB8757BDAUL, 0xB5365D03UL, 0xB1F740B4UL
-		};		
+		};
 
 	DWORD dwCurCrc = 0xFFFFFFFFUL;
 

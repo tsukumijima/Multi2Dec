@@ -193,7 +193,7 @@ public:
 		TABLE_ID_SCHEDULED_OTHER_6D = 0x6DU,
 		TABLE_ID_SCHEDULED_OTHER_6E = 0x65U,
 		TABLE_ID_SCHEDULED_OTHER_6F = 0x6FU,
-		
+
 		TABLE_ID_START				= TABLE_ID_CURORNEXT_SELF,
 		TABLE_ID_END				= TABLE_ID_SCHEDULED_OTHER_6F
 	};
@@ -201,10 +201,10 @@ public:
 	virtual const WORD GetServiceID(void) const = 0;
 	virtual const WORD GetTsID(void) const = 0;
 	virtual const WORD GetOrgNetworkID(void) const = 0;
-	
+
 	virtual const BYTE GetTableID(void) const = 0;
 	virtual const BYTE GetLastTableID(void) const = 0;
-	
+
 	virtual const BYTE GetSectionNumber(void) const = 0;
 	virtual const BYTE GetLastSectionNumber(void) const = 0;
 	virtual const BYTE GetSegmentLastSectionNumber(void) const = 0;

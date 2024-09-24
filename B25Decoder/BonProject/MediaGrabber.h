@@ -21,11 +21,11 @@ public:
 
 // CMediaDecoder
 	virtual const bool InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex = 0UL);
-	
+
 // CMediaGrabber
 	CMediaGrabber(IBonObject *pOwner);
 	virtual ~CMediaGrabber(void);
-	
+
 protected:
 // CMediaDecoder
 	virtual const bool OnPlay(void);

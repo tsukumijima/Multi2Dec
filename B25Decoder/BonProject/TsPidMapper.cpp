@@ -16,7 +16,7 @@ const bool CTsPidMapper::StorePacket(const ITsPacket *pTsPacket)
 	if(!pTsPacket)return false;
 
 	const WORD wPID = pTsPacket->GetPID();
-	
+
 	if(wPID >= 0x2000U)return false;				// PID範囲外
 	if(!m_apMapTarget[wPID])return false;			// PIDマップターゲットなし
 
@@ -52,7 +52,7 @@ const bool CTsPidMapper::MapPid(const WORD wPID, ITsPidMapTarget *pTsPidMapTarge
 	// 新しいターゲットをマップ
 	m_apMapTarget[wPID] = pTsPidMapTarget;
 	m_wMapTargetNum++;
-	
+
 	// ハンドラ呼び出し
 	pTsPidMapTarget->OnPidMapped(this, wPID);
 

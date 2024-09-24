@@ -35,7 +35,7 @@ public:
 	CModCatalogBase(IBonObject *pOwner, const MOD_CLASS_INFO *pClassInfo, const DWORD dwClassNum, const HMODULE hModule, const LPCTSTR lpszComment, const LPCTSTR lpszAuthor, const LPCTSTR lpszWebsite);
 	CModCatalogBase(IBonObject *pOwner, const MOD_CLASS_INFO *pClassInfo, const DWORD dwClassNum, const WORD wVersion, const LPCTSTR lpszComment, const LPCTSTR lpszAuthor, const LPCTSTR lpszWebsite);
 	virtual ~CModCatalogBase(void);
-	
+
 	const MOD_CLASS_INFO *m_pClassInfo;
 	const DWORD m_dwClassNum;
 	const HMODULE m_hModule;

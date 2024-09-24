@@ -27,7 +27,7 @@ void CPsiTableBase::OnPidMapped(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
 	// 参照カウンタインクリメント
 	m_dwRefCount++;
-	
+
 	// リセット
 	Reset();
 }

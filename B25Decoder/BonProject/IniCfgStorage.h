@@ -33,7 +33,7 @@ public:
 	virtual const bool SetBoolItem(LPCTSTR lpszItem, const bool bValue);
 	virtual const bool SetIntItem(LPCTSTR lpszItem, const DWORD dwValue);
 	virtual const bool SetTextItem(LPCTSTR lpszItem, LPCTSTR lpszValue);
-	
+
 	virtual const bool GetBoolItem(LPCTSTR lpszItem, const bool bDefault = false);
 	virtual const DWORD GetIntItem(LPCTSTR lpszItem, const DWORD dwDefault = 0UL, const DWORD dwMax = 0xFFFFFFFFUL, const DWORD dwMin = 0x00000000UL);
 	virtual const DWORD GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCTSTR lpszDefault = NULL, const DWORD dwMaxLen = 0UL);
