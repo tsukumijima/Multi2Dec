@@ -2,9 +2,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BonSDK.h"
-#include <Memory>
+#include <memory>
 #include "BcasCardReader.h"
 
 

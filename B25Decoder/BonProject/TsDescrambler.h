@@ -8,7 +8,7 @@
 #include "TsPidMapper.h"
 #include "TsTableBase.h"
 #include "Multi2Decoder.h"
-#include <Vector>
+#include <vector>
 
 
 /////////////////////////////////////////////////////////////////////////////
