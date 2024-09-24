@@ -127,16 +127,33 @@ const bool CMulti2Decoder::Decode(BYTE *pData, const DWORD dwSize, const BYTE by
 
 	DWORD dwPos;
 	DATKEY CbcData = m_InitialCbc;
-	DATKEY SrcData;
+	DATKEY SrcData1, SrcData2;
 
 	// CBCモード
-	for(dwPos = 0UL ; (dwSize - dwPos) >= sizeof(DATKEY) ; dwPos += sizeof(DATKEY)){
-		SrcData.SetHexData(&pData[dwPos]);
-		DecryptBlock(SrcData, WorkKey);
-		SrcData.dwLeft  ^= CbcData.dwLeft;
-		SrcData.dwRight ^= CbcData.dwRight;
-		CbcData.SetHexData(&pData[dwPos]);
-		SrcData.GetHexData(&pData[dwPos]);
+	for(dwPos = 0UL ; (dwSize - dwPos) >= sizeof(DATKEY) * 2 ; dwPos += sizeof(DATKEY) * 2){
+		SrcData1.SetHexData(&pData[dwPos]);
+		SrcData2.SetHexData(&pData[dwPos + sizeof(DATKEY)]);
+		DATKEY x1 = SrcData1;
+		DATKEY x2 = SrcData2;
+		DecryptBlockX2(x1, x2, WorkKey);
+		x1.dwLeft ^= CbcData.dwLeft;
+		x1.dwRight ^= CbcData.dwRight;
+		x2.dwLeft ^= SrcData1.dwLeft;
+		x2.dwRight ^= SrcData1.dwRight;
+		CbcData = SrcData2;
+		x1.GetHexData(&pData[dwPos]);
+		x2.GetHexData(&pData[dwPos + sizeof(DATKEY)]);
+		}
+
+	if((dwSize - dwPos) >= sizeof(DATKEY)){
+		SrcData1.SetHexData(&pData[dwPos]);
+		DATKEY x1 = SrcData1;
+		DecryptBlock(x1, WorkKey);
+		x1.dwLeft ^= CbcData.dwLeft;
+		x1.dwRight ^= CbcData.dwRight;
+		CbcData = SrcData1;
+		x1.GetHexData(&pData[dwPos]);
+		dwPos += sizeof(DATKEY);
 		}
 
 	// OFBモード
@@ -168,6 +185,21 @@ inline void CMulti2Decoder::DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey)
 		}
 }
 
+inline void CMulti2Decoder::DecryptBlockX2(DATKEY &Block1, DATKEY &Block2, const SYSKEY &WorkKey)
+{
+	// Block Decryption
+	for(DWORD dwRound = 0UL ; dwRound < SCRAMBLE_ROUND ; dwRound++){
+		RoundFuncPi4X2(Block1, Block2, WorkKey.dwKeys[7]);
+		RoundFuncPi3X2(Block1, Block2, WorkKey.dwKeys[5], WorkKey.dwKeys[6]);
+		RoundFuncPi2X2(Block1, Block2, WorkKey.dwKeys[4]);
+		RoundFuncPi1X2(Block1, Block2);
+		RoundFuncPi4X2(Block1, Block2, WorkKey.dwKeys[3]);
+		RoundFuncPi3X2(Block1, Block2, WorkKey.dwKeys[1], WorkKey.dwKeys[2]);
+		RoundFuncPi2X2(Block1, Block2, WorkKey.dwKeys[0]);
+		RoundFuncPi1X2(Block1, Block2);
+		}
+}
+
 inline void CMulti2Decoder::EncryptBlock(DATKEY &Block, const SYSKEY &WorkKey)
 {
 	// Block Encryption
@@ -183,7 +215,7 @@ inline void CMulti2Decoder::EncryptBlock(DATKEY &Block, const SYSKEY &WorkKey)
 		}
 }
 
-inline void CMulti2Decoder::KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, DATKEY &DataKey)
+void CMulti2Decoder::KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, DATKEY &DataKey)
 {
 	// Key Schedule
 	RoundFuncPi1(DataKey);									// π1
@@ -226,28 +258,71 @@ inline void CMulti2Decoder::RoundFuncPi1(DATKEY &Block)
 	Block.dwRight ^= Block.dwLeft;
 }
 
+inline void CMulti2Decoder::RoundFuncPi1X2(DATKEY &Block1, DATKEY &Block2)
+{
+	Block1.dwRight ^= Block1.dwLeft;
+	Block2.dwRight ^= Block2.dwLeft;
+}
+
 inline void CMulti2Decoder::RoundFuncPi2(DATKEY &Block, const DWORD dwK1)
 {
 	// Elementary Encryption Function π2
 	const DWORD dwY = Block.dwRight + dwK1;
-	const DWORD dwZ = LeftRotate<1>(dwY) + dwY - 1UL;
+	const DWORD dwZ = LeftRotate<1>(dwY) + dwY - 1;
 	Block.dwLeft ^= LeftRotate<4>(dwZ) ^ dwZ;
+}
+
+inline void CMulti2Decoder::RoundFuncPi2X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK1)
+{
+	DWORD t1 = Block1.dwRight + dwK1;
+	DWORD t2 = Block2.dwRight + dwK1;
+	t1 = LeftRotate<1>(t1) + t1 - 1;
+	t2 = LeftRotate<1>(t2) + t2 - 1;
+	Block1.dwLeft ^= LeftRotate<4>(t1) ^ t1;
+	Block2.dwLeft ^= LeftRotate<4>(t2) ^ t2;
 }
 
 inline void CMulti2Decoder::RoundFuncPi3(DATKEY &Block, const DWORD dwK2, const DWORD dwK3)
 {
 	// Elementary Encryption Function π3
 	const DWORD dwY = Block.dwLeft + dwK2;
-	const DWORD dwZ = LeftRotate<2>(dwY) + dwY + 1UL;
+	const DWORD dwZ = LeftRotate<2>(dwY) + dwY + 1;
 	const DWORD dwA = LeftRotate<8>(dwZ) ^ dwZ;
 	const DWORD dwB = dwA + dwK3;
-	const DWORD dwC = LeftRotate<1>(dwB) - dwB;
+	//const DWORD dwC = LeftRotate<1>(dwB) - dwB;
+	// 法2^32の合同式において、MSB(dwB)==0のとき dwC=dwB*2-dwB=dwB、MSB(dwB)==1のとき dwC=dwB*2+1-dwB=dwB+1
+	// まとめると dwC=dwB+MSB(dwB)=dwB+(dwB>>31)
+	const DWORD dwC = dwB + (dwB >> 31);
 	Block.dwRight ^= (LeftRotate<16>(dwC) ^ (dwC | Block.dwLeft));
+}
+
+inline void CMulti2Decoder::RoundFuncPi3X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK2, const DWORD dwK3)
+{
+	DWORD t1 = Block1.dwLeft + dwK2;
+	DWORD t2 = Block2.dwLeft + dwK2;
+	t1 = LeftRotate<2>(t1) + t1 + 1;
+	t2 = LeftRotate<2>(t2) + t2 + 1;
+	t1 = LeftRotate<8>(t1) ^ t1;
+	t2 = LeftRotate<8>(t2) ^ t2;
+	t1 = t1 + dwK3;
+	t2 = t2 + dwK3;
+	t1 = t1 + (t1 >> 31);
+	t2 = t2 + (t2 >> 31);
+	Block1.dwRight ^= (LeftRotate<16>(t1) ^ (t1 | Block1.dwLeft));
+	Block2.dwRight ^= (LeftRotate<16>(t2) ^ (t2 | Block2.dwLeft));
 }
 
 inline void CMulti2Decoder::RoundFuncPi4(DATKEY &Block, const DWORD dwK4)
 {
 	// Elementary Encryption Function π4
 	const DWORD dwY = Block.dwRight + dwK4;
-	Block.dwLeft ^= (LeftRotate<2>(dwY) + dwY + 1UL);
+	Block.dwLeft ^= (LeftRotate<2>(dwY) + dwY + 1);
+}
+
+inline void CMulti2Decoder::RoundFuncPi4X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK4)
+{
+	DWORD t1 = Block1.dwRight + dwK4;
+	DWORD t2 = Block2.dwRight + dwK4;
+	Block1.dwLeft ^= (LeftRotate<2>(t1) + t1 + 1);
+	Block2.dwLeft ^= (LeftRotate<2>(t2) + t2 + 1);
 }

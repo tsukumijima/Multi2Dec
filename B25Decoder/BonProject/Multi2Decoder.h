@@ -39,14 +39,19 @@ private:
 	};
 
 	static inline void DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey);
+	static inline void DecryptBlockX2(DATKEY &Block1, DATKEY &Block2, const SYSKEY &WorkKey);
 	static inline void EncryptBlock(DATKEY &Block, const SYSKEY &WorkKey);
 
-	static inline void KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, DATKEY &DataKey);
+	static void KeySchedule(SYSKEY &WorkKey, const SYSKEY &SysKey, DATKEY &DataKey);
 
 	static inline void RoundFuncPi1(DATKEY &Block);
+	static inline void RoundFuncPi1X2(DATKEY &Block1, DATKEY &Block2);
 	static inline void RoundFuncPi2(DATKEY &Block, const DWORD dwK1);
+	static inline void RoundFuncPi2X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK1);
 	static inline void RoundFuncPi3(DATKEY &Block, const DWORD dwK2, const DWORD dwK3);
+	static inline void RoundFuncPi3X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK2, const DWORD dwK3);
 	static inline void RoundFuncPi4(DATKEY &Block, const DWORD dwK4);
+	static inline void RoundFuncPi4X2(DATKEY &Block1, DATKEY &Block2, const DWORD dwK4);
 
 	DATKEY m_InitialCbc;
 	SYSKEY m_SystemKey;
