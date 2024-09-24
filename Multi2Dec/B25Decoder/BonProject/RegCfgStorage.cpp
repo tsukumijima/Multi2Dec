@@ -1,4 +1,4 @@
-// RegCfgStorage.cpp: ”Ä—pƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒgƒŒ[ƒWƒNƒ‰ƒX(ƒŒƒWƒXƒgƒŠ”Å)
+ï»¿// RegCfgStorage.cpp: æ±ç”¨ã‚³ãƒ³ãƒ•ã‚£ã‚®ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹(ãƒ¬ã‚¸ã‚¹ãƒˆãƒªç‰ˆ)
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,36 +9,36 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-// ƒfƒtƒHƒ‹ƒg‚ÌƒZƒNƒVƒ‡ƒ“–¼
+// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³å
 #define DEF_PATHNAME		TEXT("Bon")		// /HKEY_CURRENT_USER/Software/Bon/
 
-#define MAX_KEYNAME_LEN		256UL			// Å‘åƒL[–¼’·
-#define MAX_VALNAME_LEN		256UL			// Å‘åƒAƒCƒeƒ€–¼’·
+#define MAX_KEYNAME_LEN		256UL			// æœ€å¤§ã‚­ãƒ¼åé•·
+#define MAX_VALNAME_LEN		256UL			// æœ€å¤§ã‚¢ã‚¤ãƒ†ãƒ åé•·
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—pƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒgƒŒ[ƒWƒNƒ‰ƒX(ƒŒƒWƒXƒgƒŠ”Å)
+// æ±ç”¨ã‚³ãƒ³ãƒ•ã‚£ã‚®ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹(ãƒ¬ã‚¸ã‚¹ãƒˆãƒªç‰ˆ)
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CRegCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	CloseStorage();
 
-	// ƒpƒX–¼‚ğ¶¬
+	// ãƒ‘ã‚¹åã‚’ç”Ÿæˆ
 	TCHAR szKeyPath[MAX_KEYNAME_LEN] = {TEXT('\0')};
 	::_stprintf(szKeyPath, TEXT("Software\\%s"), (lpszPathName)? lpszPathName : DEF_PATHNAME);
 	
-	// ƒŒƒWƒXƒgƒŠ‚ğƒI[ƒvƒ“‚·‚é
+	// ãƒ¬ã‚¸ã‚¹ãƒˆãƒªã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
 	if(bCreate){
-		// ƒL[‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍƒL[‚ğì¬‚·‚é
+		// ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ã‚­ãƒ¼ã‚’ä½œæˆã™ã‚‹
 		if(::RegCreateKeyEx(HKEY_CURRENT_USER, szKeyPath, 0UL, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &m_hRegKey, NULL) != ERROR_SUCCESS)return false;
 		}
 	else{
-		// ƒL[‚ª‘¶İ‚µ‚È‚¢ê‡‚Í¸”s‚·‚é
+		// ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯å¤±æ•—ã™ã‚‹
 		if(::RegOpenKeyEx(HKEY_CURRENT_USER, szKeyPath, 0UL, KEY_ALL_ACCESS, &m_hRegKey) != ERROR_SUCCESS)return false;
 		}
 
@@ -49,7 +49,7 @@ const bool CRegCfgStorage::CloseStorage(void)
 {
 	if(!m_hRegKey)return false;
 
-	// ƒŒƒWƒXƒgƒŠ‚ğ•Â‚¶‚é
+	// ãƒ¬ã‚¸ã‚¹ãƒˆãƒªã‚’é–‰ã˜ã‚‹
 	::RegCloseKey(m_hRegKey);
 	m_hRegKey = NULL;
 
@@ -60,19 +60,19 @@ IConfigStorage * CRegCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 {
 	if(!m_hRegKey || !lpszSection)return NULL;
 
-	// ƒTƒuƒL[‚ğƒI[ƒvƒ“‚·‚é
+	// ã‚µãƒ–ã‚­ãƒ¼ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
 	HKEY hSubKey = NULL;
 
 	if(bCreate){
-		// ƒTƒuƒL[‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍƒTƒuƒL[‚ğì¬‚·‚é
+		// ã‚µãƒ–ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ã‚µãƒ–ã‚­ãƒ¼ã‚’ä½œæˆã™ã‚‹
 		if(::RegCreateKeyEx(m_hRegKey, lpszSection, 0UL, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hSubKey, NULL) != ERROR_SUCCESS)return NULL;
 		}
 	else{
-		// ƒTƒuƒL[‚ª‘¶İ‚µ‚È‚¢ê‡‚Í¸”s‚·‚é
+		// ã‚µãƒ–ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯å¤±æ•—ã™ã‚‹
 		if(::RegOpenKeyEx(m_hRegKey, lpszSection, 0UL, KEY_ALL_ACCESS, &hSubKey) != ERROR_SUCCESS)return NULL;
 		}
 
-	// V‚µ‚¢ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// æ–°ã—ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	CRegCfgStorage *pNewInstance = new CRegCfgStorage(NULL);
 	
 	if(!pNewInstance){
@@ -80,7 +80,7 @@ IConfigStorage * CRegCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 		return NULL;
 		}
 
-	// V‚µ‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚Éƒnƒ“ƒhƒ‹İ’è
+	// æ–°ã—ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã«ãƒãƒ³ãƒ‰ãƒ«è¨­å®š
 	pNewInstance->m_hRegKey = hSubKey;
 	
 	return pNewInstance;
@@ -92,10 +92,10 @@ const DWORD CRegCfgStorage::GetSectionNum(void)
 
 	DWORD dwSubKeyNum = 0UL;
 
-	// ƒTƒuƒL[”‚ğæ“¾‚·‚é
+	// ã‚µãƒ–ã‚­ãƒ¼æ•°ã‚’å–å¾—ã™ã‚‹
 	if(::RegQueryInfoKey(m_hRegKey, NULL, NULL, NULL, &dwSubKeyNum, NULL, NULL, NULL, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
-	// ƒTƒuƒL[”‚ğ•Ô‚·
+	// ã‚µãƒ–ã‚­ãƒ¼æ•°ã‚’è¿”ã™
 	return dwSubKeyNum;
 }
 
@@ -105,7 +105,7 @@ const DWORD CRegCfgStorage::EnumSection(const DWORD dwIndex, LPTSTR lpszSection)
 
 	DWORD dwSectionLen = MAX_KEYNAME_LEN;
 
-	// ƒTƒuƒL[–¼‚ğ—ñ‹“‚·‚é
+	// ã‚µãƒ–ã‚­ãƒ¼åã‚’åˆ—æŒ™ã™ã‚‹
 	if(::RegEnumKeyEx(m_hRegKey, dwIndex, lpszSection, &dwSectionLen, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
 	return dwSectionLen;
@@ -115,7 +115,7 @@ const bool CRegCfgStorage::DeleteSection(LPCTSTR lpszSection)
 {
 	if(!m_hRegKey)return 0UL;
 
-	// ƒTƒuƒL[‚ğíœ‚·‚é
+	// ã‚µãƒ–ã‚­ãƒ¼ã‚’å‰Šé™¤ã™ã‚‹
 	return (::RegDeleteKey(m_hRegKey, lpszSection) == ERROR_SUCCESS)? true : false;
 }
 
@@ -125,10 +125,10 @@ const DWORD CRegCfgStorage::GetItemNum(void)
 
 	DWORD dwItemNum = 0UL;
 
-	// ƒAƒCƒeƒ€”‚ğæ“¾‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’å–å¾—ã™ã‚‹
 	if(::RegQueryInfoKey(m_hRegKey, NULL, NULL, NULL, NULL, NULL, NULL, &dwItemNum, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
-	// ƒAƒCƒeƒ€”‚ğ•Ô‚·
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’è¿”ã™
 	return dwItemNum;
 }
 
@@ -138,7 +138,7 @@ const DWORD CRegCfgStorage::EnumItem(const DWORD dwIndex, LPTSTR lpszItem)
 
 	DWORD dwValueLen = MAX_VALNAME_LEN;
 
-	// ƒGƒ“ƒgƒŠ–¼‚ğ—ñ‹“‚·‚é
+	// ã‚¨ãƒ³ãƒˆãƒªåã‚’åˆ—æŒ™ã™ã‚‹
 	if(::RegEnumValue(m_hRegKey, dwIndex, lpszItem, &dwValueLen, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
 	return dwValueLen;
@@ -150,10 +150,10 @@ const DWORD CRegCfgStorage::GetItemType(LPCTSTR lpszItem)
 
 	DWORD dwType = REG_NONE;
 	
-	// ƒGƒ“ƒgƒŠ‚ÌŒ^‚ğæ“¾‚·‚é
+	// ã‚¨ãƒ³ãƒˆãƒªã®å‹ã‚’å–å¾—ã™ã‚‹
 	if(::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, NULL, NULL) != ERROR_SUCCESS)return 0UL;
 
-	// BOOL‚ÆDWORD‚Í‹æ•Ê‚Å‚«‚È‚¢(ƒ†[ƒU‚Ìˆµ‚¢‚ÉˆÏ‚Ë‚ç‚ê‚é)
+	// BOOLã¨DWORDã¯åŒºåˆ¥ã§ããªã„(ãƒ¦ãƒ¼ã‚¶ã®æ‰±ã„ã«å§”ã­ã‚‰ã‚Œã‚‹)
 	switch(dwType){
 		case REG_DWORD	: return ITEM_TYPE_INT;
 		case REG_SZ		: return ITEM_TYPE_TEXT;		
@@ -165,7 +165,7 @@ const bool CRegCfgStorage::DeleteItem(LPCTSTR lpszItem)
 {
 	if(!m_hRegKey)return 0UL;
 	
-	// ƒGƒ“ƒgƒŠ‚ğíœ‚·‚é
+	// ã‚¨ãƒ³ãƒˆãƒªã‚’å‰Šé™¤ã™ã‚‹
 	return (::RegDeleteValue(m_hRegKey, lpszItem))? true : false;
 }
 
@@ -175,7 +175,7 @@ const bool CRegCfgStorage::SetBoolItem(LPCTSTR lpszItem, const bool bValue)
 	
 	const DWORD dwValue = (bValue)? 1UL : 0UL;
 	
-	// BOOL‚ğƒZ[ƒu‚·‚é
+	// BOOLã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::RegSetValueEx(m_hRegKey, lpszItem, 0UL, REG_DWORD, (const BYTE *)&dwValue, sizeof(dwValue)))? true : false;
 }
 
@@ -183,7 +183,7 @@ const bool CRegCfgStorage::SetIntItem(LPCTSTR lpszItem, const DWORD dwValue)
 {
 	if(!m_hRegKey)return 0UL;
 
-	// DWORD‚ğƒZ[ƒu‚·‚é
+	// DWORDã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::RegSetValueEx(m_hRegKey, lpszItem, 0UL, REG_DWORD, (const BYTE *)&dwValue, sizeof(dwValue)))? true : false;
 }
 
@@ -191,7 +191,7 @@ const bool CRegCfgStorage::SetTextItem(LPCTSTR lpszItem, LPCTSTR lpszValue)
 {
 	if(!m_hRegKey)return 0UL;
 
-	// •¶š—ñ‚ğƒZ[ƒu‚·‚é
+	// æ–‡å­—åˆ—ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::RegSetValueEx(m_hRegKey, lpszItem, 0UL, REG_SZ, (const BYTE *)lpszValue, (::_tcslen(lpszValue) + 1UL) * sizeof(lpszValue[0])))? true : false;
 }
 
@@ -202,13 +202,13 @@ const bool CRegCfgStorage::GetBoolItem(LPCTSTR lpszItem, const bool bDefault)
 	DWORD dwType = REG_NONE;
 	DWORD dwValue = 0UL;
 
-	// BOOL‚ğƒ[ƒh‚·‚é
+	// BOOLã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	if(::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, (BYTE *)&dwValue, NULL) != ERROR_SUCCESS)return bDefault;
 
-	// Œ^‚ğƒ`ƒFƒbƒN
+	// å‹ã‚’ãƒã‚§ãƒƒã‚¯
 	if(dwType != REG_DWORD)return bDefault;
 
-	// ’l‚ğ•Ô‚·
+	// å€¤ã‚’è¿”ã™
 	return (dwValue)? true : false;
 }
 
@@ -219,13 +219,13 @@ const DWORD CRegCfgStorage::GetIntItem(LPCTSTR lpszItem, const DWORD dwDefault, 
 	DWORD dwType = REG_NONE;
 	DWORD dwValue = 0UL;
 
-	// DWORD‚ğƒ[ƒh‚·‚é
+	// DWORDã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	if(::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, (BYTE *)&dwValue, NULL) != ERROR_SUCCESS)return dwDefault;
 
-	// Œ^‚ğƒ`ƒFƒbƒN
+	// å‹ã‚’ãƒã‚§ãƒƒã‚¯
 	if(dwType != REG_DWORD)return dwDefault;
 
-	// ’l‚ğ•Ô‚·
+	// å€¤ã‚’è¿”ã™
 	return ((dwValue >= dwMin) && (dwValue <= dwMax))? dwValue : dwDefault;
 }
 
@@ -236,7 +236,7 @@ const DWORD CRegCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 	DWORD dwType = REG_SZ;
 	DWORD dwSize = 0xFFFFFFFFUL;
 	
-	// ƒTƒCƒY‚ğæ“¾
+	// ã‚µã‚¤ã‚ºã‚’å–å¾—
 	const LONG lReturn = ::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, NULL, &dwSize);
 	
 	if((lReturn != ERROR_SUCCESS) || (dwType != REG_SZ) || (dwMaxLen && (((dwSize / sizeof(lpszValue[0])) - 1UL) > dwMaxLen))){
@@ -250,7 +250,7 @@ const DWORD CRegCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 		return 0UL;
 		}
 
-	// •¶š—ñ‚ğæ“¾
+	// æ–‡å­—åˆ—ã‚’å–å¾—
 	if(::RegQueryValueEx(m_hRegKey, lpszItem, NULL, &dwType, (BYTE *)lpszValue, &dwSize) != ERROR_SUCCESS){
 		if(lpszDefault){
 			if(lpszValue){
@@ -262,7 +262,7 @@ const DWORD CRegCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 		return 0UL;
 		}
 	
-	// Ši”[‚µ‚½•¶š”‚ğ•Ô‚·
+	// æ ¼ç´ã—ãŸæ–‡å­—æ•°ã‚’è¿”ã™
 	return dwSize / sizeof(lpszValue[0]) - 1UL;
 }
 
@@ -275,6 +275,6 @@ CRegCfgStorage::CRegCfgStorage(IBonObject *pOwner)
 
 CRegCfgStorage::~CRegCfgStorage(void)
 {
-	// ƒXƒgƒŒ[ƒW‚ğƒNƒ[ƒY‚·‚é
+	// ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
 	CloseStorage();
 }

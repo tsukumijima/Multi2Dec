@@ -1,4 +1,4 @@
-// TsEpgCore.cpp: TS EPG ƒRƒAƒNƒ‰ƒX
+ï»¿// TsEpgCore.cpp: TS EPG ã‚³ã‚¢ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,15 +10,15 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IEitItemŠî’êƒNƒ‰ƒX
+// IEitItemåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CEitItem::ParseItem(void)
 {
-	// ƒTƒCƒY‚ğƒ`ƒFƒbƒN
+	// ã‚µã‚¤ã‚ºã‚’ãƒã‚§ãƒƒã‚¯
 	if(m_dwDataSize < 12UL)return false;
 
-	// ƒf[ƒ^‚ğ‰ğÍ‚·‚é
+	// ãƒ‡ãƒ¼ã‚¿ã‚’è§£æã™ã‚‹
 	m_wEventID = ((WORD)m_pData[0] << 8) | (WORD)m_pData[1];
 	m_StartTime.SetAribTime(&m_pData[2]);
 	m_dwDuration = CAribTime::AribBcdToSecond(&m_pData[7]);
@@ -34,64 +34,64 @@ const bool CEitItem::ParseItem(void)
 
 const WORD CEitItem::GetEventID(void) const
 {
-	// ƒCƒxƒ“ƒgID‚ğ•Ô‚·
+	// ã‚¤ãƒ™ãƒ³ãƒˆIDã‚’è¿”ã™
 	return m_wEventID;
 }
 
 const CTsTime & CEitItem::GetStartTime(void) const
 {
-	// ŠJnŠÔ‚ğ•Ô‚·
+	// é–‹å§‹æ™‚é–“ã‚’è¿”ã™
 	return m_StartTime;
 }
 
 const DWORD CEitItem::GetDuration(void) const
 {
-	// ”Ô‘g’·‚ğ•Ô‚·
+	// ç•ªçµ„é•·ã‚’è¿”ã™
 	return m_dwDuration;
 }
 
 const BYTE CEitItem::GetRunningStatus(void) const
 {
-	// isó‘Ô‚ğ•Ô‚·
+	// é€²è¡ŒçŠ¶æ…‹ã‚’è¿”ã™
 	return m_byRunningStatus;
 }
 
 const bool CEitItem::IsScrambled(void) const
 {
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹ƒtƒ‰ƒO‚ğ•Ô‚·
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	return m_bIsScrambled;
 }
 
 const IDescBlock * CEitItem::GetEventDesc(void) const
 {
-	// ‹LqqƒuƒƒbƒN‚ğ•Ô‚·
+	// è¨˜è¿°å­ãƒ–ãƒ­ãƒƒã‚¯ã‚’è¿”ã™
 	return &m_EventDesc;
 }
 
 const bool CEitItem::CopyItem(const IEitItem *pSrc)
 {
-	// IMediaDataƒCƒ“ƒ^ƒtƒF[ƒX‚ğæ“¾
+	// IMediaDataã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å–å¾—
 	const IMediaData * const pMediaData = dynamic_cast<const IMediaData *>(pSrc);
 	if(!pMediaData)return false;
 
-	// ƒAƒCƒeƒ€ƒf[ƒ^ƒRƒs[
+	// ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼
 	if(CMediaData::CopyData(pMediaData) != GetSize())return false;
 	
-	// ƒf[ƒ^‰ğÍ
+	// ãƒ‡ãƒ¼ã‚¿è§£æ
 	return ParseItem();
 }
 
 const DWORD CEitItem::CopyData(const IMediaData *pSrc)
 {
-	// IPsiSectionƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+	// IPsiSectionã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 	const IEitItem * const pEitItem = dynamic_cast<const IEitItem *>(pSrc);
 
 	if(pEitItem){
-		// IEitItem‚Æ‚µ‚ÄƒRƒs[
+		// IEitItemã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return (CopyItem(pEitItem))? GetSize() : 0UL;
 		}
 	else{
-		// IMediaData‚Æ‚µ‚ÄƒRƒs[
+		// IMediaDataã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return CMediaData::CopyData(pSrc);
 		}
 }
@@ -104,28 +104,28 @@ CEitItem::CEitItem(IBonObject *pOwner)
 	, m_bIsScrambled(false)
 	, m_EventDesc(NULL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CEitItem::~CEitItem(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IEpgItemŠî’êƒNƒ‰ƒX
+// IEpgItemåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CEpgItem::StoreEitItem(const IEitItem *pEitItem)
 {
 	if(!pEitItem)return SST_EMPTY;
 
-	// Šî–{î•ñ‚ğ‰ğÍ
+	// åŸºæœ¬æƒ…å ±ã‚’è§£æ
 	BYTE byLastState = m_byStoreState;
 	m_byStoreState |= StoreEventID(pEitItem);
 
-	// ‹Lqq‚ğ‰ğÍ
+	// è¨˜è¿°å­ã‚’è§£æ
 	const IDescBlock *pDescBlock = pEitItem->GetEventDesc();
 
 
@@ -153,13 +153,13 @@ const BYTE CEpgItem::StoreEitItem(const IEitItem *pEitItem)
 		m_byStoreState |= StoreContentDesc(pDescBlock);
 		}
 
-	// XV‚³‚ê‚½î•ñ‚ğ•Ô‚·
+	// æ›´æ–°ã•ã‚ŒãŸæƒ…å ±ã‚’è¿”ã™
 	return m_byStoreState & (~byLastState);
 }
 
 void CEpgItem::Reset(void)
 {
-	// ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	m_byStoreState = SST_EMPTY;
 	m_wEventID = 0x0000U;
 	m_StartTime.ClearTime();
@@ -182,37 +182,37 @@ void CEpgItem::Reset(void)
 
 const BYTE CEpgItem::GetStoreState(void) const
 {
-	// ƒf[ƒ^‚ÌƒXƒgƒAi’»ó‘Ô‚ğ•Ô‚·
+	// ãƒ‡ãƒ¼ã‚¿ã®ã‚¹ãƒˆã‚¢é€²æ—çŠ¶æ…‹ã‚’è¿”ã™
 	return m_byStoreState;
 }
 
 const WORD CEpgItem::GetEventID(void) const
 {
-	// ƒCƒxƒ“ƒgID‚ğ•Ô‚·
+	// ã‚¤ãƒ™ãƒ³ãƒˆIDã‚’è¿”ã™
 	return m_wEventID;
 }
 
 const CTsTime & CEpgItem::GetStartTime(void) const
 {
-	// ŠJnŠÔ‚ğ•Ô‚·
+	// é–‹å§‹æ™‚é–“ã‚’è¿”ã™
 	return m_StartTime;
 }
 
 const DWORD CEpgItem::GetDuration(void) const
 {
-	// ”Ô‘g’·‚ğ•Ô‚·
+	// ç•ªçµ„é•·ã‚’è¿”ã™
 	return m_dwDuration;
 }
 
 const bool CEpgItem::IsScrambled(void) const
 {
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹ƒtƒ‰ƒO‚ğ•Ô‚·
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	return m_bIsScrambled;
 }
 
 const DWORD CEpgItem::GetEventTitle(LPTSTR lpszDst) const
 {
-	// ”Ô‘g‚Ìƒ^ƒCƒgƒ‹‚ğ•Ô‚·
+	// ç•ªçµ„ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’è¿”ã™
 	if(lpszDst)::_tcscpy(lpszDst, m_strEventTitle.c_str());
 
 	return m_strEventTitle.length();
@@ -220,7 +220,7 @@ const DWORD CEpgItem::GetEventTitle(LPTSTR lpszDst) const
 
 const DWORD CEpgItem::GetEventInfo(LPTSTR lpszDst) const
 {
-	// ”Ô‘g‚Ìî•ñ‚ğ•Ô‚·
+	// ç•ªçµ„ã®æƒ…å ±ã‚’è¿”ã™
 	if(lpszDst)::_tcscpy(lpszDst, m_strEventInfo.c_str());
 
 	return m_strEventInfo.length();
@@ -228,7 +228,7 @@ const DWORD CEpgItem::GetEventInfo(LPTSTR lpszDst) const
 
 const DWORD CEpgItem::GetEventDetail(LPTSTR lpszDst) const
 {
-	// ”Ô‘g‚ÌÚ×‚ğ•Ô‚·
+	// ç•ªçµ„ã®è©³ç´°ã‚’è¿”ã™
 	if(lpszDst)::_tcscpy(lpszDst, m_strEventDetail.c_str());
 
 	return m_strEventDetail.length();
@@ -236,49 +236,49 @@ const DWORD CEpgItem::GetEventDetail(LPTSTR lpszDst) const
 
 const WORD CEpgItem::GetVideoResolution(void) const
 {
-	// ‰ğ‘œ“x(‰¡•ûŒü‚ÌƒsƒNƒZƒ‹”)‚ğ•Ô‚·
+	// è§£åƒåº¦(æ¨ªæ–¹å‘ã®ãƒ”ã‚¯ã‚»ãƒ«æ•°)ã‚’è¿”ã™
 	return m_wVideoResolution;
 }
 
 const bool CEpgItem::IsVideoProgressive(void) const
 {
-	// ƒvƒƒOƒŒƒbƒVƒu‚Ì—L–³‚ğ•Ô‚·
+	// ãƒ—ãƒ­ã‚°ãƒ¬ãƒƒã‚·ãƒ–ã®æœ‰ç„¡ã‚’è¿”ã™
 	return m_bIsVideoProgressive;
 }
 
 const bool CEpgItem::IsVideoAspectWide(void) const
 {
-	// ƒAƒXƒyƒNƒg”ä16:9‚Ì—L–³‚ğ•Ô‚·
+	// ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”16:9ã®æœ‰ç„¡ã‚’è¿”ã™
 	return m_bIsVideoAspectWide;
 }
 
 const bool CEpgItem::IsVideoPanAndScan(void) const
 {
-	// ƒpƒ“ƒXƒLƒƒƒ“‚Ì—L–³‚ğ•Ô‚·
+	// ãƒ‘ãƒ³ã‚¹ã‚­ãƒ£ãƒ³ã®æœ‰ç„¡ã‚’è¿”ã™
 	return m_bIsVideoPanAndScan;
 }
 
 const BYTE CEpgItem::GetAudioMode(void) const
 {
-	// ‰¹ºƒ‚[ƒh‚ğ•Ô‚·
+	// éŸ³å£°ãƒ¢ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return m_byAudioMode;
 }
 
 const DWORD CEpgItem::GetGenreNum(void) const
 {
-	// ƒWƒƒƒ“ƒ‹”‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«æ•°ã‚’è¿”ã™
 	return m_GenreArray.size();
 }
 
 const BYTE CEpgItem::GetGenreLevel1(const DWORD dwIndex) const
 {
-	// ƒWƒƒƒ“ƒ‹1‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«1ã‚’è¿”ã™
 	return (dwIndex < m_GenreArray.size())? (m_GenreArray[dwIndex] >> 4) : 0x0FU;
 }
 
 const BYTE CEpgItem::GetGenreLevel2(const DWORD dwIndex) const
 {
-	// ƒWƒƒƒ“ƒ‹2‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«2ã‚’è¿”ã™
 	return (dwIndex < m_GenreArray.size())? (m_GenreArray[dwIndex] & 0x0F) : 0x0FU;
 }
 
@@ -286,7 +286,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 {
 	if(!pSrc)return false;
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğƒRƒs[‚·‚é
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 	m_byStoreState = pSrc->GetStoreState();
 	m_wEventID = pSrc->GetEventID();
 	m_StartTime = pSrc->GetStartTime();
@@ -300,11 +300,11 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 
 	m_byAudioMode = pSrc->GetAudioMode();
 
-	// –Ê“|‚¾‚ªÀ‘•ƒNƒ‰ƒX‚ÉˆË‘¶‚µ‚È‚¢‚æ‚¤‚É‚·‚é‚É‚Í‚±‚¤‚·‚é‚µ‚©‚È‚¢
+	// é¢å€’ã ãŒå®Ÿè£…ã‚¯ãƒ©ã‚¹ã«ä¾å­˜ã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã«ã¯ã“ã†ã™ã‚‹ã—ã‹ãªã„
 	std::vector<TCHAR> szTempString;
 	DWORD dwLength;
 
-	// ”Ô‘g‚Ìƒ^ƒCƒgƒ‹‚ğƒRƒs[
+	// ç•ªçµ„ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’ã‚³ãƒ”ãƒ¼
 	if(dwLength = pSrc->GetEventTitle(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pSrc->GetEventTitle(&szTempString[0]);
@@ -314,7 +314,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 		m_strEventTitle = TEXT("");
 		}
 		
-	// ”Ô‘g‚Ìî•ñ‚ğƒRƒs[
+	// ç•ªçµ„ã®æƒ…å ±ã‚’ã‚³ãƒ”ãƒ¼
 	if(dwLength = pSrc->GetEventInfo(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pSrc->GetEventInfo(&szTempString[0]);
@@ -324,7 +324,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 		m_strEventInfo = TEXT("");
 		}
 
-	// ”Ô‘g‚ÌÚ×‚ğƒRƒs[				
+	// ç•ªçµ„ã®è©³ç´°ã‚’ã‚³ãƒ”ãƒ¼				
 	if(dwLength = pSrc->GetEventDetail(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pSrc->GetEventDetail(&szTempString[0]);
@@ -334,7 +334,7 @@ const bool CEpgItem::CopyItem(const IEpgItem *pSrc)
 		m_strEventDetail = TEXT("");
 		}
 
-	// ƒWƒƒƒ“ƒ‹‚ğƒRƒs[
+	// ã‚¸ãƒ£ãƒ³ãƒ«ã‚’ã‚³ãƒ”ãƒ¼
 	const DWORD dwGenreNum = pSrc->GetGenreNum();
 	m_GenreArray.resize(dwGenreNum);
 	
@@ -353,13 +353,13 @@ CEpgItem::CEpgItem(IBonObject *pOwner)
 
 CEpgItem::~CEpgItem(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const BYTE CEpgItem::StoreEventID(const IEitItem *pEitItem)
 {
 	if((m_byStoreState == SST_EMPTY) || (pEitItem->GetEventID() != m_wEventID)){
-		// ƒCƒxƒ“ƒgID–¢Šm’è or ƒCƒxƒ“ƒgID•Ï‰»
+		// ã‚¤ãƒ™ãƒ³ãƒˆIDæœªç¢ºå®š or ã‚¤ãƒ™ãƒ³ãƒˆIDå¤‰åŒ–æ™‚
 		Reset();
 
 		m_wEventID = pEitItem->GetEventID();
@@ -370,14 +370,14 @@ const BYTE CEpgItem::StoreEventID(const IEitItem *pEitItem)
 		return SST_EVENT_ID;
 		}
 	else if((pEitItem->GetStartTime() != m_StartTime) || (pEitItem->GetDuration() != m_dwDuration)){
-		// •ú‘—ƒXƒPƒWƒ…[ƒ‹•Ï‰»
+		// æ”¾é€ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«å¤‰åŒ–æ™‚
 		m_StartTime = pEitItem->GetStartTime();
 		m_dwDuration = pEitItem->GetDuration();
 
 		return SST_SCHEDULE_CHANGE;
 		}
 	else{
-		// •Ï‰»‚È‚µA‚È‚É‚à‚µ‚È‚¢
+		// å¤‰åŒ–ãªã—ã€ãªã«ã‚‚ã—ãªã„
 		return SST_EMPTY;
 		}
 }
@@ -386,21 +386,21 @@ const BYTE CEpgItem::StoreShortDesc(const IDescBlock *pDescBlock)
 {
 	if(m_byStoreState & SST_SHORT_INFO)return SST_EMPTY;
 
-	// ’ZŒ`®ƒCƒxƒ“ƒg‹Lqq‚ğƒXƒgƒA
+	// çŸ­å½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆè¨˜è¿°å­ã‚’ã‚¹ãƒˆã‚¢
 	const IShortEventDesc *pShortEventDesc = dynamic_cast<const IShortEventDesc *>(pDescBlock->GetDescByTag(IShortEventDesc::DESC_TAG));
 	if(!pShortEventDesc)return SST_EMPTY;
 
 	std::vector<TCHAR> szTempString;
 	DWORD dwLength;
 
-	// ”Ô‘g‚Ìƒ^ƒCƒgƒ‹‚ğƒXƒgƒA
+	// ç•ªçµ„ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’ã‚¹ãƒˆã‚¢
 	if(dwLength = pShortEventDesc->GetEventName(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pShortEventDesc->GetEventName(&szTempString[0]);
 		m_strEventTitle = &szTempString[0];
 		}
 
-	// ”Ô‘g‚Ìî•ñ‚ğƒXƒgƒA
+	// ç•ªçµ„ã®æƒ…å ±ã‚’ã‚¹ãƒˆã‚¢
 	if(dwLength = pShortEventDesc->GetEventDesc(NULL)){
 		szTempString.resize(dwLength + 1UL);
 		pShortEventDesc->GetEventDesc(&szTempString[0]);
@@ -414,12 +414,12 @@ const BYTE CEpgItem::StoreExtendDesc(const IDescBlock *pDescBlock)
 {
 	if(m_byStoreState & SST_EXTEND_INFO)return SST_EMPTY;
 
-	// Šg’£Œ`®ƒCƒxƒ“ƒg‹Lqq‚ğƒXƒgƒA
+	// æ‹¡å¼µå½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆè¨˜è¿°å­ã‚’ã‚¹ãƒˆã‚¢
 	DWORD dwIndex = 0UL;
 	const IExtendEventDesc *pExtendEventDesc;
 
-	TCHAR szTempString[256 * 16];	// l‚¦‚¤‚éÅ‘å’·(ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š‚Å‚Í‚³‚ç‚É2”{•K—v‚¾‚ª) 
-	BYTE AribString[256 * 16];		// l‚¦‚¤‚éÅ‘å’·
+	TCHAR szTempString[256 * 16];	// è€ƒãˆã†ã‚‹æœ€å¤§é•·(ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã§ã¯ã•ã‚‰ã«2å€å¿…è¦ã ãŒ) 
+	BYTE AribString[256 * 16];		// è€ƒãˆã†ã‚‹æœ€å¤§é•·
 	DWORD dwLength = 0UL;
 
 	while(pExtendEventDesc = dynamic_cast<const IExtendEventDesc *>(pDescBlock->GetDescByTag(IExtendEventDesc::DESC_TAG, dwIndex++))){
@@ -427,7 +427,7 @@ const BYTE CEpgItem::StoreExtendDesc(const IDescBlock *pDescBlock)
 
 		for(DWORD dwItem = 0UL ; dwItem < pExtendEventDesc->GetItemNum() ; dwItem++){
 			if(pExtendEventDesc->GetItemName(NULL, dwItem)){
-				// ‘OƒAƒCƒeƒ€‚ÌƒAƒCƒeƒ€“à—eƒXƒgƒA
+				// å‰ã‚¢ã‚¤ãƒ†ãƒ ã®ã‚¢ã‚¤ãƒ†ãƒ å†…å®¹ã‚¹ãƒˆã‚¢
 				if(dwLength){
 					if(CAribString::AribToString(szTempString, AribString, dwLength)){
 						m_strEventDetail += szTempString;
@@ -437,19 +437,19 @@ const BYTE CEpgItem::StoreExtendDesc(const IDescBlock *pDescBlock)
 					dwLength = 0UL;
 					}
 
-				// ƒAƒCƒeƒ€–¼
+				// ã‚¢ã‚¤ãƒ†ãƒ å
 				pExtendEventDesc->GetItemName(szTempString, dwItem);
-				m_strEventDetail += TEXT("|");
+				m_strEventDetail += TEXT("ï¼");
 				m_strEventDetail += szTempString;
-				m_strEventDetail += TEXT("|\r\n");
+				m_strEventDetail += TEXT("ï¼\r\n");
 				}
 
-			// ƒAƒCƒeƒ€“à—e
+			// ã‚¢ã‚¤ãƒ†ãƒ å†…å®¹
 			dwLength += pExtendEventDesc->GetItemText(&AribString[dwLength], dwItem);
 			}
 		}
 
-	// ÅIƒAƒCƒeƒ€“à—eƒXƒgƒA
+	// æœ€çµ‚ã‚¢ã‚¤ãƒ†ãƒ å†…å®¹ã‚¹ãƒˆã‚¢
 	if(dwLength){
 		if(CAribString::AribToString(szTempString, AribString, dwLength)){
 			m_strEventDetail += szTempString;
@@ -463,13 +463,13 @@ const BYTE CEpgItem::StoreComponentDesc(const IDescBlock *pDescBlock)
 {
 	if(m_byStoreState & SST_VIDEO_INFO)return SST_EMPTY;
 
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg‹Lqq‚ğƒXƒgƒA
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¨˜è¿°å­ã‚’ã‚¹ãƒˆã‚¢
 	DWORD dwIndex = 0UL;
 	const IComponentDesc *pComponentDesc;
 
 	while(pComponentDesc = dynamic_cast<const IComponentDesc *>(pDescBlock->GetDescByTag(IComponentDesc::DESC_TAG, dwIndex++))){
 		if(pComponentDesc->IsVideoComponent()){
-			// ‰f‘œî•ñ‚ğƒXƒgƒA
+			// æ˜ åƒæƒ…å ±ã‚’ã‚¹ãƒˆã‚¢
 			m_wVideoResolution = pComponentDesc->GetVideoResolution();
 			m_bIsVideoProgressive = pComponentDesc->IsVideoProgressive();
 			m_bIsVideoAspectWide = pComponentDesc->IsVideoAspectWide();
@@ -486,29 +486,29 @@ const BYTE CEpgItem::StoreAudioComponentDesc(const IDescBlock *pDescBlock)
 {
 	if(m_byStoreState & SST_AUDIO_INFO)return SST_EMPTY;
 
-	// ‰¹ºƒRƒ“ƒ|[ƒlƒ“ƒg‹Lqq‚ğƒXƒgƒA
+	// éŸ³å£°ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¨˜è¿°å­ã‚’ã‚¹ãƒˆã‚¢
 	const IAudioComponentDesc *pAudioComponentDesc = dynamic_cast<const IAudioComponentDesc *>(pDescBlock->GetDescByTag(IAudioComponentDesc::DESC_TAG));
 	if(!pAudioComponentDesc)return SST_EMPTY;
 	
 	switch(pAudioComponentDesc->GetComponentType()){
-		case 0x01U :	// 1/0ƒ‚[ƒhiƒVƒ“ƒOƒ‹ƒ‚ƒmj
+		case 0x01U :	// 1/0ãƒ¢ãƒ¼ãƒ‰ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒ¢ãƒï¼‰
 			m_byAudioMode = ADM_MONO;
 			break;
 			
-		case 0x02U :	// 1/0{1/0ƒ‚[ƒhiƒfƒ…ƒAƒ‹ƒ‚ƒmj
+		case 0x02U :	// 1/0ï¼‹1/0ãƒ¢ãƒ¼ãƒ‰ï¼ˆãƒ‡ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒï¼‰
 			m_byAudioMode = ADM_DUAL;
 			break;
 
-		case 0x03U :	// 2/0ƒ‚[ƒhiƒXƒeƒŒƒIj
-		case 0x05U :	// 3/0ƒ‚[ƒh
+		case 0x03U :	// 2/0ãƒ¢ãƒ¼ãƒ‰ï¼ˆã‚¹ãƒ†ãƒ¬ã‚ªï¼‰
+		case 0x05U :	// 3/0ãƒ¢ãƒ¼ãƒ‰
 			m_byAudioMode = ADM_STEREO;
 			break;
 
-		case 0x04U :	// 2/1ƒ‚[ƒh
-		case 0x06U :	// 2/2ƒ‚[ƒh
-		case 0x07U :	// 3/1ƒ‚[ƒh
-		case 0x08U :	// 3/2ƒ‚[ƒh
-		case 0x09U :	// 3/2{LFEƒ‚[ƒh
+		case 0x04U :	// 2/1ãƒ¢ãƒ¼ãƒ‰
+		case 0x06U :	// 2/2ãƒ¢ãƒ¼ãƒ‰
+		case 0x07U :	// 3/1ãƒ¢ãƒ¼ãƒ‰
+		case 0x08U :	// 3/2ãƒ¢ãƒ¼ãƒ‰
+		case 0x09U :	// 3/2ï¼‹LFEãƒ¢ãƒ¼ãƒ‰
 			m_byAudioMode = ADM_SURROUND;
 			break;
 
@@ -524,7 +524,7 @@ const BYTE CEpgItem::StoreContentDesc(const IDescBlock *pDescBlock)
 {
 	if(m_byStoreState & SST_CONTENT_INFO)return SST_EMPTY;
 
-	// ƒRƒ“ƒeƒ“ƒg‹Lqq‚ğƒXƒgƒA
+	// ã‚³ãƒ³ãƒ†ãƒ³ãƒˆè¨˜è¿°å­ã‚’ã‚¹ãƒˆã‚¢
 	const IContentDesc *pContentDesc = dynamic_cast<const IContentDesc *>(pDescBlock->GetDescByTag(IContentDesc::DESC_TAG));
 	if(!pContentDesc)return SST_EMPTY;
 

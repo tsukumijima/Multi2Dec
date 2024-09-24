@@ -1,4 +1,4 @@
-// PsiSection.h: PSIƒZƒNƒVƒ‡ƒ“Šî’êƒNƒ‰ƒX
+ï»¿// PsiSection.h: PSIã‚»ã‚¯ã‚·ãƒ§ãƒ³åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IPsiSectionŠî’êƒNƒ‰ƒX
+// IPsiSectionåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CPsiSection :	public CMediaData,
@@ -44,21 +44,21 @@ public:
 protected:
 	struct TAG_PSIHEADER
 	{
-		BYTE byTableID;					// ƒe[ƒuƒ‹ID
-		bool bSectionSyntaxIndicator;	// ƒZƒNƒVƒ‡ƒ“ƒVƒ“ƒ^ƒbƒNƒXƒCƒ“ƒWƒP[ƒ^
-		bool bPrivateIndicator;			// ƒvƒ‰ƒCƒx[ƒgƒCƒ“ƒWƒP[ƒ^
-		WORD wSectionLength;			// ƒZƒNƒVƒ‡ƒ“’·
-		WORD wTableIdExtension;			// ƒe[ƒuƒ‹IDŠg’£
-		BYTE byVersionNo;				// ƒo[ƒWƒ‡ƒ“”Ô†
-		bool bCurrentNextIndicator;		// ƒJƒŒƒ“ƒgƒlƒNƒXƒgƒCƒ“ƒWƒP[ƒ^
-		BYTE bySectionNumber;			// ƒZƒNƒVƒ‡ƒ“”Ô†
-		BYTE byLastSectionNumber;		// ƒ‰ƒXƒgƒZƒNƒVƒ‡ƒ“”Ô†
+		BYTE byTableID;					// ãƒ†ãƒ¼ãƒ–ãƒ«ID
+		bool bSectionSyntaxIndicator;	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚·ãƒ³ã‚¿ãƒƒã‚¯ã‚¹ã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿
+		bool bPrivateIndicator;			// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿
+		WORD wSectionLength;			// ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·
+		WORD wTableIdExtension;			// ãƒ†ãƒ¼ãƒ–ãƒ«IDæ‹¡å¼µ
+		BYTE byVersionNo;				// ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç•ªå·
+		bool bCurrentNextIndicator;		// ã‚«ãƒ¬ãƒ³ãƒˆãƒã‚¯ã‚¹ãƒˆã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿
+		BYTE bySectionNumber;			// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·
+		BYTE byLastSectionNumber;		// ãƒ©ã‚¹ãƒˆã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·
 	} m_Header;
 };
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IPsiSectionParserŠî’êƒNƒ‰ƒX
+// IPsiSectionParseråŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CPsiSectionParser :	public CBonObject,

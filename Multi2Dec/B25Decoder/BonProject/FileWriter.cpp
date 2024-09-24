@@ -1,4 +1,4 @@
-// FileWriter.cpp: ƒtƒ@ƒCƒ‹ƒ‰ƒCƒ^ƒfƒR[ƒ_
+ï»¿// FileWriter.cpp: ãƒ•ã‚¡ã‚¤ãƒ«ãƒ©ã‚¤ã‚¿ãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,23 +8,23 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-// ƒfƒtƒHƒ‹ƒg‚Ìƒoƒbƒtƒ@ƒTƒCƒY
+// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º
 #define DEF_BUFFSIZE	0x100000UL							// 1MB
-#define DEF_BUFFNUM		(DEF_BUFFSIZE / TS_PACKET_SIZE)		// 1MB ‘Š“–
+#define DEF_BUFFNUM		(DEF_BUFFSIZE / TS_PACKET_SIZE)		// 1MB ç›¸å½“
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ‰ƒCƒ^ƒfƒR[ƒ_
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ©ã‚¤ã‚¿ãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CFileWriter::InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex)
 {
 	if(!pMediaData || (dwInputIndex >= GetInputNum()) || !m_pFile)return false;
 
-	// ƒtƒ@ƒCƒ‹‘‚«‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 	return (m_WriteThread.IsRunning())? WriteAsync(pMediaData) : WriteSync(pMediaData);
 }
 
@@ -35,46 +35,46 @@ const bool CFileWriter::OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite, c
 	try{
 		CBlockLock AutoLock(m_pLock);
 
-		// ƒoƒbƒtƒ@ƒTƒCƒYŒvZ
+		// ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºè¨ˆç®—
 		DWORD dwWriteSize;
 		DWORD dwWriteNum;
 		
 		if(!bAsyncWrite){
-			// “¯Šú‘‚«‚İ
+			// åŒæœŸæ›¸ãè¾¼ã¿
 			dwWriteSize = (dwBuffSize)? dwBuffSize : DEF_BUFFSIZE;
 			dwWriteNum	= 0UL;
 			}
 		else{
-			// ”ñ“¯Šú‘‚«‚İ
+			// éåŒæœŸæ›¸ãè¾¼ã¿
 			dwWriteSize = DEF_BUFFSIZE;
 			dwWriteNum = (dwBuffSize)? dwBuffSize : DEF_BUFFNUM;
 			}
 	
-		// ƒXƒ}[ƒgƒtƒ@ƒCƒ‹ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+		// ã‚¹ãƒãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 		if(!(m_pFile = ::BON_SAFE_CREATE<ISmartFile *>(TEXT("CSmartFile"))))throw __LINE__;
 
-		// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		if(!m_pFile->Open(lpszFileName, ISmartFile::MF_WRITE, dwWriteSize))throw __LINE__;
 
-		// ƒƒfƒBƒAƒv[ƒ‹Šm•Û
+		// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«ç¢ºä¿
 		if(dwWriteNum){
-			// ƒƒfƒBƒAƒv[ƒ‹ƒTƒCƒYƒŠƒTƒCƒY
+			// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«ã‚µã‚¤ã‚ºãƒªã‚µã‚¤ã‚º
 			m_MediaPool.resize(dwWriteNum);
 			if(m_MediaPool.size() < dwWriteNum)throw __LINE__;
 			::ZeroMemory(&m_MediaPool[0], sizeof(IMediaData *) * dwWriteNum);
 			
-			// ƒƒfƒBƒAƒf[ƒ^ƒCƒ“ƒXƒ^ƒ“ƒXŠm•Û
+			// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ‡ãƒ¼ã‚¿ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç¢ºä¿
 			for(DWORD dwIndex = 0UL ; dwIndex < dwWriteNum ; dwIndex++){
 				m_MediaPool[dwIndex] = ::BON_SAFE_CREATE<IMediaData *>(TEXT("CMediaData"));
 				if(!m_MediaPool[dwIndex])throw __LINE__;
 				}
 			
-			// ƒƒfƒBƒAƒv[ƒ‹æ“ªƒCƒeƒŒ[ƒ^ƒZƒbƒg
+			// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«å…ˆé ­ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
 			m_itFreeMedia = m_MediaPool.begin();
 			}
 		}
 	catch(...){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		CloseFile();
 		return false;
 		}
@@ -86,21 +86,21 @@ bool CFileWriter::CloseFile(void)
 {
 	CBlockLock AutoLock(m_pLock);
 
-	// ƒtƒ@ƒCƒ‹ƒNƒ[ƒY
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚¯ãƒ­ãƒ¼ã‚º
 	if(m_pFile)m_pFile->Close();
 
-	// ƒXƒ}[ƒgƒtƒ@ƒCƒ‹ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¹ãƒãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	BON_SAFE_RELEASE(m_pFile);
 
-	// ƒƒfƒBƒAƒLƒ…[ƒNƒŠƒA
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ã‚­ãƒ¥ãƒ¼ã‚¯ãƒªã‚¢
 	while(!m_MediaQue.empty())m_MediaQue.pop();
 
-	// ƒƒfƒBƒAƒf[ƒ^ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ‡ãƒ¼ã‚¿ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	for(DWORD dwIndex = 0UL ; dwIndex < m_MediaPool.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_MediaPool[dwIndex]);		
 		}
 	
-	// ƒƒfƒBƒAƒv[ƒ‹ŠJ•ú
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«é–‹æ”¾
 	m_MediaPool.clear();
 
 	return true;
@@ -108,7 +108,7 @@ bool CFileWriter::CloseFile(void)
 
 const ULONGLONG CFileWriter::GetFileLength(void)
 {
-	// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ•Ô‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’è¿”ã™
 	return (m_pFile)? m_pFile->GetLength() : 0ULL;
 }
 
@@ -116,12 +116,12 @@ CFileWriter::CFileWriter(IBonObject *pOwner)
 	: CMediaDecoder(pOwner, 1UL, 0UL, new CSmartLock)
 	, m_pFile(NULL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CFileWriter::~CFileWriter(void)
 {
-	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	CloseFile();
 }
 
@@ -129,19 +129,19 @@ const bool CFileWriter::OnPlay(void)
 {
 	OnStop();
 
-	// ƒƒfƒBƒAƒLƒ…[ƒNƒŠƒA
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ã‚­ãƒ¥ãƒ¼ã‚¯ãƒªã‚¢
 	while(!m_MediaQue.empty())m_MediaQue.pop();
 	
-	// ƒƒfƒBƒAƒv[ƒ‹æ“ªƒCƒeƒŒ[ƒ^ƒZƒbƒg
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«å…ˆé ­ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
 	m_itFreeMedia = m_MediaPool.begin();
 
-	// ƒXƒŒƒbƒhŠJn(ƒTƒXƒyƒ“ƒhó‘Ô‚ÅŠJn)
+	// ã‚¹ãƒ¬ãƒƒãƒ‰é–‹å§‹(ã‚µã‚¹ãƒšãƒ³ãƒ‰çŠ¶æ…‹ã§é–‹å§‹)
 	return (m_MediaPool.size())? m_WriteThread.StartThread(this, &CFileWriter::WriteThread, NULL, false) : true;
 }
 
 const bool CFileWriter::OnStop(void)
 {
-	// ƒXƒŒƒbƒhI—¹
+	// ã‚¹ãƒ¬ãƒƒãƒ‰çµ‚äº†
 	m_WriteThread.EndThread(true);
 
 	return true;
@@ -149,12 +149,12 @@ const bool CFileWriter::OnStop(void)
 
 const bool CFileWriter::WriteSync(const IMediaData *pMediaData)
 {
-	// ƒf[ƒ^æ“¾
+	// ãƒ‡ãƒ¼ã‚¿å–å¾—
 	const BYTE * const pData = pMediaData->GetData();
 	const DWORD dwSize = pMediaData->GetSize();
 	if(!pData || !dwSize)return true;
 
-	// ƒtƒ@ƒCƒ‹‘‚«‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 	if(m_pFile->WriteData(pData, dwSize) != dwSize){
 		CloseFile();
 		return false;
@@ -167,25 +167,25 @@ const bool CFileWriter::WriteAsync(const IMediaData *pMediaData)
 {
 	DWORD dwIdleNum;
 
-	// ƒf[ƒ^ƒ`ƒFƒbƒN
+	// ãƒ‡ãƒ¼ã‚¿ãƒã‚§ãƒƒã‚¯
 	const BYTE * const pData = pMediaData->GetData();
 	const DWORD dwSize = pMediaData->GetSize();
 	if(!pData || !dwSize)return true;
 
-	// ƒAƒCƒhƒ‹ƒLƒ…[”æ“¾
+	// ã‚¢ã‚¤ãƒ‰ãƒ«ã‚­ãƒ¥ãƒ¼æ•°å–å¾—
 	m_pLock->Lock();
 	dwIdleNum = m_MediaPool.size() - m_MediaQue.size();
 	m_pLock->Unlock();	
 
-	// ƒLƒ…[‚ªƒtƒ‹‚Ìê‡‚Ìˆ—
+	// ã‚­ãƒ¥ãƒ¼ãŒãƒ•ãƒ«ã®å ´åˆã®å‡¦ç†
 	if(!dwIdleNum){
-		// ƒCƒxƒ“ƒg’Ê’m
+		// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 		if(SendDecoderEvent(EID_BUFF_OVERFLOW)){
-			// ƒLƒ…[‚ª‹ó‚­‚Ü‚ÅƒuƒƒbƒN‚·‚é
+			// ã‚­ãƒ¥ãƒ¼ãŒç©ºãã¾ã§ãƒ–ãƒ­ãƒƒã‚¯ã™ã‚‹
 			do{
 				::Sleep(1UL);
 
-				// ƒ|[ƒŠƒ“ƒO
+				// ãƒãƒ¼ãƒªãƒ³ã‚°
 				m_pLock->Lock();
 				dwIdleNum = m_MediaPool.size() - m_MediaQue.size();
 				m_pLock->Unlock();	
@@ -193,23 +193,23 @@ const bool CFileWriter::WriteAsync(const IMediaData *pMediaData)
 			while(!dwIdleNum);			
 			}
 		else{
-			// ƒfƒtƒHƒ‹ƒg‚Ìˆ—AŒÃ‚¢ƒf[ƒ^‚ğÌ‚Ä‚é
+			// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å‡¦ç†ã€å¤ã„ãƒ‡ãƒ¼ã‚¿ã‚’æ¨ã¦ã‚‹
 			m_pLock->Lock();
 			m_MediaQue.pop();		
 			m_pLock->Unlock();
 			}		
 		}
 
-	// ƒf[ƒ^ƒRƒs[
+	// ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼
 	if((*m_itFreeMedia)->CopyData(pMediaData) != dwSize)return false;
 
-	// ƒƒfƒBƒAƒv[ƒ‹‚É‹ó‚«‚ª‚ ‚é‚Æ‚«AƒLƒ…[‚É“Š“ü
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ—ãƒ¼ãƒ«ã«ç©ºããŒã‚ã‚‹ã¨ãã€ã‚­ãƒ¥ãƒ¼ã«æŠ•å…¥
 	m_pLock->Lock();
 	m_MediaQue.push(*m_itFreeMedia);
 	if(++m_itFreeMedia == m_MediaPool.end())m_itFreeMedia = m_MediaPool.begin();
 	m_pLock->Unlock();	
 
-	// ‘‚«‚İƒLƒ…[ƒŒƒWƒ…[ƒ€
+	// æ›¸ãè¾¼ã¿ã‚­ãƒ¥ãƒ¼ãƒ¬ã‚¸ãƒ¥ãƒ¼ãƒ 
 	m_WriteThread.ResumeThread();
 
 	return true;
@@ -220,24 +220,24 @@ void CFileWriter::WriteThread(CSmartThread<CFileWriter> *pThread, bool &bKillSig
 	const IMediaData *pMediaData;
 
 	while(!bKillSignal){
-		// ƒtƒ@ƒCƒ‹‘‚«‚İ
+		// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 		while(1){
-			// ƒLƒ…[ƒ`ƒFƒbƒN
+			// ã‚­ãƒ¥ãƒ¼ãƒã‚§ãƒƒã‚¯
 			m_pLock->Lock();
 			pMediaData = (!m_MediaQue.empty())? m_MediaQue.front() : NULL;
 			m_pLock->Unlock();
 			if(!pMediaData)break;
 
-			// ƒtƒ@ƒCƒ‹‘‚«‚İ
+			// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 			WriteSync(pMediaData);
 
-			// ƒLƒ…[æ‚èo‚µ
+			// ã‚­ãƒ¥ãƒ¼å–ã‚Šå‡ºã—
 			m_pLock->Lock();
 			m_MediaQue.pop();
 			m_pLock->Unlock();	
 			}
 
-		// ƒLƒ…[‚Éƒf[ƒ^‚ª“’…‚·‚é‚Ü‚ÅƒTƒXƒyƒ“ƒh
+		// ã‚­ãƒ¥ãƒ¼ã«ãƒ‡ãƒ¼ã‚¿ãŒåˆ°ç€ã™ã‚‹ã¾ã§ã‚µã‚¹ãƒšãƒ³ãƒ‰
 		if(!bKillSignal)pThread->SuspendThread();
 		}
 }

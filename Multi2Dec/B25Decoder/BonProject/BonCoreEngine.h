@@ -1,4 +1,4 @@
-// BonCoreEngine.h: BonƒRƒAƒGƒ“ƒWƒ“ƒNƒ‰ƒX
+ï»¿// BonCoreEngine.h: Bonã‚³ã‚¢ã‚¨ãƒ³ã‚¸ãƒ³ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef _UNICODE
@@ -21,7 +21,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CBonCoreEngineƒNƒ‰ƒX
+// CBonCoreEngineã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CBonCoreEngine :	public CBonObject,
@@ -65,28 +65,28 @@ public:
 protected:
 	static const DWORD CalcCrc(const BYTE *pData, const DWORD dwDataSize);
 
-	// Bonƒ‚ƒWƒ…[ƒ‹î•ñ
+	// Bonãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«æƒ…å ±
 	struct BON_MODULE_INFO
 	{
-		BonString strModuleName;				// ƒ‚ƒWƒ…[ƒ‹–¼
-		HINSTANCE hModule;						// DLLƒCƒ“ƒXƒ^ƒ“ƒX
-		std::vector<BONGUID> ClassList;			// ƒNƒ‰ƒXƒŠƒXƒg
+		BonString strModuleName;				// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å
+		HINSTANCE hModule;						// DLLã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+		std::vector<BONGUID> ClassList;			// ã‚¯ãƒ©ã‚¹ãƒªã‚¹ãƒˆ
 	};
 	
-	// BonƒNƒ‰ƒXî•ñ
+	// Bonã‚¯ãƒ©ã‚¹æƒ…å ±
 	struct BON_CLASS_INFO
 	{
-		BonString strClassName;					// ƒNƒ‰ƒX–¼
-		CLASSFACTORYMETHOD pfnClassFactory;		// ƒNƒ‰ƒXƒtƒ@ƒNƒgƒŠ[
-		DWORD dwPriority;						// ƒvƒ‰ƒCƒIƒŠƒeƒB
-		BONGUID ModuleId;						// ƒ‚ƒWƒ…[ƒ‹‚ÌBONGUID
+		BonString strClassName;					// ã‚¯ãƒ©ã‚¹å
+		CLASSFACTORYMETHOD pfnClassFactory;		// ã‚¯ãƒ©ã‚¹ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼
+		DWORD dwPriority;						// ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£
+		BONGUID ModuleId;						// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®BONGUID
 	};
 
-	// BonƒXƒgƒbƒNƒCƒ“ƒXƒ^ƒ“ƒXî•ñ
+	// Bonã‚¹ãƒˆãƒƒã‚¯ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹æƒ…å ±
 	struct BON_INSTANCE_INFO
 	{
-		BonString strClassName;					// ƒNƒ‰ƒX–¼
-		IBonObject *pInstance;					// ƒCƒ“ƒXƒ^ƒ“ƒX
+		BonString strClassName;					// ã‚¯ãƒ©ã‚¹å
+		IBonObject *pInstance;					// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	};
 
 	typedef std::map<const BONGUID, BON_MODULE_INFO> BonModuleMap;

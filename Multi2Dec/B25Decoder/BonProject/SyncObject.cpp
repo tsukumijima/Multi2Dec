@@ -1,4 +1,4 @@
-// SyncObject.cpp: “¯ŠúƒIƒuƒWƒFƒNƒgƒ‰ƒbƒp[ƒNƒ‰ƒX
+ï»¿// SyncObject.cpp: åŒæœŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,89 +9,89 @@
 
 
 //////////////////////////////////////////////////////////////////////
-// ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“ƒ‰ƒbƒp[ƒNƒ‰ƒX
+// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
 //////////////////////////////////////////////////////////////////////
 
 CSmartLock::CSmartLock()
 {
-	// ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“‰Šú‰»
+	// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³åˆæœŸåŒ–
 	::InitializeCriticalSection(&m_CriticalSection);
 }
 
 CSmartLock::~CSmartLock()
 {
-	// ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“íœ
+	// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³å‰Šé™¤
 	::DeleteCriticalSection(&m_CriticalSection);
 }
 
 void CSmartLock::Lock(void)
 {
-	// ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“æ“¾
+	// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³å–å¾—
 	::EnterCriticalSection(&m_CriticalSection);
 }
 
 void CSmartLock::Unlock(void)
 {
-	// ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“ŠJ•ú
+	// ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³é–‹æ”¾
 	::LeaveCriticalSection(&m_CriticalSection);
 }
 	
 	
 //////////////////////////////////////////////////////////////////////
-// ƒuƒƒbƒNƒXƒR[ƒvƒƒbƒNƒNƒ‰ƒX
+// ãƒ–ãƒ­ãƒƒã‚¯ã‚¹ã‚³ãƒ¼ãƒ—ãƒ­ãƒƒã‚¯ã‚¯ãƒ©ã‚¹
 //////////////////////////////////////////////////////////////////////
 	
 CBlockLock::CBlockLock(CSmartLock *pSmartLock)
 	: m_pSmartLock(pSmartLock)
 {
-	// ƒƒbƒNæ“¾
+	// ãƒ­ãƒƒã‚¯å–å¾—
 	if(m_pSmartLock)m_pSmartLock->Lock();
 }
 
 CBlockLock::~CBlockLock()
 {
-	// ƒƒbƒNŠJ•ú
+	// ãƒ­ãƒƒã‚¯é–‹æ”¾
 	if(m_pSmartLock)m_pSmartLock->Unlock();
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// ƒCƒxƒ“ƒgƒ‰ƒbƒp[ƒNƒ‰ƒX
+// ã‚¤ãƒ™ãƒ³ãƒˆãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
 //////////////////////////////////////////////////////////////////////
 
 CSmartEvent::CSmartEvent(const bool bManualReset, const bool bInitialState)
 	: m_hEvent(NULL)
 {
-	// ƒCƒxƒ“ƒgì¬
+	// ã‚¤ãƒ™ãƒ³ãƒˆä½œæˆ
 	m_hEvent = ::CreateEvent(NULL, (bManualReset)? TRUE : FALSE, (bInitialState)? TRUE : FALSE, NULL);
 }
 
 CSmartEvent::~CSmartEvent(void)
 {
-	// ƒCƒxƒ“ƒgŠJ•ú
+	// ã‚¤ãƒ™ãƒ³ãƒˆé–‹æ”¾
 	if(m_hEvent)::CloseHandle(m_hEvent);
 }
 
 const bool CSmartEvent::SetEvent(void)
 {
-	// ƒCƒxƒ“ƒgƒZƒbƒg
+	// ã‚¤ãƒ™ãƒ³ãƒˆã‚»ãƒƒãƒˆ
 	return (::SetEvent(m_hEvent))? true : false;
 }
 
 const bool CSmartEvent::PulseEvent(void)
 {
-	// ƒCƒxƒ“ƒgƒZƒbƒg(1‚Â‚ÌƒXƒŒƒbƒh‚Ì‚İŠJ•ú)
+	// ã‚¤ãƒ™ãƒ³ãƒˆã‚»ãƒƒãƒˆ(1ã¤ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã¿é–‹æ”¾)
 	return (::PulseEvent(m_hEvent))? true : false;
 }
 const bool CSmartEvent::ResetEvent(void)
 {
-	// ƒCƒxƒ“ƒgƒŠƒZƒbƒg
+	// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚»ãƒƒãƒˆ
 	return (::ResetEvent(m_hEvent))? true : false;
 }
 
 const DWORD CSmartEvent::WaitEvent(const DWORD dwTimeout)
 {
-	// ƒCƒxƒ“ƒg‘Ò‚¿
+	// ã‚¤ãƒ™ãƒ³ãƒˆå¾…ã¡
 	switch(::WaitForSingleObject(m_hEvent, (dwTimeout)? dwTimeout : INFINITE)){
 		case WAIT_ABANDONED :	return WE_CLOSED;
 		case WAIT_OBJECT_0	:	return WE_TRIGGER;
@@ -102,7 +102,7 @@ const DWORD CSmartEvent::WaitEvent(const DWORD dwTimeout)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒ~ƒ…[ƒeƒbƒNƒXƒ‰ƒbƒp[ƒNƒ‰ƒX
+// ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 CSmartMutex::CSmartMutex(void)
@@ -118,17 +118,17 @@ CSmartMutex::~CSmartMutex(void)
 
 const bool CSmartMutex::Create(LPCTSTR lpszName)
 {
-	// –³–¼‚É‚Í”ñ‘Î‰(ƒvƒƒZƒXŠÔ‚Ì”r‘¼§Œä‚Ì‚İ)
+	// ç„¡åã«ã¯éå¯¾å¿œ(ãƒ—ãƒ­ã‚»ã‚¹é–“ã®æ’ä»–åˆ¶å¾¡ã®ã¿)
 	if(!lpszName)return false;
 	if(!::_tcslen(lpszName))return false;
 
-	// Šù‚ÉƒI[ƒvƒ“Ï‚İ‚Ìê‡‚ÍƒGƒ‰[
+	// æ—¢ã«ã‚ªãƒ¼ãƒ—ãƒ³æ¸ˆã¿ã®å ´åˆã¯ã‚¨ãƒ©ãƒ¼
 	if(m_hMutex)return false;
 	
-	// Mutexì¬
+	// Mutexä½œæˆ
 	if(!(m_hMutex = ::CreateMutex(NULL, TRUE, lpszName)))return false;
 	
-	// ‘¼‚ÌƒvƒƒZƒX‚ÅƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚éê‡‚ÍƒGƒ‰[
+	// ä»–ã®ãƒ—ãƒ­ã‚»ã‚¹ã§ã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ã‚¨ãƒ©ãƒ¼
 	if(::GetLastError() == ERROR_ALREADY_EXISTS){
 		Close();
 		return false;
@@ -141,7 +141,7 @@ const bool CSmartMutex::Close(void)
 {
 	if(!m_hMutex)return false;
 	
-	// Mutex‚ğ•Â‚¶‚é
+	// Mutexã‚’é–‰ã˜ã‚‹
 	const BOOL bReturn = ::CloseHandle(m_hMutex);
 	m_hMutex = NULL;
 	
@@ -150,16 +150,16 @@ const bool CSmartMutex::Close(void)
 
 const bool CSmartMutex::IsExist(LPCTSTR lpszName)
 {
-	// w’è‚µ‚½–¼‘O‚ÌMutex‚ğƒI[ƒvƒ“‚·‚é
+	// æŒ‡å®šã—ãŸåå‰ã®Mutexã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
 	HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, lpszName);
 	
 	if(hMutex){
-		// Šù‚ÉMutex‚Í‘¶İ‚·‚é
+		// æ—¢ã«Mutexã¯å­˜åœ¨ã™ã‚‹
 		::CloseHandle(hMutex);
 		return true;
 		}
 	else{
-		// Mutex‚Í‘¶İ‚µ‚È‚¢
+		// Mutexã¯å­˜åœ¨ã—ãªã„
 		return false;
 		}	
 }

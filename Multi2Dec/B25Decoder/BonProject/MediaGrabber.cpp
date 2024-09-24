@@ -1,4 +1,4 @@
-// MediaGrabber.cpp: ƒƒfƒBƒAƒOƒ‰ƒoƒfƒR[ƒ_
+ï»¿// MediaGrabber.cpp: ãƒ¡ãƒ‡ã‚£ã‚¢ã‚°ãƒ©ãƒãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,12 +8,12 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒƒfƒBƒAƒOƒ‰ƒoƒfƒR[ƒ_
+// ãƒ¡ãƒ‡ã‚£ã‚¢ã‚°ãƒ©ãƒãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CMediaGrabber::InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex)
 {
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	SendDecoderEvent(IMediaGrabber::EID_ON_MEDIADATA, static_cast<PVOID>(pMediaData));
 
 	return true;
@@ -22,17 +22,17 @@ const bool CMediaGrabber::InputMedia(IMediaData *pMediaData, const DWORD dwInput
 CMediaGrabber::CMediaGrabber(IBonObject *pOwner)
 	: CMediaDecoder(pOwner, 1UL, 1UL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CMediaGrabber::~CMediaGrabber(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CMediaGrabber::OnPlay(void)
 {
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	SendDecoderEvent(IMediaGrabber::EID_ON_PLAY);
 
 	return true;
@@ -40,7 +40,7 @@ const bool CMediaGrabber::OnPlay(void)
 
 const bool CMediaGrabber::OnStop(void)
 {
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	SendDecoderEvent(IMediaGrabber::EID_ON_STOP);
 
 	return true;
@@ -48,7 +48,7 @@ const bool CMediaGrabber::OnStop(void)
 
 const bool CMediaGrabber::OnReset(void)
 {
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	SendDecoderEvent(IMediaGrabber::EID_ON_RESET);
 
 	return true;

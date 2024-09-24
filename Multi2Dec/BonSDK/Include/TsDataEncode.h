@@ -1,4 +1,4 @@
-// TsDataEncode.h: TSŠî–{ƒf[ƒ^ƒNƒ‰ƒX‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+ï»¿// TsDataEncode.h: TSåŸºæœ¬ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ARIB STD-B24 Part1•¶Žš—ñˆ—ƒNƒ‰ƒX
+// ARIB STD-B24 Part1æ–‡å­—åˆ—å‡¦ç†ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CAribString
@@ -17,7 +17,7 @@ public:
 private:
 	enum CODE_SET
 	{
-		CODE_UNKNOWN,				// •s–¾‚ÈƒOƒ‰ƒtƒBƒbƒNƒZƒbƒg(”ñ‘Î‰ž)
+		CODE_UNKNOWN,				// ä¸æ˜Žãªã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚»ãƒƒãƒˆ(éžå¯¾å¿œ)
 		CODE_KANJI,					// Kanji
 		CODE_ALPHANUMERIC,			// Alphanumeric
 		CODE_HIRAGANA,				// Hiragana
@@ -37,10 +37,10 @@ private:
 
 	enum FONT_SIZE
 	{
-		SIZE_SMALL,					// SSZ	”ñ‘Î‰ž
-		SIZE_MEDIUM,				// MSZ	”¼Šp
-		SIZE_NORMAL,				// NSZ	‘SŠp
-		SIZE_UNSUPPORTED			// SZX	”ñ‘Î‰ž
+		SIZE_SMALL,					// SSZ	éžå¯¾å¿œ
+		SIZE_MEDIUM,				// MSZ	åŠè§’
+		SIZE_NORMAL,				// NSZ	å…¨è§’
+		SIZE_UNSUPPORTED			// SZX	éžå¯¾å¿œ
 	};
 
 	CODE_SET m_CodeG[4];
@@ -81,7 +81,7 @@ private:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ARIB STD-B10 Part2 Annex C MJD+JTC ˆ—ƒNƒ‰ƒX
+// ARIB STD-B10 Part2 Annex C MJD+JTC å‡¦ç†ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CAribTime
@@ -95,7 +95,7 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// SYSTEMTIME ƒ‰ƒbƒvƒNƒ‰ƒX
+// SYSTEMTIME ãƒ©ãƒƒãƒ—ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CTsTime : public SYSTEMTIME

@@ -1,4 +1,4 @@
-// SmartSocket.h: TCP/UDPƒ\ƒPƒbƒgƒNƒ‰ƒX
+ï»¿// SmartSocket.h: TCP/UDPã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TCP/UDPƒ\ƒPƒbƒgƒNƒ‰ƒX
+// TCP/UDPã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CSmartSocket :	public CBonObject,
@@ -57,9 +57,9 @@ protected:
 
 	enum SocetType{SOCKTYPE_NON, SOCKTYPE_TCP, SOCKTYPE_UDP};
 
-	SOCKET m_Socket;				// ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
-	SocetType m_SockType;			// ƒ\ƒPƒbƒgƒ^ƒCƒv
-	DWORD m_dwLastError;			// ÅIƒGƒ‰[ƒR[ƒh
+	SOCKET m_Socket;				// ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
+	SocetType m_SockType;			// ã‚½ã‚±ãƒƒãƒˆã‚¿ã‚¤ãƒ—
+	DWORD m_dwLastError;			// æœ€çµ‚ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
 
-	static DWORD dwInstanceNum;		// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì”
+	static DWORD dwInstanceNum;		// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ•°
 };

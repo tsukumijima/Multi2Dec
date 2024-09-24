@@ -1,4 +1,4 @@
-// MediaDecoderIf.h: ƒƒfƒBƒAƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX’è‹`
+ï»¿// MediaDecoderIf.h: ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å®šç¾©
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,19 +10,19 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒ\[ƒXƒ`ƒ…[ƒiƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// TSã‚½ãƒ¼ã‚¹ãƒãƒ¥ãƒ¼ãƒŠãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class ITsSourceTuner :			public IBonObject
 {
 public:
-	enum	// OpenTuner() ƒGƒ‰[ƒR[ƒh
+	enum	// OpenTuner() ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
 	{
-		EC_OPEN_SUCCESS	= 0x00000000UL,		// ƒI[ƒvƒ“¬Œ÷
-		EC_DEVICE_NONE	= 0x00000001UL,		// ƒ`ƒ…[ƒi‚ªŒ©‚Â‚©‚ç‚È‚¢
-		EC_DEVICE_FULL	= 0x00000002UL,		// Žg—p‰Â”\‚Èƒ`ƒ…[ƒi‚ª‚È‚¢
-		EC_OPEN_FAILED	= 0x00000003UL,		// ƒI[ƒvƒ“Ž¸”s
-		EC_INTERNAL_ERR	= 0x00000004UL		// “à•”ƒGƒ‰[
+		EC_OPEN_SUCCESS	= 0x00000000UL,		// ã‚ªãƒ¼ãƒ—ãƒ³æˆåŠŸ
+		EC_DEVICE_NONE	= 0x00000001UL,		// ãƒãƒ¥ãƒ¼ãƒŠãŒè¦‹ã¤ã‹ã‚‰ãªã„
+		EC_DEVICE_FULL	= 0x00000002UL,		// ä½¿ç”¨å¯èƒ½ãªãƒãƒ¥ãƒ¼ãƒŠãŒãªã„
+		EC_OPEN_FAILED	= 0x00000003UL,		// ã‚ªãƒ¼ãƒ—ãƒ³å¤±æ•—
+		EC_INTERNAL_ERR	= 0x00000004UL		// å†…éƒ¨ã‚¨ãƒ©ãƒ¼
 	};
 	
 	virtual const DWORD OpenTuner(LPCTSTR lpszBCId) = 0;
@@ -44,18 +44,18 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒpƒPƒbƒg“¯ŠúƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// TSãƒ‘ã‚±ãƒƒãƒˆåŒæœŸãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class ITsPacketSync :			public IBonObject
 {
 public:
-	enum	// ƒfƒR[ƒ_ƒCƒxƒ“ƒgID				// [ƒCƒxƒ“ƒg“à—e]				[pParam]
+	enum	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ™ãƒ³ãƒˆID				// [ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹]				[pParam]
 	{
-		EID_SYNC_ERR		= 0x00000000UL,		// “¯ŠúƒGƒ‰[ŒŸo				(DWORD)ƒGƒ‰[”
-		EID_FORMAT_ERR		= 0x00000001UL,		// ƒtƒH[ƒ}ƒbƒgƒGƒ‰[ŒŸo		(DWORD)ƒGƒ‰[”
-		EID_TRANSPORT_ERR	= 0x00000002UL,		// ƒgƒ‰ƒ“ƒXƒ|[ƒgƒGƒ‰[ŒŸo		(DWORD)ƒGƒ‰[”
-		EID_CONTINUITY_ERR	= 0x00000003UL		// ˜A‘±«(ƒhƒƒbƒv)ƒGƒ‰[ŒŸo	(DWORD)ƒGƒ‰[”
+		EID_SYNC_ERR		= 0x00000000UL,		// åŒæœŸã‚¨ãƒ©ãƒ¼æ¤œå‡º				(DWORD)ã‚¨ãƒ©ãƒ¼æ•°
+		EID_FORMAT_ERR		= 0x00000001UL,		// ãƒ•ã‚©ãƒ¼ãƒžãƒƒãƒˆã‚¨ãƒ©ãƒ¼æ¤œå‡º		(DWORD)ã‚¨ãƒ©ãƒ¼æ•°
+		EID_TRANSPORT_ERR	= 0x00000002UL,		// ãƒˆãƒ©ãƒ³ã‚¹ãƒãƒ¼ãƒˆã‚¨ãƒ©ãƒ¼æ¤œå‡º		(DWORD)ã‚¨ãƒ©ãƒ¼æ•°
+		EID_CONTINUITY_ERR	= 0x00000003UL		// é€£ç¶šæ€§(ãƒ‰ãƒ­ãƒƒãƒ—)ã‚¨ãƒ©ãƒ¼æ¤œå‡º	(DWORD)ã‚¨ãƒ©ãƒ¼æ•°
 	};
 
 	virtual void DiscardNullPacket(const bool bEnable = true) = 0;
@@ -78,24 +78,24 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒfƒXƒNƒ‰ƒ“ƒuƒ‹ƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// TSãƒ‡ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class ITsDescrambler :			public IBonObject
 {
 public:
-	enum	// ƒfƒR[ƒ_ƒCƒxƒ“ƒgID				// [ƒCƒxƒ“ƒg“à—e]				[pParam]
+	enum	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ™ãƒ³ãƒˆID				// [ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹]				[pParam]
 	{
-		EID_CANT_DESCRAMBLE	= 0x00000000UL,		// •œ†˜R‚êƒpƒPƒbƒgŒŸo			(DWORD)•œ†˜R‚êƒpƒPƒbƒg”
-		EID_ECM_PROCESSED	= 0x00000001UL,		// ECMˆ—Š®—¹					(DWORD)GetDescramblerState() ƒŠƒ^[ƒ“ƒR[ƒh
-		EID_EMM_PROCESSED	= 0x00000002UL		// EMMˆ—Š®—¹					(bool)EMM¬Œ÷‰Â”Û
+		EID_CANT_DESCRAMBLE	= 0x00000000UL,		// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆæ¤œå‡º			(DWORD)å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆæ•°
+		EID_ECM_PROCESSED	= 0x00000001UL,		// ECMå‡¦ç†å®Œäº†					(DWORD)GetDescramblerState() ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰
+		EID_EMM_PROCESSED	= 0x00000002UL		// EMMå‡¦ç†å®Œäº†					(bool)EMMæˆåŠŸå¯å¦
 	};
 
-	enum	// GetDescramblerState() ƒŠƒ^[ƒ“ƒR[ƒh
+	enum	// GetDescramblerState() ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰
 	{
-		DS_NO_ERROR			= 0x00000000UL,		// ƒGƒ‰[‚È‚µ³í
-		DS_BCAS_ERROR		= 0x00000001UL,		// B-CASƒJ[ƒhƒGƒ‰[
-		DS_NOT_CONTRACTED	= 0x00000002UL		// Ž‹’®–¢Œ_–ñ
+		DS_NO_ERROR			= 0x00000000UL,		// ã‚¨ãƒ©ãƒ¼ãªã—æ­£å¸¸
+		DS_BCAS_ERROR		= 0x00000001UL,		// B-CASã‚«ãƒ¼ãƒ‰ã‚¨ãƒ©ãƒ¼
+		DS_NOT_CONTRACTED	= 0x00000002UL		// è¦–è´æœªå¥‘ç´„
 	};
 
 	virtual const bool OpenDescrambler(LPCTSTR lpszBCId) = 0;
@@ -120,7 +120,7 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒvƒƒOƒ‰ƒ€ƒAƒiƒ‰ƒCƒUƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IProgAnalyzer :			public IBonObject
@@ -147,15 +147,15 @@ class IProgAnalyzer :			public IBonObject
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ‰ƒCƒ^ƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ©ã‚¤ã‚¿ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IFileWriter :				public IBonObject
 {
 public:
-	enum	// ƒfƒR[ƒ_ƒCƒxƒ“ƒgID				// [ƒCƒxƒ“ƒg“à—e]				[pParam]
+	enum	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ™ãƒ³ãƒˆID				// [ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹]				[pParam]
 	{
-		EID_BUFF_OVERFLOW	= 0x00000000UL		// ƒoƒbƒtƒ@ƒI[ƒoƒtƒ[			N/A
+		EID_BUFF_OVERFLOW	= 0x00000000UL		// ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ•ãƒ­ãƒ¼			N/A
 	};
 	
 	virtual const bool OpenFile(LPCTSTR lpszFileName, const bool bAsyncWrite = false, const DWORD dwBuffSize = 0UL) = 0;
@@ -166,18 +166,18 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒŠ[ƒ_ƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒªãƒ¼ãƒ€ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IFileReader :				public IBonObject
 {
 public:
-	enum	// ƒfƒR[ƒ_ƒCƒxƒ“ƒgID				// [ƒCƒxƒ“ƒg“à—e]				[pParam]
+	enum	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ™ãƒ³ãƒˆID				// [ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹]				[pParam]
 	{
-		EID_READ_START	= 0x00000000UL,			// ƒŠ[ƒhŠJŽn					N/A
-		EID_READ_END	= 0x00000001UL,			// ƒŠ[ƒhI—¹					N/A
-		EID_PRE_READ	= 0x00000002UL,			// ƒŠ[ƒh‘O						N/A
-		EID_POST_READ	= 0x00000003UL			// ƒŠ[ƒhŒã						N/A
+		EID_READ_START	= 0x00000000UL,			// ãƒªãƒ¼ãƒ‰é–‹å§‹					N/A
+		EID_READ_END	= 0x00000001UL,			// ãƒªãƒ¼ãƒ‰çµ‚äº†					N/A
+		EID_PRE_READ	= 0x00000002UL,			// ãƒªãƒ¼ãƒ‰å‰						N/A
+		EID_POST_READ	= 0x00000003UL			// ãƒªãƒ¼ãƒ‰å¾Œ						N/A
 	};
 	
 	virtual const bool OpenFile(LPCTSTR lpszFileName, const bool bAsyncRead = false, const DWORD dwBuffSize = 0UL) = 0;
@@ -193,17 +193,17 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒƒfƒBƒAƒOƒ‰ƒoƒfƒR[ƒ_ƒCƒ“ƒ^ƒtƒF[ƒX
+// ãƒ¡ãƒ‡ã‚£ã‚¢ã‚°ãƒ©ãƒãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IMediaGrabber :			public IBonObject
 {
 public:
-	enum	// ƒfƒR[ƒ_ƒCƒxƒ“ƒgID				// [ƒCƒxƒ“ƒg“à—e]				[pParam]
+	enum	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¤ãƒ™ãƒ³ãƒˆID				// [ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹]				[pParam]
 	{
 		EID_ON_PLAY			= 0x00000000UL,		// PlayDecoder()				N/A
 		EID_ON_STOP			= 0x00000001UL,		// StopDecoder()				N/A
 		EID_ON_RESET		= 0x00000002UL,		// ResetDecoder()				N/A
-		EID_ON_MEDIADATA	= 0x00000003UL		// InputMedia()					(IMediaData *)“ü—Íƒf[ƒ^
+		EID_ON_MEDIADATA	= 0x00000003UL		// InputMedia()					(IMediaData *)å…¥åŠ›ãƒ‡ãƒ¼ã‚¿
 	};
 };

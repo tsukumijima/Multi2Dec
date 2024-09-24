@@ -1,4 +1,4 @@
-// SmartFile.cpp: ”Ä—pƒtƒ@ƒCƒ‹ƒXƒgƒŒ[ƒWƒNƒ‰ƒX
+ï»¿// SmartFile.cpp: æ±ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,10 +10,10 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—pƒtƒ@ƒCƒ‹ƒXƒgƒŒ[ƒWƒNƒ‰ƒX
+// æ±ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
-// ƒfƒtƒHƒ‹ƒg‚Ìƒoƒbƒtƒ@ƒTƒCƒY
+// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º
 #define DEF_BUFFSIZE	0x100000UL	// 1MB
 
 
@@ -24,7 +24,7 @@ const bool CSmartFile::Open(LPCTSTR lpszFileName, const DWORD dwModeFlags, const
 	TCHAR szOpenMode[16] = {TEXT('\0')};
 	int iShareFlags = 0;
 
-	// ƒ‚[ƒh‚Ìƒ`ƒFƒbƒN(“Ç‚İ‘‚«—¼•û‚É‚Í‘Î‰‚µ‚Ä‚¢‚È‚¢)
+	// ãƒ¢ãƒ¼ãƒ‰ã®ãƒã‚§ãƒƒã‚¯(èª­ã¿æ›¸ãä¸¡æ–¹ã«ã¯å¯¾å¿œã—ã¦ã„ãªã„)
 	switch(dwModeFlags){
 		case MF_READ :
 			::_tcscpy(szOpenMode, TEXT("rb"));
@@ -40,10 +40,10 @@ const bool CSmartFile::Open(LPCTSTR lpszFileName, const DWORD dwModeFlags, const
 			return false;
 		}
 
-	// ƒtƒ@ƒCƒ‹ƒXƒgƒŠ[ƒ€ƒI[ƒvƒ“
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚ªãƒ¼ãƒ—ãƒ³
 	if(!(m_pFileStream = ::_tfsopen(lpszFileName, szOpenMode, iShareFlags)))return false;
 	
-	// ƒoƒbƒtƒ@ƒTƒCƒYİ’è
+	// ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºè¨­å®š
 	if(::setvbuf(m_pFileStream, NULL, _IOFBF, (dwBuffSize)? dwBuffSize : DEF_BUFFSIZE)){
 		Close();
 		return false;
@@ -54,10 +54,10 @@ const bool CSmartFile::Open(LPCTSTR lpszFileName, const DWORD dwModeFlags, const
 
 void CSmartFile::Close(void)
 {
-	// ƒf[ƒ^ƒtƒ‰ƒbƒVƒ…
+	// ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 	FlushData();
 	
-	// ƒtƒ@ƒCƒ‹ƒNƒ[ƒY
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚¯ãƒ­ãƒ¼ã‚º
 	if(m_pFileStream){
 		::fclose(m_pFileStream);
 		m_pFileStream = NULL;
@@ -68,10 +68,10 @@ const DWORD CSmartFile::ReadData(BYTE *pBuff, const DWORD dwLen)
 {
 	if(!m_pFileStream || !pBuff || !dwLen)return 0UL;
 	
-	// ƒtƒ@ƒCƒ‹“Ç‚İæ‚è
+	// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿å–ã‚Š
 	const DWORD dwReturn = ::_fread_nolock(pBuff, 1UL, dwLen, m_pFileStream);
 	
-	// ƒGƒ‰[orƒtƒ@ƒCƒ‹I’[ƒ`ƒFƒbƒN
+	// ã‚¨ãƒ©ãƒ¼orãƒ•ã‚¡ã‚¤ãƒ«çµ‚ç«¯ãƒã‚§ãƒƒã‚¯
 	if(dwReturn != dwLen){
 		if(::ferror(m_pFileStream)){
 			::clearerr(m_pFileStream);
@@ -79,16 +79,16 @@ const DWORD CSmartFile::ReadData(BYTE *pBuff, const DWORD dwLen)
 			}
 		}
 
-	// “Ç‚İæ‚Á‚½ƒoƒCƒg”‚ğ•Ô‚·
+	// èª­ã¿å–ã£ãŸãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™
 	return dwReturn;
 }
 
 const DWORD CSmartFile::ReadData(BYTE *pBuff, const DWORD dwLen, const ULONGLONG llPos)
 {
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“ƒV[ƒN
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚·ãƒ¼ã‚¯
 	if(!SeekPos(llPos))return 0UL;
 
-	// ƒtƒ@ƒCƒ‹“Ç‚İæ‚è
+	// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿å–ã‚Š
 	return ReadData(pBuff, dwLen);
 }
 
@@ -96,25 +96,25 @@ const DWORD CSmartFile::WriteData(const BYTE *pBuff, const DWORD dwLen)
 {
 	if(!m_pFileStream || !pBuff || !dwLen)return 0UL;
 
-	// ƒtƒ@ƒCƒ‹‘‚«‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 	const DWORD dwReturn = ::_fwrite_nolock(pBuff, 1UL, dwLen, m_pFileStream);
 
-	// ƒGƒ‰[ƒ`ƒFƒbƒN
+	// ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯
 	if(dwReturn != dwLen){
 		::clearerr(m_pFileStream);
 		return 0UL;
 		}
 
-	// ‘‚«‚ñ‚¾ƒoƒCƒg”‚ğ•Ô‚·
+	// æ›¸ãè¾¼ã‚“ã ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™
 	return dwReturn;
 }
 
 const DWORD CSmartFile::WriteData(const BYTE *pBuff, const DWORD dwLen, const ULONGLONG llPos)
 {
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“ƒV[ƒN
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚·ãƒ¼ã‚¯
 	if(!SeekPos(llPos))return 0UL;
 
-	// ƒtƒ@ƒCƒ‹‘‚«‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãè¾¼ã¿
 	return WriteData(pBuff, dwLen);
 }
 
@@ -122,7 +122,7 @@ const bool CSmartFile::FlushData(void)
 {
 	if(!m_pFileStream)return false;
 
-	// ƒtƒ@ƒCƒ‹ƒtƒ‰ƒbƒVƒ…
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 	return (!::fflush(m_pFileStream))? true : false;
 }
 
@@ -130,7 +130,7 @@ const bool CSmartFile::SeekPos(const ULONGLONG llPos)
 {
 	if(!m_pFileStream)return false;
 
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“ƒV[ƒN
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚·ãƒ¼ã‚¯
 	return (!::_fseeki64(m_pFileStream, llPos, SEEK_SET))? true : false;
 }
 
@@ -138,7 +138,7 @@ const ULONGLONG CSmartFile::GetPos(void)
 {
 	if(!m_pFileStream)return 0ULL;
 
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“æ“¾
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³å–å¾—
 	const __int64 iReturn = ::_ftelli64(m_pFileStream);
 
 	return (iReturn != -1LL)? (ULONGLONG)iReturn : 0ULL;
@@ -148,20 +148,20 @@ const ULONGLONG CSmartFile::GetLength(void)
 {
 	if(!m_pFileStream)return 0ULL;
 	
-	// Œ»İ‚Ìƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“æ“¾
+	// ç¾åœ¨ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³å–å¾—
 	const __int64 iCurPos = ::_ftelli64(m_pFileStream);
 	if(iCurPos == -1LL)return 0ULL;
 
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“‚ğI’[‚ÉˆÚ“®
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’çµ‚ç«¯ã«ç§»å‹•
 	if(::_fseeki64(m_pFileStream, 0LL, SEEK_END))return 0ULL;
 	
-	// I’[‚Ìƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“æ“¾
+	// çµ‚ç«¯ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³å–å¾—
 	const __int64 iEndPos = ::_ftelli64(m_pFileStream);
 
-	// ƒtƒ@ƒCƒ‹ƒ|ƒWƒVƒ‡ƒ“‚ğŒ³‚É–ß‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’å…ƒã«æˆ»ã™
 	if(::_fseeki64(m_pFileStream, iCurPos, SEEK_SET))return 0ULL;
 
-	// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ•Ô‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’è¿”ã™
 	return (iEndPos != -1LL)? (ULONGLONG)iEndPos : 0ULL;
 }
 
@@ -169,11 +169,11 @@ CSmartFile::CSmartFile(IBonObject *pOwner)
 	: CBonObject(pOwner)
 	, m_pFileStream(NULL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CSmartFile::~CSmartFile(void)
 {
-	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	Close();
 }

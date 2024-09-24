@@ -1,4 +1,4 @@
-// SmartSocket.cpp: TCP/UDPƒ\ƒPƒbƒgƒNƒ‰ƒX
+ï»¿// SmartSocket.cpp: TCP/UDPã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@
 
 
 //////////////////////////////////////////////////////////////////////
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //////////////////////////////////////////////////////////////////////
 
 #define VERIFY_VALIDSOCK(R)	if(m_Socket != INVALID_SOCKET){m_dwLastError = EC_INVALID_SOCK; return (R);}
@@ -22,20 +22,20 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TCP/UDPƒ\ƒPƒbƒgƒNƒ‰ƒX
+// TCP/UDPã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 DWORD CSmartSocket::dwInstanceNum = 0UL;
 
 const bool CSmartSocket::Connect(LPCTSTR lpszHostName, const WORD wPort, const DWORD dwTimeout)
 {
-	// ƒzƒXƒg–¼ƒ`ƒFƒbƒN
+	// ãƒ›ã‚¹ãƒˆåãƒã‚§ãƒƒã‚¯
 	if(!lpszHostName){
 		m_dwLastError = EC_INVALID_PARAM;
 		return false;
 		}
 		
-	// ƒAƒhƒŒƒX–¼‚©‚çIPƒAƒhƒŒƒXæ“¾
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹åã‹ã‚‰IPã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 	const DWORD dwIP = HostNameToIPAddr(lpszHostName);
 
 	if(dwIP == INVALID_IPADDR){
@@ -43,28 +43,28 @@ const bool CSmartSocket::Connect(LPCTSTR lpszHostName, const WORD wPort, const D
 		return false;		
 		}
 	
-	// ƒRƒlƒNƒg
+	// ã‚³ãƒã‚¯ãƒˆ
 	return Connect(dwIP, wPort, dwTimeout);
 }
 
 const bool CSmartSocket::Connect(const DWORD dwIP, const WORD wPort, const DWORD dwTimeout)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	Close();
 
-	// ƒ\ƒPƒbƒgì¬
+	// ã‚½ã‚±ãƒƒãƒˆä½œæˆ
 	if((m_Socket = ::socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET){
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;		
 		}
 
-	// ƒAƒhƒŒƒXİ’è
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š
 	SOCKADDR_IN SockAddr;
 	SockAddr.sin_family = AF_INET;
 	SockAddr.sin_port = ::htons(wPort);
 	SockAddr.sin_addr.S_un.S_addr = ::htonl(dwIP);
 
-	// “¯ŠúƒRƒlƒNƒg
+	// åŒæœŸã‚³ãƒã‚¯ãƒˆ
 	if(!dwTimeout){
 		if(::connect(m_Socket, (PSOCKADDR)&SockAddr, sizeof(sockaddr))){
 			Close();
@@ -76,27 +76,27 @@ const bool CSmartSocket::Connect(const DWORD dwIP, const WORD wPort, const DWORD
 		return true;
 		}
 
-	// ”ñ“¯ŠúƒRƒlƒNƒg
+	// éåŒæœŸã‚³ãƒã‚¯ãƒˆ
 	try{
-		// ”ñ“¯Šú‚ÉØ‚è‘Ö‚¦
+		// éåŒæœŸã«åˆ‡ã‚Šæ›¿ãˆ
 		if(!SetAsyncMode(true))throw;
 
-		// ƒRƒlƒNƒg
+		// ã‚³ãƒã‚¯ãƒˆ
 		if(::connect(m_Socket, (PSOCKADDR)&SockAddr, sizeof(sockaddr)) != SOCKET_ERROR)throw;
 		if(::WSAGetLastError() != WSAEWOULDBLOCK)throw;
 
-		// ƒ^ƒCƒ€ƒAƒEƒg”»’è
+		// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆåˆ¤å®š
 		if(WaitAsyncTimeout(false, dwTimeout)){
 			Close();
 			m_dwLastError = EC_TIME_OUT;
 			return false;
 			}
 
-		// “¯Šú‚ÉØ‚è‘Ö‚¦
+		// åŒæœŸã«åˆ‡ã‚Šæ›¿ãˆ
 		if(!SetAsyncMode(false))throw;
 		}
 	catch(...){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		Close();
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
@@ -110,30 +110,30 @@ const bool CSmartSocket::Connect(const DWORD dwIP, const WORD wPort, const DWORD
 
 const bool CSmartSocket::Listen(const WORD wPort)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	Close();
 	
-	// ƒ\ƒPƒbƒgì¬
+	// ã‚½ã‚±ãƒƒãƒˆä½œæˆ
 	if((m_Socket = ::socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET){
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;		
 		}
 
-	// ƒAƒhƒŒƒXİ’è
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š
 	SOCKADDR_IN SockAddr;
 	SockAddr.sin_family = AF_INET;
 	SockAddr.sin_port = ::htons(wPort);
 	SockAddr.sin_addr.S_un.S_addr = INADDR_ANY;
 
 	try{
-		// ƒoƒCƒ“ƒh
+		// ãƒã‚¤ãƒ³ãƒ‰
 		if(::bind(m_Socket, (PSOCKADDR)&SockAddr, sizeof(SockAddr)) == SOCKET_ERROR)throw;
 
-		// Ú‘±ó‚¯“ü‚ê
+		// æ¥ç¶šå—ã‘å…¥ã‚Œ
 		if(::listen(m_Socket, 5) == SOCKET_ERROR)throw;
 		}
 	catch(...){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		Close();
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
@@ -153,16 +153,16 @@ ISmartSocket * CSmartSocket::Accept(const DWORD dwTimeout)
 	::ZeroMemory(&AddrIn, sizeof(AddrIn));
 	int iAddrLen = sizeof(AddrIn);
 
-	// ƒRƒlƒNƒg‘Ò‚¿
+	// ã‚³ãƒã‚¯ãƒˆå¾…ã¡
 	if(dwTimeout){
 		if(WaitAsyncTimeout(true, dwTimeout)){
-			// ƒ^ƒCƒ€ƒAƒEƒg
+			// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆ
 			m_dwLastError = EC_TIME_OUT;
 			return NULL;
 			}
 		}
 
-	// ƒRƒlƒNƒgó‚¯“ü‚ê
+	// ã‚³ãƒã‚¯ãƒˆå—ã‘å…¥ã‚Œ
 	SOCKET SockIn = ::accept(m_Socket, (sockaddr *)&AddrIn, &iAddrLen);
 
 	if(SockIn == INVALID_SOCKET){
@@ -190,7 +190,7 @@ const bool CSmartSocket::Send(const BYTE *pData, const DWORD dwLen, const DWORD 
 		return false;
 		}
 
-	// w’èƒTƒCƒY‘—M
+	// æŒ‡å®šã‚µã‚¤ã‚ºé€ä¿¡
 	DWORD dwReturn = 0UL, dwSend = 0UL;
 
 	do{
@@ -210,7 +210,7 @@ const bool CSmartSocket::Recv(BYTE *pData, const DWORD dwLen, const DWORD dwTime
 		return false;
 		}
 
-	// w’èƒTƒCƒYóM
+	// æŒ‡å®šã‚µã‚¤ã‚ºå—ä¿¡
 	DWORD dwReturn = 0UL, dwRecv = 0UL;
 
 	do{
@@ -230,13 +230,13 @@ const DWORD CSmartSocket::SendOnce(const BYTE *pData, const DWORD dwLen, const D
 		return false;
 		}
 	
-	// ƒ^ƒCƒ€ƒAƒEƒgİ’è
+	// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆè¨­å®š
 	if(!SetSendTimeout(dwTimeout)){
 		m_dwLastError = EC_SOCK_ERROR;
 		return 0UL;
 		}
 	
-	// ‘—M
+	// é€ä¿¡
 	const int iReturn = ::send(m_Socket, (const char *)pData, dwLen, 0);
 
 	if((iReturn == SOCKET_ERROR) || !iReturn){
@@ -264,13 +264,13 @@ const DWORD CSmartSocket::RecvOnce(BYTE *pData, const DWORD dwLen, const DWORD d
 		return FALSE;
 		}
 
-	// ƒ^ƒCƒ€ƒAƒEƒg’lİ’è
+	// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆå€¤è¨­å®š
 	if(!SetRecvTimeout(dwTimeout)){
 		m_dwLastError = EC_SOCK_ERROR;
 		return 0UL;
 		}
 
-	// óM
+	// å—ä¿¡
 	const int iReturn = ::recv(m_Socket, (char *)pData, dwLen, 0);
 
 	if((iReturn == SOCKET_ERROR) || !iReturn){
@@ -296,7 +296,7 @@ const bool CSmartSocket::GetLocalAddr(DWORD *pdwIP, WORD *pwPort)
 	struct sockaddr_in LocalAddr;
 	int iAddrLen = sizeof(LocalAddr);
 	
-	// ƒ[ƒJƒ‹ƒAƒhƒŒƒXæ“¾
+	// ãƒ­ãƒ¼ã‚«ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 	if(::getsockname(m_Socket, (struct sockaddr *)&LocalAddr, &iAddrLen) == SOCKET_ERROR){
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
@@ -317,7 +317,7 @@ const bool CSmartSocket::GetPeerAddr(DWORD *pdwIP, WORD *pwPort)
 	struct sockaddr_in PeerAddr;
 	int iAddrLen = sizeof(PeerAddr);
 	
-	// ƒsƒAƒAƒhƒŒƒXæ“¾
+	// ãƒ”ã‚¢ã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 	if(::getpeername(m_Socket, (struct sockaddr *)&PeerAddr, &iAddrLen) == SOCKET_ERROR){
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
@@ -333,22 +333,22 @@ const bool CSmartSocket::GetPeerAddr(DWORD *pdwIP, WORD *pwPort)
 
 const bool CSmartSocket::Bind(const WORD wPort)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	Close();
 
-	// UDPƒ\ƒPƒbƒgì¬
+	// UDPã‚½ã‚±ãƒƒãƒˆä½œæˆ
 	if((m_Socket = ::socket(PF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET){
 		m_dwLastError = EC_SOCK_ERROR;
 		return false;
 		}
 
-	// ƒAƒhƒŒƒXİ’è
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š
 	SOCKADDR_IN SockAddr;
 	SockAddr.sin_family = AF_INET;
 	SockAddr.sin_port = ::htons(wPort);
 	SockAddr.sin_addr.S_un.S_addr = INADDR_ANY;
 
-	// ƒoƒCƒ“ƒh
+	// ãƒã‚¤ãƒ³ãƒ‰
 	if(::bind(m_Socket, (struct sockaddr *)&SockAddr, sizeof(SockAddr)) == SOCKET_ERROR){
 		Close();
 		m_dwLastError = EC_SOCK_ERROR;
@@ -370,22 +370,22 @@ const DWORD CSmartSocket::SendTo(const DWORD dwIP, const WORD wPort, const BYTE 
 		return 0UL;
 		}
 
-	// ƒAƒhƒŒƒXİ’è
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š
 	SOCKADDR_IN SockAddr;
 	SockAddr.sin_family = AF_INET;
 	SockAddr.sin_port = ::htons(wPort);
 	SockAddr.sin_addr.S_un.S_addr = ::htonl(dwIP);
 
-	// ‘—M‘Ò‚¿
+	// é€ä¿¡å¾…ã¡
 	if(dwTimeout){
 		if(WaitAsyncTimeout(false, dwTimeout)){
-			// ƒ^ƒCƒ€ƒAƒEƒg
+			// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆ
 			m_dwLastError = EC_TIME_OUT;
 			return 0UL;
 			}
 		}
 		
-	// ‘—M
+	// é€ä¿¡
 	int iReturn = sendto(m_Socket, (const char *)pData, dwLen, 0, (struct sockaddr *)&SockAddr, sizeof(SockAddr));
 	
 	if(iReturn == SOCKET_ERROR){
@@ -407,7 +407,7 @@ const DWORD CSmartSocket::SendTo(LPCTSTR lpszHostName, const WORD wPort, const B
 		return 0UL;
 		}
 		
-	// ƒAƒhƒŒƒX–¼‚©‚çIPƒAƒhƒŒƒXæ“¾
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹åã‹ã‚‰IPã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 	const DWORD dwIP = HostNameToIPAddr(lpszHostName);
 
 	if(dwIP == INVALID_IPADDR){
@@ -427,23 +427,23 @@ const DWORD CSmartSocket::RecvFrom(BYTE *pData, const DWORD dwLen, DWORD *pdwIP,
 		return 0UL;
 		}
 
-	// ƒAƒhƒŒƒXİ’è
+	// ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š
 	int iSockSize = sizeof(SOCKADDR_IN);
 	SOCKADDR_IN SockAddr;
 	SockAddr.sin_family = AF_INET;
 	SockAddr.sin_port = 0U;
 	SockAddr.sin_addr.S_un.S_addr = 0UL;
 
-	// óM‘Ò‚¿
+	// å—ä¿¡å¾…ã¡
 	if(dwTimeout){
 		if(WaitAsyncTimeout(true, dwTimeout)){
-			// ƒ^ƒCƒ€ƒAƒEƒg
+			// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆ
 			m_dwLastError = EC_TIME_OUT;
 			return 0UL;
 			}
 		}
 
-	// óM
+	// å—ä¿¡
 	const int iReturn = ::recvfrom(m_Socket, (char *)pData, dwLen, 0, (struct sockaddr *)&SockAddr, &iSockSize);
 
 	if(iReturn == SOCKET_ERROR){
@@ -461,7 +461,7 @@ const DWORD CSmartSocket::RecvFrom(BYTE *pData, const DWORD dwLen, DWORD *pdwIP,
 
 void CSmartSocket::Close(void)
 {
-	// ƒ\ƒPƒbƒgƒNƒ[ƒY
+	// ã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ­ãƒ¼ã‚º
 	if(m_Socket != INVALID_SOCKET){
 		if(m_SockType == SOCKTYPE_TCP){
 			char cData;
@@ -488,7 +488,7 @@ const DWORD CSmartSocket::HostNameToIPAddr(LPCTSTR lpszHostName)
 	LPCSTR szHostName = lpszHostName;
 #endif
 
-	// ƒzƒXƒg–¼‚©‚çIPƒAƒhƒŒƒXæ“¾
+	// ãƒ›ã‚¹ãƒˆåã‹ã‚‰IPã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
 	const DWORD dwIP = ::inet_addr(szHostName);
 
 	if(dwIP == INADDR_NONE){
@@ -503,7 +503,7 @@ const DWORD CSmartSocket::HostNameToIPAddr(LPCTSTR lpszHostName)
 
 const DWORD CSmartSocket::IPAddrToHostName(LPTSTR lpszHostName, const DWORD dwIP)
 {
-	// IPƒAƒhƒŒƒX‚©‚çƒzƒXƒg–¼æ“¾
+	// IPã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ãƒ›ã‚¹ãƒˆåå–å¾—
 	const DWORD dwNetIP = ::htonl(dwIP);
 
 	struct hostent *pHost = ::gethostbyaddr((const char *)&dwNetIP, sizeof(dwNetIP), AF_INET);
@@ -520,7 +520,7 @@ const DWORD CSmartSocket::IPAddrToHostName(LPTSTR lpszHostName, const DWORD dwIP
 
 const DWORD CSmartSocket::GetLastError(void)
 {
-	// ÅŒã‚É”­¶‚µ‚½ƒGƒ‰[‚ğ•Ô‚·
+	// æœ€å¾Œã«ç™ºç”Ÿã—ãŸã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 	return m_dwLastError;
 }
 
@@ -530,7 +530,7 @@ CSmartSocket::CSmartSocket(IBonObject *pOwner)
 	, m_SockType(SOCKTYPE_NON)
 	, m_dwLastError(EC_NO_ERROR)
 {
-	// WinSock2‰Šú‰»
+	// WinSock2åˆæœŸåŒ–
 	if(!(dwInstanceNum++)){
 		::BON_ASSERT(InitializeWinSock());
 		}
@@ -538,10 +538,10 @@ CSmartSocket::CSmartSocket(IBonObject *pOwner)
 
 CSmartSocket::~CSmartSocket(void)
 {
-	// ƒ\ƒPƒbƒgƒNƒ[ƒY
+	// ã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ­ãƒ¼ã‚º
 	Close();
 
-	// WinSock2ŠJ•ú
+	// WinSock2é–‹æ”¾
 	if(!(--dwInstanceNum)){
 		ReleaseWinSock();
 		}
@@ -555,7 +555,7 @@ const bool CSmartSocket::InitializeWinSock(void)
 	::_tsetlocale(LC_ALL, TEXT("japanese"));
 #endif
 
-	// WinSock2‰Šú‰»
+	// WinSock2åˆæœŸåŒ–
 	if(::WSAStartup(MAKEWORD(2U, 2U), &WsaData))return false;
 	if((LOBYTE(WsaData.wVersion) != 2U) || (HIBYTE(WsaData.wVersion) != 2U))return false;
 
@@ -564,7 +564,7 @@ const bool CSmartSocket::InitializeWinSock(void)
 
 const bool CSmartSocket::ReleaseWinSock(void)
 {
-	// WinSock2ŠJ•ú
+	// WinSock2é–‹æ”¾
 	return (::WSACleanup())? true : false;
 }
 
@@ -572,7 +572,7 @@ const bool CSmartSocket::SetAsyncMode(const bool bEnable)
 {
 	DWORD dwArg = (bEnable)? 1UL : 0UL;
 
-	// ”ñ“¯Šú‚ÉØ‚è‘Ö‚¦
+	// éåŒæœŸã«åˆ‡ã‚Šæ›¿ãˆ
 	return (::ioctlsocket(m_Socket, FIONBIO, &dwArg) != SOCKET_ERROR)? true : false;
 }
 
@@ -586,7 +586,7 @@ const bool CSmartSocket::WaitAsyncTimeout(const bool bIsRead, const DWORD dwTime
 
 	int iReturn;
 
-	// ˆ—Š®—¹‘Ò‚¿
+	// å‡¦ç†å®Œäº†å¾…ã¡
 	if(bIsRead){
 		// Read
 		::BON_ASSERT((iReturn = ::select(32, &FdSet, NULL, NULL, &TimeVal)) != SOCKET_ERROR);
@@ -596,13 +596,13 @@ const bool CSmartSocket::WaitAsyncTimeout(const bool bIsRead, const DWORD dwTime
 		::BON_ASSERT((iReturn = ::select(32, NULL, &FdSet, NULL, &TimeVal)) != SOCKET_ERROR);
 		}
 	
-	// ƒ^ƒCƒ€ƒAƒEƒg”»’è
+	// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆåˆ¤å®š
 	return (!iReturn)? true : false;
 }
 
 const bool CSmartSocket::SetSendTimeout(const DWORD dwTimeout)
 {
-	// ‘—Mƒ^ƒCƒ€ƒAƒEƒgİ’è
+	// é€ä¿¡ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆè¨­å®š
 	int iValue  = 0, iSize = sizeof(int);
 
 	if(::getsockopt(m_Socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&iValue, &iSize)){
@@ -624,7 +624,7 @@ const bool CSmartSocket::SetSendTimeout(const DWORD dwTimeout)
 
 const bool CSmartSocket::SetRecvTimeout(const DWORD dwTimeout)
 {
-	// óMƒ^ƒCƒ€ƒAƒEƒgİ’è
+	// å—ä¿¡ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆè¨­å®š
 	int iValue  = 0, iSize = sizeof(int);
 
 	if(::getsockopt(m_Socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&iValue, &iSize)){

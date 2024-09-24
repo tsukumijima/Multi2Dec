@@ -1,4 +1,4 @@
-// B25Decoder.cpp: CCB25Decoder ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+ï»¿// B25Decoder.cpp: CCB25Decoder ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -7,7 +7,7 @@
 
 
 //////////////////////////////////////////////////////////////////////
-// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬ƒƒ\ƒbƒh
+// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆãƒ¡ã‚½ãƒƒãƒ‰
 //////////////////////////////////////////////////////////////////////
 
 extern "C"
@@ -15,13 +15,13 @@ extern "C"
 
 B25DECAPI IB25Decoder * CreateB25Decoder()
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	return dynamic_cast<IB25Decoder *>(new CB25Decoder(NULL));
 }
 
 B25DECAPI IB25Decoder2 * CreateB25Decoder2()
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	return dynamic_cast<IB25Decoder2 *>(new CB25Decoder(NULL));
 }
 
@@ -29,7 +29,7 @@ B25DECAPI IB25Decoder2 * CreateB25Decoder2()
 
 
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 CB25Decoder::CB25Decoder(IBonObject * const pOwner)
@@ -37,22 +37,22 @@ CB25Decoder::CB25Decoder(IBonObject * const pOwner)
 	, m_TsPacketSync(NULL)
 	, m_TsDescrambler(NULL)
 	, m_MediaGrabber(dynamic_cast<IMediaDecoderHandler *>(this))
-	, m_InputBuff((BYTE)0x00U, 0x100000UL)	// 1MB‚Ìƒoƒbƒtƒ@‚ğŠm•Û
-	, m_OutputBuff((BYTE)0x00U, 0x100000UL)	// 1MB‚Ìƒoƒbƒtƒ@‚ğŠm•Û
+	, m_InputBuff((BYTE)0x00U, 0x100000UL)	// 1MBã®ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
+	, m_OutputBuff((BYTE)0x00U, 0x100000UL)	// 1MBã®ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
 {
-	// ƒfƒR[ƒ_ƒOƒ‰ƒt\’z
+	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚°ãƒ©ãƒ•æ§‹ç¯‰
 	m_TsPacketSync.SetOutputDecoder(&m_TsDescrambler);
 	m_TsDescrambler.SetOutputDecoder(&m_MediaGrabber);
 }
 
 CB25Decoder::~CB25Decoder(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const BOOL CB25Decoder::Initialize(DWORD dwRound)
 {
-	// ƒfƒR[ƒ_ƒI[ƒvƒ“AƒfƒR[ƒ_ƒOƒ‰ƒtÄ¶
+	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚ªãƒ¼ãƒ—ãƒ³ã€ãƒ‡ã‚³ãƒ¼ãƒ€ã‚°ãƒ©ãƒ•å†ç”Ÿ
 	return Reset();
 }
 
@@ -61,28 +61,28 @@ const BOOL CB25Decoder::Decode(BYTE *pSrcBuf, const DWORD dwSrcSize, BYTE **ppDs
 	CBlockLock AutoLock(&m_GraphLock);
 
 	if(!pSrcBuf || !pdwDstSize || !ppDstBuf || !pdwDstSize){
-		// ˆø”‚ª•s³
+		// å¼•æ•°ãŒä¸æ­£
 		return FALSE;
 		}
 
 	if(!m_TsDescrambler.GetHalBcasCard()){
-		// B-CASƒJ[ƒh‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+		// B-CASã‚«ãƒ¼ãƒ‰ãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 		return FALSE;
 		}
 
-	// o—Íƒoƒbƒtƒ@ƒNƒŠƒA
+	// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	m_OutputBuff.ClearSize();
 
-	// ƒƒfƒBƒAƒf[ƒ^ƒZƒbƒg
+	// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
 	m_InputBuff.SetData(pSrcBuf, dwSrcSize);
 	
-	// ƒfƒR[ƒ_‚É“ü—Í‚·‚é
+	// ãƒ‡ã‚³ãƒ¼ãƒ€ã«å…¥åŠ›ã™ã‚‹
 	if(!m_TsPacketSync.InputMedia(&m_InputBuff)){
-		// ƒfƒR[ƒ_ƒOƒ‰ƒt‚ÅƒGƒ‰[”­¶
+		// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚°ãƒ©ãƒ•ã§ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		return FALSE;
 		}
 
-	// o—Íƒf[ƒ^ƒZƒbƒg
+	// å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
 	*ppDstBuf = m_OutputBuff.GetData();
 	*pdwDstSize = m_OutputBuff.GetSize();
 
@@ -91,13 +91,13 @@ const BOOL CB25Decoder::Decode(BYTE *pSrcBuf, const DWORD dwSrcSize, BYTE **ppDs
 
 const BOOL CB25Decoder::Flush(BYTE **ppDstBuf, DWORD *pdwDstSize)
 {
-	// ‚±‚Ìƒƒ\ƒbƒh‚ÍŒø‰Ê‚ª‚È‚¢(ŒİŠ·«‚Ì‚½‚ßÀ‘•)
+	// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯åŠ¹æœãŒãªã„(äº’æ›æ€§ã®ãŸã‚å®Ÿè£…)
 	if(!ppDstBuf || !pdwDstSize){
-		// ˆø”‚ª•s³
+		// å¼•æ•°ãŒä¸æ­£
 		return FALSE;
 		}
 
-	// o—Íƒf[ƒ^ƒZƒbƒg(ƒf[ƒ^‚Íc‚ç‚È‚¢‚½‚ßí‚É‹ó)
+	// å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ(ãƒ‡ãƒ¼ã‚¿ã¯æ®‹ã‚‰ãªã„ãŸã‚å¸¸ã«ç©º)
 	*ppDstBuf = NULL;
 	*pdwDstSize = 0;
 
@@ -108,120 +108,120 @@ const BOOL CB25Decoder::Reset(void)
 {
 	CBlockLock AutoLock(&m_GraphLock);
 
-	// ˆê’UƒfƒR[ƒ_ƒOƒ‰ƒt’â~
+	// ä¸€æ—¦ãƒ‡ã‚³ãƒ¼ãƒ€ã‚°ãƒ©ãƒ•åœæ­¢
 	m_TsPacketSync.StopDecoder();
 	
-	// ƒpƒPƒbƒg“¯ŠúƒfƒR[ƒ_İ’è
+	// ãƒ‘ã‚±ãƒƒãƒˆåŒæœŸãƒ‡ã‚³ãƒ¼ãƒ€è¨­å®š
 	m_TsPacketSync.DiscardNullPacket(false);
 	
-	// ƒfƒXƒNƒ‰ƒ“ƒuƒ‰ƒfƒR[ƒ_ƒI[ƒvƒ“
+	// ãƒ‡ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ©ãƒ‡ã‚³ãƒ¼ãƒ€ã‚ªãƒ¼ãƒ—ãƒ³
 	if(!m_TsDescrambler.OpenDescrambler(TEXT("CBcasCardReader")))return FALSE;
 
-	// ƒfƒXƒNƒ‰ƒ“ƒuƒ‰ƒfƒR[ƒ_İ’è
+	// ãƒ‡ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ©ãƒ‡ã‚³ãƒ¼ãƒ€è¨­å®š
 	m_TsDescrambler.EnableEmmProcess(false);
 	m_TsDescrambler.DiscardScramblePacket(false);
 
-	// o—Íƒoƒbƒtƒ@ƒNƒŠƒA
+	// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	m_OutputBuff.ClearSize();
 
-	// “Œvî•ñƒŠƒZƒbƒg
+	// çµ±è¨ˆæƒ…å ±ãƒªã‚»ãƒƒãƒˆ
 	ResetStatistics();
 
-	// ƒfƒR[ƒ_ƒOƒ‰ƒtÄ¶
+	// ãƒ‡ã‚³ãƒ¼ãƒ€ã‚°ãƒ©ãƒ•å†ç”Ÿ
 	return (m_TsPacketSync.PlayDecoder())? TRUE : FALSE;
 }
 
 void CB25Decoder::DiscardNullPacket(const bool bEnable)
 {
-	// NULLƒpƒPƒbƒg”jŠü‚Ì—L–³‚ğİ’è
+	// NULLãƒ‘ã‚±ãƒƒãƒˆç ´æ£„ã®æœ‰ç„¡ã‚’è¨­å®š
 	m_TsPacketSync.DiscardNullPacket(bEnable);
 }
 
 void CB25Decoder::DiscardScramblePacket(const bool bEnable)
 {
-	// •œ†˜R‚êƒpƒPƒbƒg”jŠü‚Ì—L–³‚ğİ’è
+	// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆç ´æ£„ã®æœ‰ç„¡ã‚’è¨­å®š
 	m_TsDescrambler.DiscardScramblePacket(bEnable);
 }
 
 void CB25Decoder::EnableEmmProcess(const bool bEnable)
 {
-	// EMMˆ—‚Ì—LŒø/–³Œø‚ğİ’è
+	// EMMå‡¦ç†ã®æœ‰åŠ¹/ç„¡åŠ¹ã‚’è¨­å®š
 	m_TsDescrambler.EnableEmmProcess(bEnable);
 }
 
 const DWORD CB25Decoder::GetDescramblingState(const WORD wProgramID)
 {
-	// «–{“–‚Í•K—v
+	// â†“æœ¬å½“ã¯å¿…è¦
 	// CBlockLock AutoLock(&m_GraphLock);
 
-	// w’è‚µ‚½ƒvƒƒOƒ‰ƒ€ID‚Ì•œ†ó‘Ô‚ğ•Ô‚·
+	// æŒ‡å®šã—ãŸãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã®å¾©å·çŠ¶æ…‹ã‚’è¿”ã™
 	return m_TsDescrambler.GetDescramblingState(wProgramID);
 }
 
 void CB25Decoder::ResetStatistics(void)
 {
-	// “Œvî•ñ‚ğƒŠƒZƒbƒg‚·‚é
+	// çµ±è¨ˆæƒ…å ±ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	m_TsPacketSync.ResetStatistics();
 	m_TsDescrambler.ResetStatistics();
 }
 
 const DWORD CB25Decoder::GetPacketStride(void)
 {
-	// ƒpƒPƒbƒgüŠú‚ğ•Ô‚·
+	// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸã‚’è¿”ã™
 	return m_TsPacketSync.GetPacketStride();
 }
 
 const DWORD CB25Decoder::GetInputPacketNum(const WORD wPID)
 {
-	// “ü—ÍƒpƒPƒbƒg”‚ğ•Ô‚·@¦TS_INVALID_PIDw’è‚Í‘SPID‚Ì‡Œv‚ğ•Ô‚·
+	// å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™ã€€â€»TS_INVALID_PIDæŒ‡å®šæ™‚ã¯å…¨PIDã®åˆè¨ˆã‚’è¿”ã™
 	return m_TsPacketSync.GetInputPacketNum(wPID);
 }
 
 const DWORD CB25Decoder::GetOutputPacketNum(const WORD wPID)
 {
-	// o—ÍƒpƒPƒbƒg”‚ğ•Ô‚·@¦TS_INVALID_PIDw’è‚Í‘SPID‚Ì‡Œv‚ğ•Ô‚·
+	// å‡ºåŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™ã€€â€»TS_INVALID_PIDæŒ‡å®šæ™‚ã¯å…¨PIDã®åˆè¨ˆã‚’è¿”ã™
 	return m_TsPacketSync.GetOutputPacketNum(wPID);
 }
 
 const DWORD CB25Decoder::GetSyncErrNum(void)
 {
-	// “¯ŠúƒGƒ‰[”‚ğ•Ô‚·
+	// åŒæœŸã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™
 	return m_TsPacketSync.GetSyncErrNum();
 }
 
 const DWORD CB25Decoder::GetFormatErrNum(void)
 {
-	// ƒtƒH[ƒ}ƒbƒgƒGƒ‰[”‚ğ•Ô‚·
+	// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™
 	return m_TsPacketSync.GetFormatErrNum();
 }
 
 const DWORD CB25Decoder::GetTransportErrNum(void)
 {
-	// ƒrƒbƒgƒGƒ‰[”‚ğ•Ô‚·
+	// ãƒ“ãƒƒãƒˆã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™
 	return m_TsPacketSync.GetTransportErrNum();
 }
 
 const DWORD CB25Decoder::GetContinuityErrNum(const WORD wPID)
 {
-	// ƒhƒƒbƒvƒpƒPƒbƒg”‚ğ•Ô‚·
+	// ãƒ‰ãƒ­ãƒƒãƒ—ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™
 	return m_TsPacketSync.GetContinuityErrNum(wPID);
 }
 
 const DWORD CB25Decoder::GetScramblePacketNum(const WORD wPID)
 {
-	// •œ†˜R‚êƒpƒPƒbƒg”‚ğ•Ô‚·
+	// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™
 	return m_TsDescrambler.GetScramblePacketNum(wPID);
 }
 
 const DWORD CB25Decoder::GetEcmProcessNum(void)
 {
-	// ECMˆ—”‚ğ•Ô‚·(B-CASƒJ[ƒhƒAƒNƒZƒX‰ñ”)
+	// ECMå‡¦ç†æ•°ã‚’è¿”ã™(B-CASã‚«ãƒ¼ãƒ‰ã‚¢ã‚¯ã‚»ã‚¹å›æ•°)
 	return m_TsDescrambler.GetEcmProcessNum();
 }
 
 const DWORD CB25Decoder::GetEmmProcessNum(void)
 {
-	// EMMˆ—”‚ğ•Ô‚·(B-CASƒJ[ƒhƒAƒNƒZƒX‰ñ”)
+	// EMMå‡¦ç†æ•°ã‚’è¿”ã™(B-CASã‚«ãƒ¼ãƒ‰ã‚¢ã‚¯ã‚»ã‚¹å›æ•°)
 	return m_TsDescrambler.GetEmmProcessNum();
 }
 
@@ -229,7 +229,7 @@ const DWORD CB25Decoder::OnDecoderEvent(IMediaDecoder *pDecoder, const DWORD dwE
 {
 	if(pDecoder == dynamic_cast<IMediaDecoder *>(&m_MediaGrabber)){
 		if(dwEventID == IMediaGrabber::EID_ON_MEDIADATA){	
-			// o—Íƒoƒbƒtƒ@‚Éƒf[ƒ^‚ğ’Ç‰Á
+			// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã«ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
 			m_OutputBuff.AddData(reinterpret_cast<IMediaData *>(pParam));		
 			}
 		}

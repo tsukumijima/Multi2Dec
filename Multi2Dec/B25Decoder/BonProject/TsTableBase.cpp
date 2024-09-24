@@ -1,4 +1,4 @@
-// TsTableBase.cpp: TSƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+ï»¿// TsTableBase.cpp: TSãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,33 +8,33 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// PSIƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// PSIãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CPsiTableBase::StorePacket(const ITsPacket *pTsPacket)
 {
-	// ƒpƒPƒbƒg‚ğƒp[ƒT‚É“ü—Í
+	// ãƒ‘ã‚±ãƒƒãƒˆã‚’ãƒ‘ãƒ¼ã‚µã«å…¥åŠ›
 	return m_SectionParser.StorePacket(pTsPacket);
 }
 
 void CPsiTableBase::OnPidReset(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// ó‘Ô‚ğƒŠƒZƒbƒg
+	// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 	Reset();
 }
 
 void CPsiTableBase::OnPidMapped(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// QÆƒJƒEƒ“ƒ^ƒCƒ“ƒNƒŠƒƒ“ƒg
+	// å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	m_dwRefCount++;
 	
-	// ƒŠƒZƒbƒg
+	// ãƒªã‚»ãƒƒãƒˆ
 	Reset();
 }
 
 void CPsiTableBase::OnPidUnmapped(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// QÆƒJƒEƒ“ƒ^ƒfƒNƒŠƒƒ“ƒg
+	// å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	if(!(--m_dwRefCount))Release();
 }
 
@@ -54,24 +54,24 @@ CPsiTableBase::~CPsiTableBase(void)
 
 void CPsiTableBase::Reset(void)
 {
-	// ó‘Ô‚ğƒŠƒZƒbƒg
+	// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 	m_SectionParser.Reset();
 	m_LastSection.Reset();
 }
 
 const DWORD CPsiTableBase::GetCrcErrorCount(void) const
 {
-	// CRCƒGƒ‰[”‚ğ•Ô‚·
+	// CRCã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™
 	return m_SectionParser.GetCrcErrorNum();
 }
 
 void CPsiTableBase::OnPsiSection(const IPsiSectionParser *pPsiSectionParser, const IPsiSection *pPsiSection)
 {
-	// ƒfƒtƒHƒ‹ƒg‚ÌÀ‘•‚Å‚ÍƒZƒNƒVƒ‡ƒ“ƒyƒCƒ[ƒhXV‚É‰¼‘zŠÖ”‚É’Ê’m‚·‚é
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å®Ÿè£…ã§ã¯ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰æ›´æ–°æ™‚ã«ä»®æƒ³é–¢æ•°ã«é€šçŸ¥ã™ã‚‹
 	if(m_LastSection.CompareSection(pPsiSection)){
-		// ƒZƒNƒVƒ‡ƒ“‚ªXV‚³‚ê‚½
+		// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãŒæ›´æ–°ã•ã‚ŒãŸ
 		if(OnTableUpdate(pPsiSection, &m_LastSection)){
-			// ƒZƒNƒVƒ‡ƒ“ƒXƒgƒA
+			// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚¹ãƒˆã‚¢
 			m_LastSection.CopySection(pPsiSection);
 			}
 		}
@@ -79,6 +79,6 @@ void CPsiTableBase::OnPsiSection(const IPsiSectionParser *pPsiSectionParser, con
 
 const bool CPsiTableBase::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
 {
-	// ƒfƒtƒHƒ‹ƒg‚ÌÀ‘•‚Å‚Í‰½‚à‚µ‚È‚¢
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å®Ÿè£…ã§ã¯ä½•ã‚‚ã—ãªã„
 	return true;
 }

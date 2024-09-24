@@ -1,4 +1,4 @@
-// TsTable.cpp: TSƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+ï»¿// TsTable.cpp: TSãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,12 +9,12 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x00] PATƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x00] PATãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CPatTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_wTsID = 0x0000U;
 	
 	m_NitPIDArray.clear();
@@ -25,37 +25,37 @@ void CPatTable::Reset(void)
 
 const WORD CPatTable::GetTsID(void) const
 {
-	// TS ID‚ğ•Ô‚·
+	// TS IDã‚’è¿”ã™
 	return m_wTsID;
 }
 
 const WORD CPatTable::GetNitPID(const DWORD dwIndex) const
 {
-	// NIT‚ÌPID‚ğ•Ô‚·
+	// NITã®PIDã‚’è¿”ã™
 	return (dwIndex < m_NitPIDArray.size())? m_NitPIDArray[dwIndex].wPID : TS_INVALID_PID;
 }
 
 const DWORD CPatTable::GetNitNum(void) const
 {
-	// NIT‚Ì”‚ğ•Ô‚·
+	// NITã®æ•°ã‚’è¿”ã™
 	return m_NitPIDArray.size();
 }
 
 const WORD CPatTable::GetPmtPID(const DWORD dwIndex) const
 {
-	// PMT‚ÌPID‚ğ•Ô‚·
+	// PMTã®PIDã‚’è¿”ã™
 	return (dwIndex < m_PmtPIDArray.size())? m_PmtPIDArray[dwIndex].wPID : TS_INVALID_PID;
 }
 
 const WORD CPatTable::GetProgramID(const DWORD dwIndex) const
 {
-	// Program Number ID‚ğ•Ô‚·
+	// Program Number IDã‚’è¿”ã™
 	return (dwIndex < m_PmtPIDArray.size())? m_PmtPIDArray[dwIndex].wProgramID : 0x0000U;
 }
 
 const DWORD CPatTable::GetProgramNum(void) const
 {
-	// PMT‚Ì”‚ğ•Ô‚·
+	// PMTã®æ•°ã‚’è¿”ã™
 	return m_PmtPIDArray.size();
 }
 
@@ -64,12 +64,12 @@ CPatTable::CPatTable(IBonObject *pOwner)
 	, m_pHandler(dynamic_cast<IPatTable::IHandler *>(pOwner))
 	, m_wTsID(0UL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CPatTable::~CPatTable(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CPatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
@@ -77,16 +77,16 @@ const bool CPatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(wDataSize % 4U)return false;										// ƒe[ƒuƒ‹‚ÌƒTƒCƒY‚ª•s³
-	if(pNewSection->GetTableID() != IPatTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(wDataSize % 4U)return false;										// ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚µã‚¤ã‚ºãŒä¸æ­£
+	if(pNewSection->GetTableID() != IPatTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 
-	// PID‚ğƒNƒŠƒA‚·‚é
+	// PIDã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_NitPIDArray.clear();
 	m_PmtPIDArray.clear();
 
 	TAG_PATITEM PatItem;
 
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_wTsID = pNewSection->GetTableIdExtension();
 
 	::BON_TRACE(TEXT("\n------- PAT Table -------\nTS ID = %04X\n"), m_wTsID);
@@ -96,18 +96,18 @@ const bool CPatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		PatItem.wPID		= ((WORD)(pHexData[2] & 0x1FU) << 8) | (WORD)pHexData[3];	// +3,4
 
 		if(!PatItem.wProgramID){
-			// NIT‚ÌPID
+			// NITã®PID
 			::BON_TRACE(TEXT("NIT #%u [ID:%04X][PID:%04X]\n"), m_NitPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
 			m_NitPIDArray.push_back(PatItem);
 			}
 		else{
-			// PMT‚ÌPID
+			// PMTã®PID
 			::BON_TRACE(TEXT("PMT #%u [ID:%04X][PID:%04X]\n"), m_PmtPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
 			m_PmtPIDArray.push_back(PatItem);
 			}
 		}
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnPatTable(this);
 
 	return true;
@@ -115,12 +115,12 @@ const bool CPatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x01] CATƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x01] CATãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CCatTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_DescBlock.Reset();
 
 	CPsiTableBase::Reset();
@@ -128,7 +128,7 @@ void CCatTable::Reset(void)
 
 const IDescBlock * CCatTable::GetCatDesc(void) const
 {
-	// ‹Lqq—Ìˆæ‚ğ•Ô‚·
+	// è¨˜è¿°å­é ˜åŸŸã‚’è¿”ã™
 	return &m_DescBlock;
 }
 
@@ -137,19 +137,19 @@ CCatTable::CCatTable(IBonObject *pOwner)
 	, m_DescBlock(NULL)
 	, m_pHandler(dynamic_cast<ICatTable::IHandler *>(pOwner))
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CCatTable::~CCatTable(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
 {
-	if(pNewSection->GetTableID() != ICatTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(pNewSection->GetTableID() != ICatTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 	
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_DescBlock.SetData(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 	m_DescBlock.ParseDescs();
 
@@ -160,7 +160,7 @@ const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		::BON_TRACE(TEXT("[%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 		}
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnCatTable(this);
 
 	return true;
@@ -168,12 +168,12 @@ const bool CCatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x02] PMTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x02] PMTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CPmtTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_wProgramID = 0x0000U;
 	m_wPcrPID = TS_INVALID_PID;
 	m_DescBlock.Reset();
@@ -189,43 +189,43 @@ void CPmtTable::Reset(void)
 
 const WORD CPmtTable::GetProgramID(void) const
 {
-	// •ú‘—”Ô‘g”Ô†ID‚ğ•Ô‚·
+	// æ”¾é€ç•ªçµ„ç•ªå·IDã‚’è¿”ã™
 	return m_wProgramID;
 }
 
 const WORD CPmtTable::GetPcrPID(void) const
 {
-	// PCR PID‚ğ•Ô‚·
+	// PCR PIDã‚’è¿”ã™
 	return m_wPcrPID;
 }
 
 const IDescBlock * CPmtTable::GetPmtDesc(void) const
 {
-	// ‹Lqq—Ìˆæ1‚ğ•Ô‚·
+	// è¨˜è¿°å­é ˜åŸŸ1ã‚’è¿”ã™
 	return &m_DescBlock;
 }
 
 const DWORD CPmtTable::GetEsNum(void) const
 {
-	// ƒGƒŒƒƒ“ƒ^ƒŠƒXƒgƒŠ[ƒ€”‚ğ•Ô‚·
+	// ã‚¨ãƒ¬ãƒ¡ãƒ³ã‚¿ãƒªã‚¹ãƒˆãƒªãƒ¼ãƒ æ•°ã‚’è¿”ã™
 	return m_EsInfoArray.size();
 }
 
 const BYTE CPmtTable::GetStreamTypeID(const DWORD dwIndex) const
 {
-	// ƒXƒgƒŠ[ƒ€Œ`®ID‚ğ•Ô‚·
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ å½¢å¼IDã‚’è¿”ã™
 	return (dwIndex < m_EsInfoArray.size())? m_EsInfoArray[dwIndex].byStreamTypeID : 0x00U;
 }
 
 const WORD CPmtTable::GetEsPID(const DWORD dwIndex) const
 {
-	// ƒGƒŒƒƒ“ƒ^ƒŠPID‚ğ•Ô‚·
+	// ã‚¨ãƒ¬ãƒ¡ãƒ³ã‚¿ãƒªPIDã‚’è¿”ã™
 	return (dwIndex < m_EsInfoArray.size())? m_EsInfoArray[dwIndex].wEsPID : TS_INVALID_PID;
 }
 
 const IDescBlock * CPmtTable::GetEsDesc(const DWORD dwIndex) const
 {
-	// ‹Lqq—Ìˆæ2‚ğ•Ô‚·
+	// è¨˜è¿°å­é ˜åŸŸ2ã‚’è¿”ã™
 	return (dwIndex < m_EsInfoArray.size())? m_EsInfoArray[dwIndex].pDescBlock : NULL;
 }
 
@@ -236,12 +236,12 @@ CPmtTable::CPmtTable(IBonObject *pOwner)
 	, m_DescBlock(NULL)
 	, m_pHandler(dynamic_cast<IPmtTable::IHandler *>(pOwner))
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CPmtTable::~CPmtTable(void)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	Reset();
 }
 
@@ -250,16 +250,16 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(pNewSection->GetTableID() != IPmtTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(pNewSection->GetTableID() != IPmtTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 	
-	// ESî•ñ‚ğƒNƒŠƒA‚·‚é
+	// ESæƒ…å ±ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex < m_EsInfoArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_EsInfoArray[dwIndex].pDescBlock);
 		}
 
 	m_EsInfoArray.clear();
 	
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_wProgramID = pNewSection->GetTableIdExtension();
 	m_wPcrPID = ((WORD)(pHexData[0] & 0x1FU) << 8) | (WORD)pHexData[1];
 
@@ -274,17 +274,17 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 		}
 
-	// ƒXƒgƒŠ[ƒ€î•ñ‚ÌŠJnˆÊ’u‚ğŒvZ
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ æƒ…å ±ã®é–‹å§‹ä½ç½®ã‚’è¨ˆç®—
 	WORD wPos = wDescLen + 4U;
 	TAG_PMTITEM PmtItem;
 
-	// ESî•ñ‚ğ‰ğÍ
+	// ESæƒ…å ±ã‚’è§£æ
 	while(wPos < wDataSize){
 		PmtItem.byStreamTypeID = pHexData[wPos + 0U];													// +0
 		PmtItem.wEsPID = ((WORD)(pHexData[wPos + 1U] & 0x1FU) << 8) | (WORD)pHexData[wPos + 2U];		// +1,2	
 		wDescLen = ((WORD)(pHexData[wPos + 3U] & 0x0FU) << 8) | (WORD)pHexData[wPos + 4U];				// +3,4
 
-		// ‹LqqƒuƒƒbƒN
+		// è¨˜è¿°å­ãƒ–ãƒ­ãƒƒã‚¯
 		PmtItem.pDescBlock = dynamic_cast<CDescBlock *>(CDescBlock::CreateInstance(NULL));
 		PmtItem.pDescBlock->SetData(&pHexData[wPos + 5U], wDescLen);
 		PmtItem.pDescBlock->ParseDescs();
@@ -296,12 +296,12 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 			::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 			}
 
-		// ƒe[ƒuƒ‹‚É’Ç‰Á‚·‚é
+		// ãƒ†ãƒ¼ãƒ–ãƒ«ã«è¿½åŠ ã™ã‚‹
 		m_EsInfoArray.push_back(PmtItem);
 		wPos += (wDescLen + 5U);
 		}
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnPmtTable(this);
 
 	return true;
@@ -309,12 +309,12 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x40] NITƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x40] NITãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CNitTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_wNetworkID = 0x0000U;
 	m_NwDescBlock.Reset();
 
@@ -329,37 +329,37 @@ void CNitTable::Reset(void)
 
 const WORD CNitTable::GetNetworkID(void) const
 {
-	// ƒlƒbƒgƒ[ƒNID‚ğ•Ô‚·
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯IDã‚’è¿”ã™
 	return m_wNetworkID;
 }
 
 const IDescBlock * CNitTable::GetNetworkDesc(void) const
 {
-	// ƒlƒbƒgƒ[ƒN‹Lqq—Ìˆæ‚ğ•Ô‚·
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯è¨˜è¿°å­é ˜åŸŸã‚’è¿”ã™
 	return (m_NwDescBlock.GetSize())? &m_NwDescBlock : NULL;
 }
 
 const DWORD CNitTable::GetTsNum(void) const
 {
-	// TSî•ñ”‚ğ•Ô‚·
+	// TSæƒ…å ±æ•°ã‚’è¿”ã™
 	return m_TsInfoArray.size();
 }
 
 const BYTE CNitTable::GetTsID(const DWORD dwIndex) const
 {
-	// TS ID‚ğ•Ô‚·
+	// TS IDã‚’è¿”ã™
 	return (dwIndex < m_TsInfoArray.size())? m_TsInfoArray[dwIndex].wTsID : 0x0000U;
 }
 
 const BYTE CNitTable::GetOrgNetworkID(const DWORD dwIndex) const
 {
-	// ƒIƒŠƒWƒiƒ‹ƒlƒbƒgƒ[ƒNID‚ğ•Ô‚·
+	// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯IDã‚’è¿”ã™
 	return (dwIndex < m_TsInfoArray.size())? m_TsInfoArray[dwIndex].wOrgNetworkID : 0x0000U;
 }
 
 const IDescBlock * CNitTable::GetTsDesc(const DWORD dwIndex) const
 {
-	// ƒlƒbƒgƒ[ƒN‹Lqq—Ìˆæ‚ğ•Ô‚·
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯è¨˜è¿°å­é ˜åŸŸã‚’è¿”ã™
 	return (dwIndex < m_TsInfoArray.size())? m_TsInfoArray[dwIndex].pDescBlock : NULL;
 }
 
@@ -369,12 +369,12 @@ CNitTable::CNitTable(IBonObject *pOwner)
 	, m_NwDescBlock(NULL)
 	, m_pHandler(dynamic_cast<INitTable::IHandler *>(pOwner))
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CNitTable::~CNitTable(void)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	Reset();
 }
 
@@ -383,16 +383,16 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(pNewSection->GetTableID() != INitTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(pNewSection->GetTableID() != INitTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 	
-	// TSî•ñ‚ğƒNƒŠƒA‚·‚é
+	// TSæƒ…å ±ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex < m_TsInfoArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_TsInfoArray[dwIndex].pDescBlock);
 		}
 
 	m_TsInfoArray.clear();
 	
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_wNetworkID = pNewSection->GetTableIdExtension();
 
 	WORD wDescLen = ((WORD)(pHexData[0] & 0x0FU) << 8) | (WORD)pHexData[1];
@@ -414,18 +414,18 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		::BON_TRACE(TEXT("    [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 		}
 
-	// TSî•ñ‚ÌŠJnˆÊ’u‚ğŒvZ
+	// TSæƒ…å ±ã®é–‹å§‹ä½ç½®ã‚’è¨ˆç®—
 	WORD wPos = wDescLen + 4U;
 	TAG_NITITEM NitItem;
 
-	// TSî•ñ‚ğ‰ğÍ
+	// TSæƒ…å ±ã‚’è§£æ
 	while(wPos < wDataSize){
 		NitItem.wTsID = ((WORD)pHexData[wPos + 0U] << 8) | (WORD)pHexData[wPos + 1U];
 		NitItem.wOrgNetworkID = ((WORD)pHexData[wPos + 2U] << 8) | (WORD)pHexData[wPos + 3U];
 
 		wDescLen = ((WORD)(pHexData[wPos + 4U] & 0x0FU) << 8) | (WORD)pHexData[wPos + 5U];
 
-		// ‹LqqƒuƒƒbƒN
+		// è¨˜è¿°å­ãƒ–ãƒ­ãƒƒã‚¯
 		NitItem.pDescBlock = dynamic_cast<CDescBlock *>(CDescBlock::CreateInstance(NULL));
 		NitItem.pDescBlock->SetData(&pHexData[wPos + 6U], wDescLen);
 		NitItem.pDescBlock->ParseDescs();
@@ -437,12 +437,12 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 			::BON_TRACE(TEXT("        [%lu] TAG = 0x%02X LEN = %lu\n"), dwIndex, pDescBase->GetTag(), pDescBase->GetLength());
 			}
 
-		// ƒe[ƒuƒ‹‚É’Ç‰Á‚·‚é
+		// ãƒ†ãƒ¼ãƒ–ãƒ«ã«è¿½åŠ ã™ã‚‹
 		m_TsInfoArray.push_back(NitItem);
 		wPos += (wDescLen + 6U);
 		}
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnNitTable(this);
 
 	return true;
@@ -450,12 +450,12 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x42] SDTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x42] SDTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CSdtTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_wTsID = 0x0000U;
 	m_wOrgNetworkID = 0x0000U;
 
@@ -470,59 +470,59 @@ void CSdtTable::Reset(void)
 
 const WORD CSdtTable::GetTsID(void) const
 {
-	// TS ID‚ğ•Ô‚·
+	// TS IDã‚’è¿”ã™
 	return m_wTsID;
 }
 
 const WORD CSdtTable::GetOrgNetworkID(void) const
 {
-	// ƒIƒŠƒWƒiƒ‹ƒlƒbƒgƒ[ƒNID‚ğ•Ô‚·
+	// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯IDã‚’è¿”ã™
 	return m_wOrgNetworkID;
 }
 
 const DWORD CSdtTable::GetServiceNum(void) const
 {
-	// ƒT[ƒrƒX”‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹æ•°ã‚’è¿”ã™
 	return m_SdtItemArray.size();
 }
 
 const WORD CSdtTable::GetServiceID(const DWORD dwIndex) const
 {
-	// ƒT[ƒrƒXID‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹IDã‚’è¿”ã™
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[dwIndex].wServiceID : 0x0000U;
 }
 
 const bool CSdtTable::IsEitSchedule(const WORD wServiceID) const
 {
-	// EITƒXƒPƒWƒ…[ƒ‹ƒtƒ‰ƒO‚ğ•Ô‚·
+	// EITã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	const DWORD dwIndex = GetIndexByServiceID(wServiceID);
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[wServiceID].bIsEitSchedule : false;
 }
 
 const bool CSdtTable::IsEitPresentFollowing(const WORD wServiceID) const
 {
-	// EITŒ»İ/Ÿƒtƒ‰ƒO‚ğ•Ô‚·
+	// EITç¾åœ¨/æ¬¡ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	const DWORD dwIndex = GetIndexByServiceID(wServiceID);
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[dwIndex].IsEitPresentFollowing : false;
 }
 
 const BYTE CSdtTable::GetRunningStatus(const WORD wServiceID) const
 {
-	// isó‘Ô‚ğ•Ô‚·
+	// é€²è¡ŒçŠ¶æ…‹ã‚’è¿”ã™
 	const DWORD dwIndex = GetIndexByServiceID(wServiceID);
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[dwIndex].byRunningStatus : ISdtTable::RST_UNDEFINED;
 }
 
 const bool CSdtTable::IsScrambling(const WORD wServiceID) const
 {
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹ƒtƒ‰ƒO‚ğ•Ô‚·
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	const DWORD dwIndex = GetIndexByServiceID(wServiceID);
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[dwIndex].bIsScrambling : false;
 }
 
 const IDescBlock * CSdtTable::GetServiceDesc(const WORD wServiceID) const
 {
-	// ‹Lqq—Ìˆæ‚ğ•Ô‚·
+	// è¨˜è¿°å­é ˜åŸŸã‚’è¿”ã™
 	const DWORD dwIndex = GetIndexByServiceID(wServiceID);
 	return (dwIndex < m_SdtItemArray.size())? m_SdtItemArray[dwIndex].pDescBlock : NULL;
 }
@@ -533,12 +533,12 @@ CSdtTable::CSdtTable(IBonObject *pOwner)
 	, m_wOrgNetworkID(0x0000U)
 	, m_pHandler(dynamic_cast<ISdtTable::IHandler *>(pOwner))
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CSdtTable::~CSdtTable(void)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	Reset();
 }
 
@@ -547,16 +547,16 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(pNewSection->GetTableID() != ISdtTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(pNewSection->GetTableID() != ISdtTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 	
-	// ƒT[ƒrƒXî•ñ‚ğƒNƒŠƒA‚·‚é
+	// ã‚µãƒ¼ãƒ“ã‚¹æƒ…å ±ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex != m_SdtItemArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_SdtItemArray[dwIndex].pDescBlock);
 		}
 
 	m_SdtItemArray.clear();
 	
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_wTsID = pNewSection->GetTableIdExtension();
 	m_wOrgNetworkID = ((WORD)pHexData[0] << 8) | (WORD)pHexData[1];
 
@@ -565,7 +565,7 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	WORD wPos = 3U;
 	TAG_SDTITEM SdtItem;
 	
-	// ƒT[ƒrƒXî•ñ‚ğ‰ğÍ
+	// ã‚µãƒ¼ãƒ“ã‚¹æƒ…å ±ã‚’è§£æ
 	while(wPos < wDataSize){
 		SdtItem.wServiceID = ((WORD)pHexData[wPos + 0U] << 8) | (WORD)pHexData[wPos + 1U];
 		SdtItem.bIsEitSchedule = (pHexData[wPos + 2U] & 0x02U)? true : false;
@@ -573,17 +573,17 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		SdtItem.byRunningStatus = (pHexData[wPos + 3U]) >> 5;
 		SdtItem.bIsScrambling = (pHexData[wPos + 3U] & 0x10U)? true : false;
 
-		// ‹LqqƒuƒƒbƒN
+		// è¨˜è¿°å­ãƒ–ãƒ­ãƒƒã‚¯
 		const WORD wDescLen = ((WORD)(pHexData[wPos + 3U] & 0x0FU) << 8) | (WORD)pHexData[wPos + 4U];
 		SdtItem.pDescBlock = dynamic_cast<CDescBlock *>(CDescBlock::CreateInstance(NULL));
 		SdtItem.pDescBlock->SetData(&pHexData[wPos + 5U], wDescLen);
 		SdtItem.pDescBlock->ParseDescs();
 
-		// ƒe[ƒuƒ‹‚É’Ç‰Á‚·‚é
+		// ãƒ†ãƒ¼ãƒ–ãƒ«ã«è¿½åŠ ã™ã‚‹
 		m_SdtItemArray.push_back(SdtItem);
 		wPos += (wDescLen + 5U);
 
-		// ˆÈ‰ºƒfƒoƒbƒO—p
+		// ä»¥ä¸‹ãƒ‡ãƒãƒƒã‚°ç”¨
 		::BON_TRACE(TEXT("\n[%u] Service ID = %04X\n    Eit Schedule = %u\n    Eit Present Following = %u\n    Running Status = %u\n    Scrambling = %u\n"), m_SdtItemArray.size() - 1U, SdtItem.wServiceID, SdtItem.bIsEitSchedule, SdtItem.IsEitPresentFollowing, SdtItem.byRunningStatus, SdtItem.bIsScrambling);		
 
 		TCHAR szTemp[256];
@@ -605,7 +605,7 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 			}
 		}
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnSdtTable(this);
 
 	return true;
@@ -613,7 +613,7 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 const DWORD CSdtTable::GetIndexByServiceID(const WORD wServiceID) const
 {
-	// ƒT[ƒrƒXID‚©‚çƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
+	// ã‚µãƒ¼ãƒ“ã‚¹IDã‹ã‚‰ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
 	DWORD dwIndex;
 	
 	for(dwIndex = 0UL ; dwIndex < m_SdtItemArray.size() ; dwIndex++){
@@ -625,12 +625,12 @@ const DWORD CSdtTable::GetIndexByServiceID(const WORD wServiceID) const
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x4E-0x6F] EITƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x4E-0x6F] EITãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CEitTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_EitItem.ClearSize();
 	
 	CPsiTableBase::Reset();
@@ -638,13 +638,13 @@ void CEitTable::Reset(void)
 
 const WORD CEitTable::GetServiceID(void) const
 {
-	// ƒT[ƒrƒXID‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹IDã‚’è¿”ã™
 	return m_LastSection.GetTableIdExtension();
 }
 
 const WORD CEitTable::GetTsID(void) const
 {
-	// TS ID‚ğ•Ô‚·
+	// TS IDã‚’è¿”ã™
 	if(m_LastSection.GetPayloadSize() < 6U)return 0x0000U;
 
 	const BYTE *pHexData = m_LastSection.GetPayloadData();
@@ -653,7 +653,7 @@ const WORD CEitTable::GetTsID(void) const
 
 const WORD CEitTable::GetOrgNetworkID(void) const
 {
-	// Original Network ID‚ğ•Ô‚·
+	// Original Network IDã‚’è¿”ã™
 	if(m_LastSection.GetPayloadSize() < 6U)return 0x0000U;
 
 	const BYTE *pHexData = m_LastSection.GetPayloadData();
@@ -662,13 +662,13 @@ const WORD CEitTable::GetOrgNetworkID(void) const
 
 const BYTE CEitTable::GetTableID(void) const
 {
-	// ƒe[ƒuƒ‹ID‚ğ•Ô‚·
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’è¿”ã™
 	return m_LastSection.GetTableID();
 }
 
 const BYTE CEitTable::GetLastTableID(void) const
 {
-	// ÅIƒe[ƒuƒ‹ID‚ğ•Ô‚·
+	// æœ€çµ‚ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’è¿”ã™
 	if(m_LastSection.GetPayloadSize() < 6U)return 0x00U;
 
 	const BYTE *pHexData = m_LastSection.GetPayloadData();
@@ -677,19 +677,19 @@ const BYTE CEitTable::GetLastTableID(void) const
 
 const BYTE CEitTable::GetSectionNumber(void) const
 {
-	// ƒZƒNƒVƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	return m_LastSection.GetSectionNumber();
 }
 
 const BYTE CEitTable::GetLastSectionNumber(void) const
 {
-	// ÅIƒZƒNƒVƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// æœ€çµ‚ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	return m_LastSection.GetLastSectionNumber();
 }
 
 const BYTE CEitTable::GetSegmentLastSectionNumber(void) const
 {
-	// ƒZƒOƒƒ“ƒgÅIƒZƒNƒVƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// ã‚»ã‚°ãƒ¡ãƒ³ãƒˆæœ€çµ‚ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	if(m_LastSection.GetPayloadSize() < 6U)return 0x00U;
 
 	const BYTE *pHexData = m_LastSection.GetPayloadData();
@@ -701,19 +701,19 @@ CEitTable::CEitTable(IBonObject *pOwner)
 	, m_pHandler(dynamic_cast<IEitTable::IHandler *>(pOwner))
 	, m_EitItem(NULL)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CEitTable::~CEitTable(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CEitTable::OnPsiSection(const IPsiSectionParser *pPsiSectionParser, const IPsiSection *pPsiSection)
 {
-	// CPsiTableBase‚ÌÀ‘•‚ğƒI[ƒo[ƒ‰ƒCƒh‚·‚é
+	// CPsiTableBaseã®å®Ÿè£…ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹
 	if(m_LastSection.CompareSection(pPsiSection)){
-		// ƒZƒNƒVƒ‡ƒ“‚ªXV‚³‚ê‚½
+		// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãŒæ›´æ–°ã•ã‚ŒãŸ
 		OnTableUpdate(pPsiSection, &m_LastSection);
 		}
 }
@@ -723,23 +723,23 @@ const bool CEitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(pNewSection->GetTableID() < IEitTable::TABLE_ID_START)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
-	if(pNewSection->GetTableID() > IEitTable::TABLE_ID_END)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
-	if(wDataSize < 18U)return false;										// ƒyƒCƒ[ƒh’·‚ª•s³
+	if(pNewSection->GetTableID() < IEitTable::TABLE_ID_START)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
+	if(pNewSection->GetTableID() > IEitTable::TABLE_ID_END)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
+	if(wDataSize < 18U)return false;										// ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰é•·ãŒä¸æ­£
 
-	// ƒZƒNƒVƒ‡ƒ“ƒXƒgƒA
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚¹ãƒˆã‚¢
 	m_LastSection.CopySection(pNewSection);
 
-	// ƒAƒCƒeƒ€–ˆ‚Éƒnƒ“ƒhƒ‰‚É’Ê’m
+	// ã‚¢ã‚¤ãƒ†ãƒ æ¯ã«ãƒãƒ³ãƒ‰ãƒ©ã«é€šçŸ¥
 	if(!m_pHandler)return true;
 	
 	for(WORD wPos = 6U ; (wPos < wDataSize) && ((wDataSize - wPos) >= 12U) ; ){
-		// ƒAƒCƒeƒ€ƒTƒCƒYŒvZ
+		// ã‚¢ã‚¤ãƒ†ãƒ ã‚µã‚¤ã‚ºè¨ˆç®—
 		const WORD wItemLen = (((WORD)(pHexData[wPos + 10] & 0x0FU) << 8) | (WORD)pHexData[wPos + 11]) + 12U;
 		m_EitItem.SetData(&pHexData[wPos], wItemLen);
 		wPos += wItemLen;
 		
-		// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+		// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 		if(m_EitItem.ParseItem()){
 			m_pHandler->OnEitTable(this, &m_EitItem);
 			}
@@ -750,12 +750,12 @@ const bool CEitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x73] TOTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x73] TOTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CTotTable::Reset(void)
 {
-	// ó‘Ô‚ğƒNƒŠƒA‚·‚é
+	// çŠ¶æ…‹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_DateTime.ClearTime();
 	m_DescBlock.Reset();
 	
@@ -764,13 +764,13 @@ void CTotTable::Reset(void)
 
 const SYSTEMTIME & CTotTable::GetDateTime(void) const
 {
-	// Œ»İ“ú•t/‚ğ•Ô‚·
+	// ç¾åœ¨æ—¥ä»˜/æ™‚åˆ»ã‚’è¿”ã™
 	return m_DateTime;
 }
 
 const IDescBlock * CTotTable::GetTotDesc(void) const
 {
-	// ‹Lqq—Ìˆæ‚ğ•Ô‚·
+	// è¨˜è¿°å­é ˜åŸŸã‚’è¿”ã™
 	return &m_DescBlock;
 }
 
@@ -779,13 +779,13 @@ CTotTable::CTotTable(IBonObject *pOwner)
 	, m_DescBlock(NULL)
 	, m_pHandler(dynamic_cast<ITotTable::IHandler *>(pOwner))
 {
-	// •W€Œ`®ƒZƒNƒVƒ‡ƒ“‚ğ‘I‘ğ
+	// æ¨™æº–å½¢å¼ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’é¸æŠ
 	m_SectionParser.SetExtSection(false);
 }
 
 CTotTable::~CTotTable(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CTotTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
@@ -793,16 +793,16 @@ const bool CTotTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 
-	if(pNewSection->GetTableID() != ITotTable::TABLE_ID)return false;	// ƒe[ƒuƒ‹ID‚ª•s³
+	if(pNewSection->GetTableID() != ITotTable::TABLE_ID)return false;	// ãƒ†ãƒ¼ãƒ–ãƒ«IDãŒä¸æ­£
 
-	// ƒe[ƒuƒ‹‚ğ‰ğÍ‚·‚é
+	// ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æã™ã‚‹
 	m_DateTime.SetAribTime(pHexData);
 	
 	const WORD wDescLen = ((WORD)(pHexData[5] & 0x0FU) << 8) | (WORD)pHexData[6];
 	m_DescBlock.SetData(&pHexData[7], wDescLen);
 	m_DescBlock.ParseDescs();
 
-	// ƒnƒ“ƒhƒ‰‚Ö’Ê’m
+	// ãƒãƒ³ãƒ‰ãƒ©ã¸é€šçŸ¥
 	if(m_pHandler)m_pHandler->OnTotTable(this);
 
 	return true;

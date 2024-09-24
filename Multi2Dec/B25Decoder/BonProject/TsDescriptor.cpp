@@ -1,4 +1,4 @@
-// TsDescriptor.cpp: ƒfƒXƒNƒŠƒvƒ^ƒNƒ‰ƒX
+ï»¿// TsDescriptor.cpp: ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,291 +9,291 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ‚±‚ê‚ç‚ÌÀ‘•ƒNƒ‰ƒX‚Í‹Lqq‚Ìƒf[ƒ^‚ğ•Û‚¹‚¸AIDescBlockƒCƒ“ƒ^ƒtƒF[ƒX
-// À‘•ƒNƒ‰ƒX‚ª•Û‚·‚éƒƒ‚ƒŠƒuƒƒbƒN‚ğQÆ‚·‚éB
-// ‚±‚Ì‚½‚ß‚±‚ê‚ç‚ÌƒNƒ‰ƒX‚ÍIDescBlockƒCƒ“ƒ^ƒtƒF[ƒX‚©‚çæ“¾‚µ‚Äg—p‚µ‚È‚¯‚ê‚Î
-// ‚È‚ç‚È‚¢B(’P“Æ‚ÅƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢)
+// ã“ã‚Œã‚‰ã®å®Ÿè£…ã‚¯ãƒ©ã‚¹ã¯è¨˜è¿°å­ã®ãƒ‡ãƒ¼ã‚¿ã‚’ä¿æŒã›ãšã€IDescBlockã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+// å®Ÿè£…ã‚¯ãƒ©ã‚¹ãŒä¿æŒã™ã‚‹ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’å‚ç…§ã™ã‚‹ã€‚
+// ã“ã®ãŸã‚ã“ã‚Œã‚‰ã®ã‚¯ãƒ©ã‚¹ã¯IDescBlockã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‹ã‚‰å–å¾—ã—ã¦ä½¿ç”¨ã—ãªã‘ã‚Œã°
+// ãªã‚‰ãªã„ã€‚(å˜ç‹¬ã§ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã“ã¨ã¯ã§ããªã„)
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x09] Conditional Access Method ‹LqqƒNƒ‰ƒX
+// [0x09] Conditional Access Method è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const WORD CCaMethodDesc::GetCaMethodID(void) const
 {
-	// ŒÀ’èóM•û®ID‚ğ•Ô‚·
+	// é™å®šå—ä¿¡æ–¹å¼IDã‚’è¿”ã™
 	return (WORD)m_pDescData[0] << 8 | (WORD)m_pDescData[1];
 }
 
 const WORD CCaMethodDesc::GetCaPID(void) const
 {
-	// ŒÀ’èóMPID‚ğ•Ô‚·
+	// é™å®šå—ä¿¡PIDã‚’è¿”ã™
 	return (WORD)(m_pDescData[2] & 0x1FU) << 8 | (WORD)m_pDescData[3];
 }
 
 const BYTE * CCaMethodDesc::GetPrivateData(void) const
 {
-	// ƒvƒ‰ƒCƒx[ƒgƒf[ƒ^‚ğ•Ô‚·
+	// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™
 	return &m_pDescData[4];
 }
 
 const BYTE CCaMethodDesc::GetPrivateDataSize(void) const
 {
-	// ƒvƒ‰ƒCƒx[ƒgƒf[ƒ^’·‚ğ•Ô‚·
+	// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ‡ãƒ¼ã‚¿é•·ã‚’è¿”ã™
 	return m_byDescLen - 4U;
 }
 
 CCaMethodDesc::CCaMethodDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CCaMethodDesc::~CCaMethodDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CCaMethodDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 4U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x40] ƒlƒbƒgƒ[ƒN–¼ ‹LqqƒCƒ“ƒ^ƒtƒF[ƒX
+// [0x40] ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å è¨˜è¿°å­ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CNetworkNameDesc::GetNetworkName(LPTSTR lpszDst) const
 {
-	// ƒlƒbƒgƒ[ƒN–¼’·‚ğƒ`ƒFƒbƒN
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯åé•·ã‚’ãƒã‚§ãƒƒã‚¯
 	if(!m_byDescLen)return 0UL;
 
-	// ƒlƒbƒgƒ[ƒN–¼‚ğæ“¾‚·‚é
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯åã‚’å–å¾—ã™ã‚‹
 	TCHAR szName[256] = TEXT("\0");
 	CAribString::AribToString(szName, &m_pDescData[0], m_byDescLen);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);
 }
 
 CNetworkNameDesc::CNetworkNameDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CNetworkNameDesc::~CNetworkNameDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CNetworkNameDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 1U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x41] ƒT[ƒrƒXƒŠƒXƒg ‹LqqƒCƒ“ƒ^ƒtƒF[ƒX
+// [0x41] ã‚µãƒ¼ãƒ“ã‚¹ãƒªã‚¹ãƒˆ è¨˜è¿°å­ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CServiceListDesc::GetServiceNum(void) const
 {
-	// ƒT[ƒrƒX”‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹æ•°ã‚’è¿”ã™
 	return m_byDescLen / 3UL;
 }
 
 const WORD CServiceListDesc::GetServiceID(const DWORD dwIndex) const
 {
-	// ƒT[ƒrƒXID‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹IDã‚’è¿”ã™
 	return (dwIndex < GetServiceNum())? ((WORD)m_pDescData[dwIndex * 3] << 8 | (WORD)m_pDescData[dwIndex * 3 + 1]) : 0x0000U;
 }
 
 const BYTE CServiceListDesc::GetServiceType(const DWORD dwIndex) const
 {
-	// ƒT[ƒrƒXŒ`®í•Ê‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹å½¢å¼ç¨®åˆ¥ã‚’è¿”ã™
 	return (dwIndex < GetServiceNum())? m_pDescData[dwIndex * 3 + 2] : 0x00U;
 }
 
 CServiceListDesc::CServiceListDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CServiceListDesc::~CServiceListDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CServiceListDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen && !(m_byDescLen % 3U))? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x48] Service ‹LqqƒNƒ‰ƒX
+// [0x48] Service è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CServiceDesc::GetServiceType(void) const
 {
-	// ƒT[ƒrƒXŒ`®ID‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹å½¢å¼IDã‚’è¿”ã™
 	return m_pDescData[0];
 }
 
 const DWORD CServiceDesc::GetProviderName(LPTSTR lpszDst) const
 {
-	// –‹ÆÒ–¼’·‚ğƒ`ƒFƒbƒN
+	// äº‹æ¥­è€…åé•·ã‚’ãƒã‚§ãƒƒã‚¯
 	const DWORD dwPos = 1UL;
 	if(!m_pDescData[dwPos])return 0UL;
 
-	// –‹ÆÒ–¼‚ğæ“¾‚·‚é
+	// äº‹æ¥­è€…åã‚’å–å¾—ã™ã‚‹
 	TCHAR szName[256] = TEXT("\0");
 	CAribString::AribToString(szName, &m_pDescData[dwPos + 1UL], m_pDescData[dwPos]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);
 }
 
 const DWORD CServiceDesc::GetServiceName(LPTSTR lpszDst) const
 {
-	// ƒT[ƒrƒX–¼’·‚ğƒ`ƒFƒbƒN
+	// ã‚µãƒ¼ãƒ“ã‚¹åé•·ã‚’ãƒã‚§ãƒƒã‚¯
 	const DWORD dwPos = (DWORD)m_pDescData[1] + 2UL;
 	if(!m_pDescData[dwPos])return 0UL;
 
-	// ƒT[ƒrƒX–¼‚ğæ“¾‚·‚é
+	// ã‚µãƒ¼ãƒ“ã‚¹åã‚’å–å¾—ã™ã‚‹
 	TCHAR szName[256] = TEXT("\0");
 	CAribString::AribToString(szName, &m_pDescData[dwPos + 1UL], m_pDescData[dwPos]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);
 }
 
 CServiceDesc::CServiceDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CServiceDesc::~CServiceDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CServiceDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 3U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x4D] ’ZŒ`®ƒCƒxƒ“ƒg ‹LqqƒNƒ‰ƒX
+// [0x4D] çŸ­å½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆ è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CShortEventDesc::GetLanguageCode(void) const
 {
-	// Œ¾ŒêƒR[ƒh‚ğ•Ô‚·
+	// è¨€èªã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return ((DWORD)m_pDescData[0] << 16) | ((DWORD)m_pDescData[1] << 8) | (DWORD)m_pDescData[2];
 }
 
 const DWORD CShortEventDesc::GetEventName(LPTSTR lpszDst) const
 {
-	// ”Ô‘g–¼’·‚ğƒ`ƒFƒbƒN
+	// ç•ªçµ„åé•·ã‚’ãƒã‚§ãƒƒã‚¯
 	const DWORD dwPos = 3UL;
 	if(!m_pDescData[dwPos])return 0UL;
 
-	// ”Ô‘g–¼‚ğæ“¾‚·‚é
+	// ç•ªçµ„åã‚’å–å¾—ã™ã‚‹
 	TCHAR szName[256] = TEXT("\0");
 	CAribString::AribToString(szName, &m_pDescData[dwPos + 1UL], m_pDescData[dwPos]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);
 }
 
 const DWORD CShortEventDesc::GetEventDesc(LPTSTR lpszDst) const
 {
-	// ”Ô‘g‹Lq’·‚ğƒ`ƒFƒbƒN
+	// ç•ªçµ„è¨˜è¿°é•·ã‚’ãƒã‚§ãƒƒã‚¯
 	const DWORD dwPos = (DWORD)m_pDescData[3] + 4UL;
 	if(!m_pDescData[dwPos])return 0UL;
 
-	// ”Ô‘g‹Lq‚ğæ“¾‚·‚é
+	// ç•ªçµ„è¨˜è¿°ã‚’å–å¾—ã™ã‚‹
 	TCHAR szName[256] = TEXT("\0");
 	CAribString::AribToString(szName, &m_pDescData[dwPos + 1UL], m_pDescData[dwPos]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);
 }
 
 CShortEventDesc::CShortEventDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CShortEventDesc::~CShortEventDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CShortEventDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 5U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x4E] Šg’£Œ`®ƒCƒxƒ“ƒg ‹LqqƒNƒ‰ƒX
+// [0x4E] æ‹¡å¼µå½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆ è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CExtendEventDesc::GetDescNumber(void) const
 {
-	// ‹Lqq”Ô†‚ğ•Ô‚·
+	// è¨˜è¿°å­ç•ªå·ã‚’è¿”ã™
 	return m_pDescData[0] >> 4;
 }
 
 const BYTE CExtendEventDesc::GetLastDescNumber(void) const
 {
-	// ÅI‹Lqq”Ô†‚ğ•Ô‚·
+	// æœ€çµ‚è¨˜è¿°å­ç•ªå·ã‚’è¿”ã™
 	return m_pDescData[0] & 0x0FU;
 }
 
 const DWORD CExtendEventDesc::GetLanguageCode(void) const
 {
-	// Œ¾ŒêƒR[ƒh‚ğ•Ô‚·
+	// è¨€èªã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return ((DWORD)m_pDescData[1] << 16) | ((DWORD)m_pDescData[2] << 8) | (DWORD)m_pDescData[3];
 }
 
 const DWORD CExtendEventDesc::GetItemNum(void) const
 {
-	// ƒAƒCƒeƒ€”‚ğ•Ô‚·
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’è¿”ã™
 	const BYTE *pItem = &m_pDescData[5];
 	DWORD dwItem = 0UL;
 
 	for(DWORD dwPos = 0UL ; dwPos < (DWORD)m_pDescData[4] ; dwItem++){
-		// ƒ|ƒCƒ“ƒ^ˆÊ’uXV
+		// ãƒã‚¤ãƒ³ã‚¿ä½ç½®æ›´æ–°
 		if((dwPos + (DWORD)pItem[dwPos] + 1U) >= (DWORD)m_pDescData[4])break;
 		dwPos += (DWORD)pItem[dwPos] + 1UL;
 		dwPos += (DWORD)pItem[dwPos] + 1UL;
@@ -304,25 +304,25 @@ const DWORD CExtendEventDesc::GetItemNum(void) const
 
 const DWORD CExtendEventDesc::GetItemName(LPTSTR lpszDst, const DWORD dwIndex) const
 {
-	// ƒAƒCƒeƒ€ƒ|ƒCƒ“ƒ^‚ğæ“¾
+	// ã‚¢ã‚¤ãƒ†ãƒ ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
 	const BYTE *pItem = GetItemPointer(dwIndex);
 	if(!pItem)return 0UL;
 	if(!pItem[0])return 0UL;
 
-	// ƒAƒCƒeƒ€–¼‚ğ•Ô‚·
+	// ã‚¢ã‚¤ãƒ†ãƒ åã‚’è¿”ã™
 	TCHAR szName[512] = TEXT("\0");
 	CAribString::AribToString(szName, &pItem[1], pItem[0]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szName);	
 }
 
 const DWORD CExtendEventDesc::GetItemText(BYTE *pDst, const DWORD dwIndex) const
 {
-	// ƒAƒCƒeƒ€ƒ|ƒCƒ“ƒ^‚ğæ“¾
+	// ã‚¢ã‚¤ãƒ†ãƒ ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
 	const BYTE *pItem = GetItemPointer(dwIndex);
 	if(!pItem)return 0UL;
 	
@@ -330,10 +330,10 @@ const DWORD CExtendEventDesc::GetItemText(BYTE *pDst, const DWORD dwIndex) const
 	
 	if(!pItem[0])return 0UL;
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(pDst)::CopyMemory(pDst, &pItem[1], pItem[0]);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚ÈƒoƒCƒg”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™
 	return pItem[0];	
 }
 
@@ -343,13 +343,13 @@ const DWORD CExtendEventDesc::GetExtDesc(LPTSTR lpszDst) const
 	DWORD dwPos = 0UL;
 
 	while(true){
-		// ƒ|ƒCƒ“ƒ^ˆÊ’uXV
+		// ãƒã‚¤ãƒ³ã‚¿ä½ç½®æ›´æ–°
 		if(dwPos >= (DWORD)m_pDescData[4]){
-			// Description‚È‚µ
+			// Descriptionãªã—
 			return 0UL;
 			}
 		else if((dwPos + (DWORD)pItem[dwPos] + 1U) >= (DWORD)m_pDescData[4]){
-			// Description‚ ‚è
+			// Descriptionã‚ã‚Š
 			pItem = &pItem[dwPos];
 			break;
 			}
@@ -359,48 +359,48 @@ const DWORD CExtendEventDesc::GetExtDesc(LPTSTR lpszDst) const
 			}
 		}
 
-	// ƒAƒCƒeƒ€‚ÌƒeƒLƒXƒg‚ğ•Ô‚·
+	// ã‚¢ã‚¤ãƒ†ãƒ ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’è¿”ã™
 	TCHAR szDesc[256] = TEXT("\0");
 	CAribString::AribToString(szDesc, &pItem[1], pItem[0]);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szDesc);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szDesc);	
 }
 
 CExtendEventDesc::CExtendEventDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CExtendEventDesc::~CExtendEventDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CExtendEventDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 8U)? true : false;
 }
 
 const BYTE * CExtendEventDesc::GetItemPointer(const DWORD dwIndex) const
 {
-	// w’è‚µ‚½ƒAƒCƒeƒ€‚Ìæ“ªƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+	// æŒ‡å®šã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
 	const BYTE *pItem = &m_pDescData[5];
 	
 	for(DWORD dwPos = 0UL, dwItem = 0UL ; dwPos < (DWORD)m_pDescData[4] ; ){
 		if((dwPos + (DWORD)pItem[dwPos] + 1U) >= (DWORD)m_pDescData[4])break;
 
 		if(dwItem++ == dwIndex){
-			// ƒCƒ“ƒfƒbƒNƒX“’BAƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+			// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹åˆ°é”ã€ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
 			return &pItem[dwPos];
 			}
 		else{
-			// ƒ|ƒCƒ“ƒ^ˆÊ’uXV
+			// ãƒã‚¤ãƒ³ã‚¿ä½ç½®æ›´æ–°
 			dwPos += (DWORD)pItem[dwPos] + 1UL;
 			dwPos += (DWORD)pItem[dwPos] + 1UL;
 			}
@@ -411,57 +411,57 @@ const BYTE * CExtendEventDesc::GetItemPointer(const DWORD dwIndex) const
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x50] Component ‹LqqƒNƒ‰ƒX
+// [0x50] Component è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CComponentDesc::GetStreamContent(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg“à—e‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå†…å®¹ã‚’è¿”ã™
 	return m_pDescData[0] & 0x0FU;
 }
 
 const BYTE CComponentDesc::GetComponentType(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—ã‚’è¿”ã™
 	return m_pDescData[1];
 }
 
 const BYTE CComponentDesc::GetComponentTag(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒO‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚°ã‚’è¿”ã™
 	return m_pDescData[2];
 }
 
 const DWORD CComponentDesc::GetLanguageCode(void) const
 {
-	// Œ¾ŒêƒR[ƒh‚ğ•Ô‚·
+	// è¨€èªã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return ((WORD)m_pDescData[3] << 16) | ((WORD)m_pDescData[4] << 8) | (WORD)m_pDescData[5];
 }
 
 const DWORD CComponentDesc::GetComponentText(LPTSTR lpszDst) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg‹Lq‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¨˜è¿°ã‚’è¿”ã™
 	if(m_byDescLen < 7U)return 0UL;
 	
 	TCHAR szText[256] = TEXT("\0");
 	CAribString::AribToString(szText, &m_pDescData[6], m_byDescLen - 6UL);
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szText);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szText);
 }
 
 const bool CComponentDesc::IsVideoComponent(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg“à—e‚ª‰f‘œ‚ÉŠÖ‚·‚é‚à‚Ì‚©‚Ç‚¤‚©‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå†…å®¹ãŒæ˜ åƒã«é–¢ã™ã‚‹ã‚‚ã®ã‹ã©ã†ã‹ã‚’è¿”ã™
 	return (GetStreamContent() == 0x01U)? true : false;
 }
 
 const WORD CComponentDesc::GetVideoResolution(void) const
 {
-	// ‰ğ‘œ“x(‰¡•ûŒü‚ÌƒsƒNƒZƒ‹”)‚ğ•Ô‚·
+	// è§£åƒåº¦(æ¨ªæ–¹å‘ã®ãƒ”ã‚¯ã‚»ãƒ«æ•°)ã‚’è¿”ã™
 	if(!IsVideoComponent())return 0U;
 	
 	switch(GetComponentType() & 0x0FU){
@@ -483,20 +483,20 @@ const WORD CComponentDesc::GetVideoResolution(void) const
 				case 0xB0U :	// 1080i
 					return 1080U;
 				
-				default :		// –¢’è‹`‚Ì‰ğ‘œ“x
+				default :		// æœªå®šç¾©ã®è§£åƒåº¦
 					return 0U;
 				}
 			break;
 		
 		default :
-			// –¢’è‹`‚Ì‰ğ‘œ“x
+			// æœªå®šç¾©ã®è§£åƒåº¦
 			return 0U;
 		}
 }
 
 const bool CComponentDesc::IsVideoProgressive(void) const
 {
-	// ƒvƒƒOƒŒƒbƒVƒu‚Ì—L–³‚ğ•Ô‚·
+	// ãƒ—ãƒ­ã‚°ãƒ¬ãƒƒã‚·ãƒ–ã®æœ‰ç„¡ã‚’è¿”ã™
 	if(!IsVideoComponent())return false;
 	
 	switch(GetComponentType() & 0x0FU){
@@ -514,20 +514,20 @@ const bool CComponentDesc::IsVideoProgressive(void) const
 				case 0xC0U :	// 720p
 					return true;
 
-				default :		// –¢’è‹`‚Ì‰ğ‘œ“x
+				default :		// æœªå®šç¾©ã®è§£åƒåº¦
 					return false;
 				}
 			break;
 		
 		default :
-			// –¢’è‹`‚Ì‰ğ‘œ“x
+			// æœªå®šç¾©ã®è§£åƒåº¦
 			return false;
 		}
 }
 
 const bool CComponentDesc::IsVideoAspectWide(void) const
 {
-	// ƒAƒXƒyƒNƒg”ä16:9‚Ì—L–³‚ğ•Ô‚·
+	// ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”16:9ã®æœ‰ç„¡ã‚’è¿”ã™
 	if(!IsVideoComponent())return true;
 
 	switch(GetComponentType() & 0xF0U){
@@ -546,19 +546,19 @@ const bool CComponentDesc::IsVideoAspectWide(void) const
 					return true;	// 16:9
 		
 				default :
-					// –¢’è‹`‚Ì‰ğ‘œ“x
+					// æœªå®šç¾©ã®è§£åƒåº¦
 					return true;
 				}
 			break;
 
-		default :	// –¢’è‹`‚Ì‰ğ‘œ“x
+		default :	// æœªå®šç¾©ã®è§£åƒåº¦
 			return true;
 		}
 }
 
 const bool CComponentDesc::IsVideoPanAndScan(void) const
 {
-	// ƒpƒ“ƒXƒLƒƒƒ“‚Ì—L–³‚ğ•Ô‚·
+	// ãƒ‘ãƒ³ã‚¹ã‚­ãƒ£ãƒ³ã®æœ‰ç„¡ã‚’è¿”ã™
 	if(!IsVideoComponent())return false;
 
 	switch(GetComponentType() & 0xF0U){
@@ -569,20 +569,20 @@ const bool CComponentDesc::IsVideoPanAndScan(void) const
 		case 0xB0U :	// 1080i
 			switch(GetComponentType() & 0x0FU){
 				case 0x02U :
-					return true;	// ƒpƒ“ƒxƒNƒgƒ‹‚ ‚è
+					return true;	// ãƒ‘ãƒ³ãƒ™ã‚¯ãƒˆãƒ«ã‚ã‚Š
 				
 				case 0x01U :
 				case 0x03U :				
 				case 0x04U :
-					return false;	// ƒpƒ“ƒxƒNƒgƒ‹‚È‚µ
+					return false;	// ãƒ‘ãƒ³ãƒ™ã‚¯ãƒˆãƒ«ãªã—
 		
 				default :
-					// –¢’è‹`‚Ì‰ğ‘œ“x
+					// æœªå®šç¾©ã®è§£åƒåº¦
 					return false;
 				}
 			break;
 
-		default :	// –¢’è‹`‚Ì‰ğ‘œ“x
+		default :	// æœªå®šç¾©ã®è§£åƒåº¦
 			return false;
 		}
 }
@@ -590,206 +590,206 @@ const bool CComponentDesc::IsVideoPanAndScan(void) const
 CComponentDesc::CComponentDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CComponentDesc::~CComponentDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CComponentDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen >= 6U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x52] Stream Identifier ‹LqqƒNƒ‰ƒX
+// [0x52] Stream Identifier è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CStreamIdDesc::GetComponentTag(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒO‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚°ã‚’è¿”ã™
 	return m_pDescData[0];
 }
 
 CStreamIdDesc::CStreamIdDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CStreamIdDesc::~CStreamIdDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CStreamIdDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen == 1U)? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x54] Content ‹LqqƒNƒ‰ƒX
+// [0x54] Content è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CContentDesc::GetGenreNum(void) const
 {
-	// ƒWƒƒƒ“ƒ‹‚Ì”‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«ã®æ•°ã‚’è¿”ã™
 	return m_byDescLen / 2U;
 }
 
 const BYTE CContentDesc::GetGenreLevel1(const DWORD dwIndex) const
 {
-	// ƒWƒƒƒ“ƒ‹1‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«1ã‚’è¿”ã™
 	return (dwIndex < GetGenreNum())? (m_pDescData[dwIndex / 2UL + 0UL] >> 4) : 0x0FU;
 }
 
 const BYTE CContentDesc::GetGenreLevel2(const DWORD dwIndex) const
 {
-	// ƒWƒƒƒ“ƒ‹2‚ğ•Ô‚·
+	// ã‚¸ãƒ£ãƒ³ãƒ«2ã‚’è¿”ã™
 	return (dwIndex < GetGenreNum())? (m_pDescData[dwIndex / 2UL + 0UL] & 0x0F) : 0x0FU;
 }
 
 const BYTE CContentDesc::GetUserGenre1(const DWORD dwIndex) const
 {
-	// ƒ†[ƒUƒWƒƒƒ“ƒ‹1‚ğ•Ô‚·
+	// ãƒ¦ãƒ¼ã‚¶ã‚¸ãƒ£ãƒ³ãƒ«1ã‚’è¿”ã™
 	return (dwIndex < GetGenreNum())? (m_pDescData[dwIndex / 2UL + 1UL] >> 4) : 0x0FU;
 }
 
 const BYTE CContentDesc::GetUserGenre2(const DWORD dwIndex) const
 {
-	// ƒ†[ƒUƒWƒƒƒ“ƒ‹2‚ğ•Ô‚·
+	// ãƒ¦ãƒ¼ã‚¶ã‚¸ãƒ£ãƒ³ãƒ«2ã‚’è¿”ã™
 	return (dwIndex < GetGenreNum())? (m_pDescData[dwIndex / 2UL + 1UL] & 0x0F) : 0x0FU;
 }
 
 CContentDesc::CContentDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CContentDesc::~CContentDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CContentDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	return (m_byDescLen && !(m_byDescLen % 2U))? true : false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0xC4] ‰¹º Component ‹LqqƒNƒ‰ƒX
+// [0xC4] éŸ³å£° Component è¨˜è¿°å­ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BYTE CAudioComponentDesc::GetComponentType(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒgí•Ê‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç¨®åˆ¥ã‚’è¿”ã™
 	return m_pDescData[1];
 }
 
 const BYTE CAudioComponentDesc::GetComponentTag(void) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒO‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚°ã‚’è¿”ã™
 	return m_pDescData[2];
 }
 
 const BYTE CAudioComponentDesc::GetStreamType(void) const
 {
-	// ƒXƒgƒŠ[ƒ€Œ`®‚ğ•Ô‚·
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ å½¢å¼ã‚’è¿”ã™
 	return m_pDescData[3];
 }
 
 const BYTE CAudioComponentDesc::GetSimulcastGroupTag(void) const
 {
-	// ƒTƒCƒ}ƒ‹ƒLƒƒƒXƒgƒOƒ‹[ƒvƒ^ƒO‚ğ•Ô‚·
+	// ã‚µã‚¤ãƒãƒ«ã‚­ãƒ£ã‚¹ãƒˆã‚°ãƒ«ãƒ¼ãƒ—ã‚¿ã‚°ã‚’è¿”ã™
 	return m_pDescData[4];
 }
 
 const bool CAudioComponentDesc::IsEsMultiLanguage(void) const
 {
-	// ES‘½Œ¾Œêƒtƒ‰ƒO‚ğ•Ô‚·
+	// ESå¤šè¨€èªãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	return (m_pDescData[5] & 0x80U)? true : false;
 }
 
 const bool CAudioComponentDesc::IsMainComponent(void) const
 {
-	// åƒRƒ“ƒ|[ƒlƒ“ƒgƒtƒ‰ƒO‚ğ•Ô‚·
+	// ä¸»ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	return (m_pDescData[5] & 0x40U)? true : false;
 }
 
 const BYTE CAudioComponentDesc::GetQualityIndicator(void) const
 {
-	// ‰¹¿•\¦‚ğ•Ô‚·
+	// éŸ³è³ªè¡¨ç¤ºã‚’è¿”ã™
 	return (m_pDescData[5] >> 4) & 0x03U;
 }
 
 const BYTE CAudioComponentDesc::GetSamplingRate(void) const
 {
-	// ƒTƒ“ƒvƒŠƒ“ƒOü”g”‚ğ•Ô‚·
+	// ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°å‘¨æ³¢æ•°ã‚’è¿”ã™
 	return (m_pDescData[5] >> 1) & 0x07U;
 }
 
 const DWORD CAudioComponentDesc::GetMainLanguageCode(void) const
 {
-	// ‘æ1‰¹º‚ÌŒ¾ŒêƒR[ƒh‚ğ•Ô‚·
+	// ç¬¬1éŸ³å£°ã®è¨€èªã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return ((WORD)m_pDescData[6] << 16) | ((WORD)m_pDescData[7] << 8) | (WORD)m_pDescData[8];
 }
 
 const DWORD CAudioComponentDesc::GetSubLanguageCode(void) const
 {
-	// ‘æ2‰¹º‚ÌŒ¾ŒêƒR[ƒh‚ğ•Ô‚·
+	// ç¬¬2éŸ³å£°ã®è¨€èªã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	if(IsEsMultiLanguage() && (m_byDescLen >= 12U)){
-		// ‘æ2‰¹º‚ ‚è
+		// ç¬¬2éŸ³å£°ã‚ã‚Š
 		return ((WORD)m_pDescData[9] << 16) | ((WORD)m_pDescData[10] << 8) | (WORD)m_pDescData[11];
 		}
 	else{
-		// ‘æ2‰¹º‚È‚µ
+		// ç¬¬2éŸ³å£°ãªã—
 		return 0x00000000UL;
 		}
 }
 
 const DWORD CAudioComponentDesc::GetComponentText(LPTSTR lpszDst) const
 {
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg‹Lq‚ğ•Ô‚·
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¨˜è¿°ã‚’è¿”ã™
 	TCHAR szText[256] = TEXT("\0");
 
 	if(IsEsMultiLanguage() && (m_byDescLen >= 13U)){
-		// ‘æ2‰¹º‚ ‚è
+		// ç¬¬2éŸ³å£°ã‚ã‚Š
 		CAribString::AribToString(szText, &m_pDescData[12], m_byDescLen - 12UL);
 		}
 	else if(m_byDescLen >= 10U){
-		// ‘æ2‰¹º‚È‚µ
+		// ç¬¬2éŸ³å£°ãªã—
 		CAribString::AribToString(szText, &m_pDescData[9], m_byDescLen - 9UL);
 		}
 	else{
-		// ƒRƒ“ƒ|[ƒlƒ“ƒg‹Lq‚È‚µ
+		// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¨˜è¿°ãªã—
 		return 0UL;
 		}
 
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszDst)::_tcscpy(lpszDst, szText);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szText);
 }
 
 const bool CAudioComponentDesc::IsDualMonoMode(void) const
 {
-	// “ñd‰¹º‚Ì—L–³‚ğ•Ô‚·
+	// äºŒé‡éŸ³å£°ã®æœ‰ç„¡ã‚’è¿”ã™
 	return (GetComponentType() == 0x02U)? true : false;
 }
 
 const bool CAudioComponentDesc::IsEnableCenter(void) const
 {
-	// ƒZƒ“ƒ^[ƒXƒs[ƒJ[‚Ì—L–³
+	// ã‚»ãƒ³ã‚¿ãƒ¼ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®æœ‰ç„¡
 	switch(GetComponentType()){
 		case 0x01U :	// 1/0
 		case 0x02U :	// 1/0+1/0
@@ -806,7 +806,7 @@ const bool CAudioComponentDesc::IsEnableCenter(void) const
 
 const bool CAudioComponentDesc::IsEnableFront(void) const
 {
-	// ƒtƒƒ“ƒgƒƒCƒ“ƒXƒs[ƒJ[‚Ì—L–³
+	// ãƒ•ãƒ­ãƒ³ãƒˆãƒ¡ã‚¤ãƒ³ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®æœ‰ç„¡
 	switch(GetComponentType()){
 		case 0x03U :	// 2/0		Stereo
 		case 0x04U :	// 2/1
@@ -824,7 +824,7 @@ const bool CAudioComponentDesc::IsEnableFront(void) const
 
 const bool CAudioComponentDesc::IsEnableSurround(void) const
 {
-	// ƒŠƒAƒTƒ‰ƒEƒ“ƒhƒXƒs[ƒJ[‚Ì—L–³
+	// ãƒªã‚¢ã‚µãƒ©ã‚¦ãƒ³ãƒ‰ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®æœ‰ç„¡
 	switch(GetComponentType()){
 		case 0x04U :	// 2/1
 		case 0x06U :	// 2/2
@@ -840,7 +840,7 @@ const bool CAudioComponentDesc::IsEnableSurround(void) const
 
 const bool CAudioComponentDesc::IsEnableLFE(void) const
 {
-	// LFEƒXƒs[ƒJ[‚Ì—L–³
+	// LFEã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®æœ‰ç„¡
 	switch(GetComponentType()){
 		case 0x09U :	// 3/2+LFE
 			return true;
@@ -853,27 +853,27 @@ const bool CAudioComponentDesc::IsEnableLFE(void) const
 CAudioComponentDesc::CAudioComponentDesc(IBonObject *pOwner)
 	: CDescBase(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CAudioComponentDesc::~CAudioComponentDesc(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CAudioComponentDesc::ParseData(void)
 {
-	// ƒTƒCƒY‚Ì‚İƒ`ƒFƒbƒN‚·‚é
+	// ã‚µã‚¤ã‚ºã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	if(m_byDescLen < 9U){
-		// ƒTƒCƒY‚ª•s³
+		// ã‚µã‚¤ã‚ºãŒä¸æ­£
 		return false;
 		}
 	else if(IsEsMultiLanguage()){
-		// ‘æ2‰¹º‚ ‚è
+		// ç¬¬2éŸ³å£°ã‚ã‚Š
 		return (m_byDescLen >= 12U)? true : false;
 		}
 	else{
-		// ‘æ2‰¹º‚È‚µ
+		// ç¬¬2éŸ³å£°ãªã—
 		return (m_byDescLen >= 9U)? true : false;
 		}
 }

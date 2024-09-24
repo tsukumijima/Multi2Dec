@@ -1,11 +1,11 @@
-// ModCatalogBase.h: ƒ‚ƒWƒ…[ƒ‹ƒJƒ^ƒƒOŠî’êƒNƒ‰ƒX
+ï»¿// ModCatalogBase.h: ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚«ã‚¿ãƒ­ã‚°åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹ƒJƒ^ƒƒOŠî’êƒNƒ‰ƒX
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚«ã‚¿ãƒ­ã‚°åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CModCatalogBase	:	public CBonObject,
@@ -14,9 +14,9 @@ class CModCatalogBase	:	public CBonObject,
 public:
 	struct MOD_CLASS_INFO
 	{
-		TCHAR szBIId[BON_MAX_CLASS_NAME];	// ƒCƒ“ƒ^ƒtƒF[ƒX–¼
-		TCHAR szBCId[BON_MAX_CLASS_NAME];	// ƒNƒ‰ƒX–¼
-		TCHAR szDesc[256];					// ƒNƒ‰ƒX‚Ìà–¾
+		TCHAR szBIId[BON_MAX_CLASS_NAME];	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å
+		TCHAR szBCId[BON_MAX_CLASS_NAME];	// ã‚¯ãƒ©ã‚¹å
+		TCHAR szDesc[256];					// ã‚¯ãƒ©ã‚¹ã®èª¬æ˜Ž
 	};
 
 // CBonObject

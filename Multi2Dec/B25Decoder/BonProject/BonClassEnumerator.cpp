@@ -1,4 +1,4 @@
-// BonClassEnumerator.cpp: BonƒNƒ‰ƒX—ñ‹“ƒNƒ‰ƒX
+ï»¿// BonClassEnumerator.cpp: Bonã‚¯ãƒ©ã‚¹åˆ—æŒ™ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// BonƒNƒ‰ƒX—ñ‹“ƒNƒ‰ƒX
+// Bonã‚¯ãƒ©ã‚¹åˆ—æŒ™ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CBonClassEnumerator::EnumBonClass(LPCTSTR lpszBIId)
@@ -17,106 +17,106 @@ const DWORD CBonClassEnumerator::EnumBonClass(LPCTSTR lpszBIId)
 	if(!lpszBIId)return 0UL;
 	if(!lpszBIId[0])return 0UL;
 
-	// ƒŠƒXƒg‚ğƒNƒŠƒA
+	// ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
 	ReleaseCatalog();
 
-	// ƒCƒ“ƒ^ƒtƒF[ƒX–¼•Û‘¶
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åä¿å­˜
 	::_tcscpy(m_szEnumBIId, lpszBIId);
 
-	// ƒRƒAƒGƒ“ƒWƒ“ƒCƒ“ƒXƒ^ƒ“ƒXæ“¾
+	// ã‚³ã‚¢ã‚¨ãƒ³ã‚¸ãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å–å¾—
 	IBonCoreEngine *pCoreEngine = dynamic_cast<IBonCoreEngine *>(::GET_STOCK_INSTANCE(TEXT("CBonCoreEngine")));
 	::BON_ASSERT(pCoreEngine != NULL);
 
 	DWORD dwModIndex = 0UL;
 	TCHAR szModName[BON_MAX_MODULE_NAME] = TEXT("");
 	
-	// ƒ‚ƒWƒ…[ƒ‹—ñ‹“
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åˆ—æŒ™
 	while(pCoreEngine->GetBonModuleName(pCoreEngine->EnumBonModule(dwModIndex++), szModName)){
-		// ƒ‚ƒWƒ…[ƒ‹ƒJƒ^ƒƒOƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+		// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚«ã‚¿ãƒ­ã‚°ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 		IBonModCatalog *pModCatalog = ::BON_SAFE_CREATE<IBonModCatalog *>(szModName);
 
-		// ƒŠƒXƒg‚É’Ç‰Á
+		// ãƒªã‚¹ãƒˆã«è¿½åŠ 
 		if(pModCatalog)m_CatalogList.push_back(pModCatalog);
 		}
 
-	// ƒNƒ‰ƒX‚ğ—ñ‹“
+	// ã‚¯ãƒ©ã‚¹ã‚’åˆ—æŒ™
 	for(dwModIndex = 0UL ; dwModIndex < m_CatalogList.size() ; dwModIndex++){
 		DWORD dwClassIndex = 0UL;
 		
 		while(m_CatalogList[dwModIndex]->EnumClass(lpszBIId, dwClassIndex) != BCID_NULL){
-			// ƒNƒ‰ƒXƒŠƒXƒg‚É’Ç‰Á
+			// ã‚¯ãƒ©ã‚¹ãƒªã‚¹ãƒˆã«è¿½åŠ 
 			CLASS_CAT_INFO NewInfo = {m_CatalogList[dwModIndex], dwClassIndex++};
 			m_ClassList.push_back(NewInfo);
 			}
 		}
 
-	// w’è‚³‚ê‚½ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌƒNƒ‰ƒX”‚ğ•Ô‚·
+	// æŒ‡å®šã•ã‚ŒãŸã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚¯ãƒ©ã‚¹æ•°ã‚’è¿”ã™
 	return m_ClassList.size();
 }
 
 const DWORD CBonClassEnumerator::GetBonClassNum(void)
 {
-	// —ñ‹“‚³‚ê‚½ƒNƒ‰ƒX”‚ğ•Ô‚·
+	// åˆ—æŒ™ã•ã‚ŒãŸã‚¯ãƒ©ã‚¹æ•°ã‚’è¿”ã™
 	return m_ClassList.size();
 }
 
 const DWORD CBonClassEnumerator::GetBonModuleName(DWORD dwIndex, LPTSTR lpszModuleName)
 {
-	// ƒ‚ƒWƒ…[ƒ‹–¼‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? ::GET_BON_CLASS_NAME(m_ClassList[dwIndex].pModCatalog->GetGuid(), lpszModuleName) : 0UL;
 }
 
 const DWORD CBonClassEnumerator::GetBonClassName(DWORD dwIndex, LPTSTR lpszClassName)
 {
-	// ƒNƒ‰ƒX–¼‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹åã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? ::GET_BON_CLASS_NAME(m_ClassList[dwIndex].pModCatalog->EnumClass(m_szEnumBIId, m_ClassList[dwIndex].dwClassIndex), lpszClassName) : 0UL;
 }
 
 const DWORD CBonClassEnumerator::GetBonClassDesc(DWORD dwIndex, LPTSTR lpszDescription)
 {
-	// ƒNƒ‰ƒX‚Ìà–¾‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹ã®èª¬æ˜ã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? m_ClassList[dwIndex].pModCatalog->GetClassDesc(m_ClassList[dwIndex].pModCatalog->EnumClass(m_szEnumBIId, m_ClassList[dwIndex].dwClassIndex), lpszDescription) : 0UL;
 }
 
 const DWORD CBonClassEnumerator::GetBonModuleComment(DWORD dwIndex, LPTSTR lpszComment)
 {
-	// ƒ‚ƒWƒ…[ƒ‹‚Ìà–¾‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®èª¬æ˜ã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? m_ClassList[dwIndex].pModCatalog->GetComment(lpszComment) : 0UL;
 }
 
 const DWORD CBonClassEnumerator::GetBonModuleAuthor(DWORD dwIndex, LPTSTR lpszAuthor)
 {
-	// ƒ‚ƒWƒ…[ƒ‹‚ÌìÒ–¼‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ä½œè€…åã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? m_ClassList[dwIndex].pModCatalog->GetAuthor(lpszAuthor) : 0UL;
 }
 
 const DWORD CBonClassEnumerator::GetBonModuleWebsite(DWORD dwIndex, LPTSTR lpszWebsite)
 {
-	// ƒ‚ƒWƒ…[ƒ‹‚Ì˜A—æ‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®é€£çµ¡å…ˆã‚’è¿”ã™
 	return (dwIndex < m_ClassList.size())? m_ClassList[dwIndex].pModCatalog->GetWebsite(lpszWebsite) : 0UL;
 }
 
 CBonClassEnumerator::CBonClassEnumerator(IBonObject *pOwner)
 	: CBonObject(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CBonClassEnumerator::~CBonClassEnumerator(void)
 {
-	// ƒJƒ^ƒƒOƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚«ã‚¿ãƒ­ã‚°ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	ReleaseCatalog();
 }
 
 void CBonClassEnumerator::ReleaseCatalog(void)
 {
-	// ƒCƒ“ƒ^ƒtƒF[ƒX–¼ƒNƒŠƒA
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åã‚¯ãƒªã‚¢
 	m_szEnumBIId[0] = TEXT('\0');
 
-	// ƒNƒ‰ƒXƒŠƒXƒgƒNƒŠƒA
+	// ã‚¯ãƒ©ã‚¹ãƒªã‚¹ãƒˆã‚¯ãƒªã‚¢
 	m_ClassList.clear();
 	
-	// ƒJƒ^ƒƒOƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚«ã‚¿ãƒ­ã‚°ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CatalogList.size() ; dwIndex++){
 		m_CatalogList[dwIndex]->Release();
 		}

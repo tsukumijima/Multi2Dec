@@ -1,4 +1,4 @@
-// TsDescrambler.cpp: TSƒfƒXƒNƒ‰ƒ“ƒuƒ‹ƒfƒR[ƒ_
+ï»¿// TsDescrambler.cpp: TSãƒ‡ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,45 +10,45 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-// EMMˆ——LŒøŠúŠÔ
+// EMMå‡¦ç†æœ‰åŠ¹æœŸé–“
 #define EMM_VALID_PERIOD			7UL			// 7day
 
-// B-CASƒJ[ƒhÄ‰Šú‰»ƒK[ƒhƒCƒ“ƒ^[ƒoƒ‹
+// B-CASã‚«ãƒ¼ãƒ‰å†åˆæœŸåŒ–ã‚¬ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«
 #define BCAS_REFRESH_INTERVAL		1000UL		// 1s
 
-// PMT‘Ò‚¿ƒpƒPƒbƒgƒJƒEƒ“ƒg”
+// PMTå¾…ã¡ãƒ‘ã‚±ãƒƒãƒˆã‚«ã‚¦ãƒ³ãƒˆæ•°
 #define PMT_WAIT_PACKET_COUNT		(3250 *  200 / TS_PACKET_SIZE)	//  200ms @ 26Mbps
 #define ECM_WAIT_PACKET_COUNT		(3250 * 2000 / TS_PACKET_SIZE)	// 2000ms @ 26Mbps
 
-// ƒNƒŠƒbƒv•t‚«ƒCƒ“ƒNƒŠƒƒ“ƒgƒ}ƒNƒ
+// ã‚¯ãƒªãƒƒãƒ—ä»˜ãã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆãƒã‚¯ãƒ­
 #define CLIPED_INCREMENT(V)			{if((V) < 0xFFFFFFFFUL)(V)++;}
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒfƒXƒNƒ‰ƒ“ƒuƒ‹ƒfƒR[ƒ_
+// TSãƒ‡ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CTsDescrambler::InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex)
 {
-	// “ü—Íƒpƒ‰ƒ[ƒ^ƒ`ƒFƒbƒN
+	// å…¥åŠ›ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒã‚§ãƒƒã‚¯
 	ITsPacket * const pPacket = dynamic_cast<ITsPacket *>(pMediaData);
 	if(!pPacket || (dwInputIndex >= GetInputNum()))return false;
 
-	// PSˆ—
+	// PSå‡¦ç†
 	InputPacket(pPacket);
 
 	if(!m_bEnableBuffering || (m_DecBufState == BDS_RUNNING)){
-		// ƒpƒPƒbƒg•œ†
+		// ãƒ‘ã‚±ãƒƒãƒˆå¾©å·
 		OutputPacket(pPacket);
 		}
 	else{
-		// –¢ˆ—ƒpƒPƒbƒgƒoƒbƒtƒ@ƒŠƒ“ƒO
+		// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°
 		PushUnprocPacket(pPacket);
 
-		// ƒoƒbƒtƒ@ƒŠƒ“ƒO§Œä
+		// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°åˆ¶å¾¡
 		BufManagement(pPacket);
 		}
 
@@ -57,35 +57,35 @@ const bool CTsDescrambler::InputMedia(IMediaData *pMediaData, const DWORD dwInpu
 
 const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	CloseDescrambler();
 
 	IHalDevice *pHalDevice = NULL;
 
 	try{
-		// B-CASƒJ[ƒh‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
+		// B-CASã‚«ãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
 		if(!(pHalDevice = ::BON_SAFE_CREATE<IHalDevice *>(lpszBCId)))throw __LINE__;
 
-		// ƒfƒoƒCƒXƒ^ƒCƒv‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã‚¿ã‚¤ãƒ—ã‚’ãƒã‚§ãƒƒã‚¯
 		if(pHalDevice->GetDeviceType() != ::BON_NAME_TO_GUID(TEXT("IHalBcasCard")))throw __LINE__;
 
-		// ƒfƒoƒCƒX‚Ì‘¶İ‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã®å­˜åœ¨ã‚’ãƒã‚§ãƒƒã‚¯
 		if(!pHalDevice->GetTotalDeviceNum())throw __LINE__;
 
-		// ƒfƒoƒCƒX‚Ì‹ó‚«‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã®ç©ºãã‚’ãƒã‚§ãƒƒã‚¯
 		if(pHalDevice->GetActiveDeviceNum() >= pHalDevice->GetTotalDeviceNum())throw __LINE__;
 	
-		// IHalBcasCardƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+		// IHalBcasCardã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 		if(!(m_pHalBcasCard = dynamic_cast<IHalBcasCard *>(pHalDevice)))throw __LINE__;
 
-		// B-CASƒJ[ƒh‚ğƒI[ƒvƒ“
+		// B-CASã‚«ãƒ¼ãƒ‰ã‚’ã‚ªãƒ¼ãƒ—ãƒ³
 		if(!m_pHalBcasCard->OpenCard())throw __LINE__;
 		
-		// ‘Só‘ÔƒŠƒZƒbƒg
+		// å…¨çŠ¶æ…‹ãƒªã‚»ãƒƒãƒˆ
 		OnReset();
 		}
 	catch(...){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		BON_SAFE_RELEASE(pHalDevice);
 		m_pHalBcasCard = NULL;
 		
@@ -98,7 +98,7 @@ const bool CTsDescrambler::OpenDescrambler(LPCTSTR lpszBCId)
 
 const bool CTsDescrambler::CloseDescrambler(void)
 {
-	// B-CASƒJ[ƒh‚ğƒNƒ[ƒY
+	// B-CASã‚«ãƒ¼ãƒ‰ã‚’ã‚¯ãƒ­ãƒ¼ã‚º
 	BON_SAFE_RELEASE(m_pHalBcasCard);
 
 	return true;
@@ -106,25 +106,25 @@ const bool CTsDescrambler::CloseDescrambler(void)
 
 void CTsDescrambler::DiscardScramblePacket(const bool bEnable)
 {
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹‰ğœ˜R‚êƒpƒPƒbƒg‚ğ”jŠü‚·‚é‚©İ’è
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«è§£é™¤æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆã‚’ç ´æ£„ã™ã‚‹ã‹è¨­å®š
 	m_bDiscardScramblePacket = (bEnable)? true : false;
 }
 
 void CTsDescrambler::EnableEmmProcess(const bool bEnable)
 {
-	// EMM‚ğˆ—‚·‚é‚©İ’è
+	// EMMã‚’å‡¦ç†ã™ã‚‹ã‹è¨­å®š
 	m_bEnableEmmProcess = (bEnable)? true : false;
 }
 
 void CTsDescrambler::EnableBuffering(const bool bEnable)
 {
-	// ƒoƒbƒtƒ@ƒŠƒ“ƒO‚·‚é‚©İ’è
+	// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°ã™ã‚‹ã‹è¨­å®š
 	m_bEnableBuffering = (bEnable)? true : false;
 }
 
 void CTsDescrambler::ResetStatistics(void)
 {
-	// “Œvƒf[ƒ^‚ğƒŠƒZƒbƒg‚·‚é
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	m_dwInputPacketNum = 0UL;
 	m_dwOutputPacketNum = 0UL;
 	m_dwScramblePacketNum = 0UL;
@@ -138,19 +138,19 @@ void CTsDescrambler::ResetStatistics(void)
 
 const DWORD CTsDescrambler::GetDescramblingState(const WORD wProgramID)
 {
-	// PATƒe[ƒuƒ‹‚ğæ“¾
+	// PATãƒ†ãƒ¼ãƒ–ãƒ«ã‚’å–å¾—
 	const IPatTable *pPatTable = dynamic_cast<const IPatTable *>(m_TsInputMap.GetMapTarget(0x0000U));
 	if(!pPatTable)return IHalBcasCard::EC_BADARGUMENT;
 		
-	// ˆø”‚Éˆê’v‚·‚éPMT‚ÌPID‚ğŒŸõ
+	// å¼•æ•°ã«ä¸€è‡´ã™ã‚‹PMTã®PIDã‚’æ¤œç´¢
 	for(WORD wIndex = 0U ; wIndex < pPatTable->GetProgramNum() ; wIndex++){
 		if(pPatTable->GetProgramID(wIndex) == wProgramID){
 			
-			// PMTƒe[ƒuƒ‹‚ğæ“¾
+			// PMTãƒ†ãƒ¼ãƒ–ãƒ«ã‚’å–å¾—
 			const IPmtTable *pPmtTable = dynamic_cast<const IPmtTable *>(m_TsInputMap.GetMapTarget(pPatTable->GetPmtPID(wIndex)));
 			if(!pPmtTable)return IHalBcasCard::EC_BADARGUMENT;
 			
-			// ECM‚ÌPID‚ğæ“¾
+			// ECMã®PIDã‚’å–å¾—
 			const IDescBlock * const pDescBlock = pPmtTable->GetPmtDesc();
 			if(!pDescBlock)return IHalBcasCard::EC_BADARGUMENT;
 	
@@ -160,11 +160,11 @@ const DWORD CTsDescrambler::GetDescramblingState(const WORD wProgramID)
 			const WORD wEcmPID = pCaMethodDesc->GetCaPID();
 			if(wEcmPID >= TS_INVALID_PID)return IHalBcasCard::EC_NO_ERROR;
 
-			// ECMƒvƒƒZƒbƒT‚ğæ“¾
+			// ECMãƒ—ãƒ­ã‚»ãƒƒã‚µã‚’å–å¾—
 			const CEcmProcessor *pEcmProcessor = dynamic_cast<const CEcmProcessor *>(m_TsInputMap.GetMapTarget(pPatTable->GetPmtPID(wEcmPID)));
 			if(!pEcmProcessor)return IHalBcasCard::EC_BADARGUMENT;
 			
-			// •œ†ó‘Ô‚ğ•Ô‚·
+			// å¾©å·çŠ¶æ…‹ã‚’è¿”ã™
 			return pEcmProcessor->m_dwDescramblingState;
 			}		
 		}
@@ -174,37 +174,37 @@ const DWORD CTsDescrambler::GetDescramblingState(const WORD wProgramID)
 
 const DWORD CTsDescrambler::GetInputPacketNum(const WORD wPID)
 {
-	// “ü—ÍƒpƒPƒbƒg”‚ğ•Ô‚·
+	// å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™
 	return (wPID < 0x2000U)? m_adwInputPacketNum[wPID] : m_dwInputPacketNum;
 }
 
 const DWORD CTsDescrambler::GetOutputPacketNum(const WORD wPID)
 {
-	// o—ÍƒpƒPƒbƒg”‚ğ•Ô‚·
+	// å‡ºåŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™
 	return (wPID < 0x2000U)? m_adwOutputPacketNum[wPID] : m_dwOutputPacketNum;
 }
 
 const DWORD CTsDescrambler::GetScramblePacketNum(const WORD wPID)
 {
-	// •œ†˜R‚êƒpƒPƒbƒg”‚ğ•Ô‚·
+	// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™
 	return (wPID < 0x2000U)? m_adwScramblePacketNum[wPID] : m_dwScramblePacketNum;
 }
 
 const DWORD CTsDescrambler::GetEcmProcessNum(void)
 {
-	// ECMˆ—‰ñ”‚ğ•Ô‚·
+	// ECMå‡¦ç†å›æ•°ã‚’è¿”ã™
 	return m_dwEcmProcessNum;
 }
 
 const DWORD CTsDescrambler::GetEmmProcessNum(void)
 {
-	// EMMˆ—‰ñ”‚ğ•Ô‚·
+	// EMMå‡¦ç†å›æ•°ã‚’è¿”ã™
 	return m_dwEmmProcessNum;
 }
 
 IHalBcasCard * CTsDescrambler::GetHalBcasCard(void)
 {
-	// B-CASƒJ[ƒhƒŠ[ƒ_ƒfƒoƒCƒX‚ğ•Ô‚·
+	// B-CASã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ãƒ‡ãƒã‚¤ã‚¹ã‚’è¿”ã™
 	return m_pHalBcasCard;
 }
 
@@ -220,37 +220,37 @@ CTsDescrambler::CTsDescrambler(IBonObject *pOwner)
 	, m_DecBufState(BDS_INITIAL)
 	, m_dwPmtWaitCount(0UL)
 {
-	// “Œvƒf[ƒ^‚ğ‰Šú‰»‚·‚é
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ–ã™ã‚‹
 	ResetStatistics();
 
-	// PATƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// PATãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsInputMap.MapPid(0x0000U, dynamic_cast<ITsPidMapTarget *>(CPatTable::CreateInstance(dynamic_cast<IPatTable::IHandler *>(this))));
 
-	// CATƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// CATãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsInputMap.MapPid(0x0001U, dynamic_cast<ITsPidMapTarget *>(CCatTable::CreateInstance(dynamic_cast<ICatTable::IHandler *>(this))));
 
-	// TOTƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// TOTãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsInputMap.MapPid(0x0014U, dynamic_cast<ITsPidMapTarget *>(CTotTable::CreateInstance(dynamic_cast<ITotTable::IHandler *>(this))));
 }
 
 CTsDescrambler::~CTsDescrambler(void)
 {
-	// B-CASƒJ[ƒhƒNƒ[ƒY
+	// B-CASã‚«ãƒ¼ãƒ‰ã‚¯ãƒ­ãƒ¼ã‚º
 	CloseDescrambler();
 	
-	// ƒoƒbƒtƒ@ŠJ•ú
+	// ãƒãƒƒãƒ•ã‚¡é–‹æ”¾
 	ClearUnprocPacket();
 }
 
 const bool CTsDescrambler::OnPlay(void)
 {
-	// “à•”ó‘Ô‚ğ‰Šú‰»‚·‚é
+	// å†…éƒ¨çŠ¶æ…‹ã‚’åˆæœŸåŒ–ã™ã‚‹
 	return OnReset();
 }
 
 const bool CTsDescrambler::OnStop(void)
 {
-	// –¢ˆ—ƒpƒPƒbƒg‚ğƒtƒ‰ƒbƒVƒ…‚·‚é
+	// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹
 	FlushUnprocPacket();
 
 	return CMediaDecoder::OnStop();
@@ -258,21 +258,21 @@ const bool CTsDescrambler::OnStop(void)
 
 const bool CTsDescrambler::OnReset(void)
 {
-	// PIDƒ}ƒbƒvƒŠƒZƒbƒg
+	// PIDãƒãƒƒãƒ—ãƒªã‚»ãƒƒãƒˆ
 	ResetPidMap();
 
-	// TSIDƒŠƒZƒbƒg
+	// TSIDãƒªã‚»ãƒƒãƒˆ
 	m_wLastTsID = TS_INVALID_PID;
 
-	// PATƒŠƒZƒbƒg
+	// PATãƒªã‚»ãƒƒãƒˆ
 	m_TsInputMap.ResetPid(0x0000U);
 
-	// ƒoƒbƒtƒ@ƒŠƒ“ƒOó‘ÔƒŠƒZƒbƒg
+	// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°çŠ¶æ…‹ãƒªã‚»ãƒƒãƒˆ
 	m_DecBufState = BDS_INITIAL;
 	m_dwPmtWaitCount = 0UL;
 	ClearUnprocPacket();
 
-	// “Œvƒf[ƒ^ƒŠƒZƒbƒg
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿ãƒªã‚»ãƒƒãƒˆ
 	ResetStatistics();
 
 	return true;
@@ -280,26 +280,26 @@ const bool CTsDescrambler::OnReset(void)
 
 void CTsDescrambler::OnPatTable(const IPatTable *pPatTable)
 {
-	// TSIDXVŠm”F
+	// TSIDæ›´æ–°ç¢ºèª
 	if(m_bEnableBuffering && (m_wLastTsID != pPatTable->GetTsID())){
 		if(m_wLastTsID != TS_INVALID_PID){
-			// –¢ˆ—ƒpƒPƒbƒg‚ğƒtƒ‰ƒbƒVƒ…‚·‚é
+			// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹
 			FlushUnprocPacket();
 			m_DecBufState = BDS_INITIAL;
 			m_dwPmtWaitCount = 0UL;
 			
-			// PIDƒ}ƒbƒvƒŠƒZƒbƒg
+			// PIDãƒãƒƒãƒ—ãƒªã‚»ãƒƒãƒˆ
 			ResetPidMap();
 			}
 		m_wLastTsID = pPatTable->GetTsID();
 		}
 
-	// PMTƒe[ƒuƒ‹PIDƒ}ƒbƒv’Ç‰Á
+	// PMTãƒ†ãƒ¼ãƒ–ãƒ«PIDãƒãƒƒãƒ—è¿½åŠ 
 	for(WORD wIndex = 0U ; wIndex < pPatTable->GetProgramNum() ; wIndex++){
 		m_TsInputMap.MapPid(pPatTable->GetPmtPID(wIndex), dynamic_cast<ITsPidMapTarget *>(CPmtTable::CreateInstance(dynamic_cast<IPmtTable::IHandler *>(this))));
 		}
 
-	// ƒoƒbƒtƒ@ƒŠƒ“ƒOó‘Ôó‘ÔXV
+	// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°çŠ¶æ…‹çŠ¶æ…‹æ›´æ–°
 	if(m_DecBufState == BDS_INITIAL){
 		m_DecBufState = BDS_STORING_PMT;
 		m_dwPmtWaitCount = 0UL;
@@ -308,7 +308,7 @@ void CTsDescrambler::OnPatTable(const IPatTable *pPatTable)
 
 void CTsDescrambler::OnCatTable(const ICatTable *pCatTable)
 {
-	// EMM‚ÌPID‚ğæ“¾‚·‚é
+	// EMMã®PIDã‚’å–å¾—ã™ã‚‹
 	const IDescBlock * const pDescBlock = pCatTable->GetCatDesc();
 	if(!pDescBlock)return;
 	
@@ -318,13 +318,13 @@ void CTsDescrambler::OnCatTable(const ICatTable *pCatTable)
 	const WORD wEmmPID = pCaMethodDesc->GetCaPID();
 	if(wEmmPID >= TS_INVALID_PID)return;
 
-	// EMMƒvƒƒZƒbƒT‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// EMMãƒ—ãƒ­ã‚»ãƒƒã‚µã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsInputMap.MapPid(wEmmPID, dynamic_cast<ITsPidMapTarget *>(CEmmProcessor::CreateInstance(dynamic_cast<ITsDescrambler *>(this))));
 }
 
 void CTsDescrambler::OnPmtTable(const IPmtTable *pPmtTable)
 {
-	// ECM‚ÌPID‚ğæ“¾‚·‚é
+	// ECMã®PIDã‚’å–å¾—ã™ã‚‹
 	const IDescBlock * const pDescBlock = pPmtTable->GetPmtDesc();
 	if(!pDescBlock)return;
 	
@@ -334,13 +334,13 @@ void CTsDescrambler::OnPmtTable(const IPmtTable *pPmtTable)
 	const WORD wEcmPID = pCaMethodDesc->GetCaPID();
 	if(wEcmPID >= TS_INVALID_PID)return;
 
-	// Šù‘¶‚ÌECMƒvƒƒZƒbƒT‚ğŠm”F
+	// æ—¢å­˜ã®ECMãƒ—ãƒ­ã‚»ãƒƒã‚µã‚’ç¢ºèª
 	if(!m_TsInputMap.GetMapTarget(wEcmPID)){
-		// ECMƒvƒƒZƒbƒT‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+		// ECMãƒ—ãƒ­ã‚»ãƒƒã‚µã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 		m_TsInputMap.MapPid(wEcmPID, dynamic_cast<ITsPidMapTarget *>(CEcmProcessor::CreateInstance(dynamic_cast<ITsDescrambler *>(this))));
 		}
 
-	// ESƒvƒƒZƒbƒT‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// ESãƒ—ãƒ­ã‚»ãƒƒã‚µã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	for(WORD wIndex = 0U ; wIndex < pPmtTable->GetEsNum() ; wIndex++){
 		m_TsOutputMap.MapPid(pPmtTable->GetEsPID(wIndex), dynamic_cast<ITsPidMapTarget *>(CEsProcessor::CreateInstance(m_TsInputMap.GetMapTarget(wEcmPID))));
 		}
@@ -348,15 +348,15 @@ void CTsDescrambler::OnPmtTable(const IPmtTable *pPmtTable)
 
 void CTsDescrambler::OnTotTable(const ITotTable *pTotTable)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CTsDescrambler::InputPacket(ITsPacket * const pPacket)
 {
-	// PIDƒ}ƒbƒv‚É“ü—Í
+	// PIDãƒãƒƒãƒ—ã«å…¥åŠ›
 	if(m_pHalBcasCard)m_TsInputMap.StorePacket(pPacket);
 
-	// “ü—ÍƒpƒPƒbƒg”ƒCƒ“ƒNƒŠƒƒ“ƒg
+	// å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	CLIPED_INCREMENT(m_dwInputPacketNum);
 	CLIPED_INCREMENT(m_adwInputPacketNum[pPacket->GetPID()]);
 }
@@ -364,18 +364,18 @@ void CTsDescrambler::InputPacket(ITsPacket * const pPacket)
 void CTsDescrambler::BufManagement(ITsPacket * const pPacket)
 {
 	if(m_PacketBuf.size() >= ECM_WAIT_PACKET_COUNT){
-		// ƒoƒbƒtƒ@ƒŠƒ“ƒOƒŠƒ~ƒbƒg’´‰ß
+		// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°ãƒªãƒŸãƒƒãƒˆè¶…é
 		FlushUnprocPacket();
 		m_DecBufState = BDS_RUNNING;
 		}
 	else if(m_DecBufState == BDS_STORING_PMT){
-		// PMT‘Ò‚¿ƒJƒEƒ“ƒ^ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// PMTå¾…ã¡ã‚«ã‚¦ãƒ³ã‚¿ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		if(++m_dwPmtWaitCount >= PMT_WAIT_PACKET_COUNT){
 			m_DecBufState = BDS_STORING_ECM;
 			}
 		}
 	else if(m_DecBufState == BDS_STORING_ECM){
-		// ECMƒXƒgƒAó‘Ôƒ‚ƒjƒ^
+		// ECMã‚¹ãƒˆã‚¢çŠ¶æ…‹ãƒ¢ãƒ‹ã‚¿
 		if(dynamic_cast<CEcmProcessor *>(m_TsInputMap.GetMapTarget(pPacket->GetPID()))){
 			bool bNotStored = false;
 		
@@ -383,7 +383,7 @@ void CTsDescrambler::BufManagement(ITsPacket * const pPacket)
 				const CEcmProcessor *pEcmProcessor = dynamic_cast<CEcmProcessor *>(m_TsInputMap.GetMapTarget(wPID));
 				if(pEcmProcessor){
 					if(!pEcmProcessor->IsEcmReceived()){
-						// ECM–¢óM
+						// ECMæœªå—ä¿¡
 						bNotStored = true;
 						}
 					}
@@ -392,7 +392,7 @@ void CTsDescrambler::BufManagement(ITsPacket * const pPacket)
 			if(!bNotStored){
 				m_DecBufState = BDS_RUNNING;
 			
-				// –¢ˆ—ƒpƒPƒbƒgo—Í
+				// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆå‡ºåŠ›
 				FlushUnprocPacket();
 				}
 			}
@@ -403,61 +403,61 @@ void CTsDescrambler::OutputPacket(ITsPacket * const pPacket)
 {
 	const WORD wPID = pPacket->GetPID();
 
-	// ESƒvƒƒZƒbƒT‚É“ü—Í
+	// ESãƒ—ãƒ­ã‚»ãƒƒã‚µã«å…¥åŠ›
 	m_TsOutputMap.StorePacket(pPacket);
 
 	if(pPacket->IsScrambled()){
-		// •œ†˜R‚êƒpƒPƒbƒg”ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		CLIPED_INCREMENT(m_dwScramblePacketNum);
 		CLIPED_INCREMENT(m_adwScramblePacketNum[wPID]);
 
 		SendDecoderEvent(EID_CANT_DESCRAMBLE, reinterpret_cast<PVOID>(m_dwScramblePacketNum));
 		
-		// •œ†˜R‚êƒpƒPƒbƒg”jŠü—LŒø‚Í‰ºˆÊƒfƒR[ƒ_‚Éo—Í‚µ‚È‚¢
+		// å¾©å·æ¼ã‚Œãƒ‘ã‚±ãƒƒãƒˆç ´æ£„æœ‰åŠ¹æ™‚ã¯ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã«å‡ºåŠ›ã—ãªã„
 		if(m_bDiscardScramblePacket)return;
 		}
 
-	// o—ÍƒpƒPƒbƒg”ƒCƒ“ƒNƒŠƒƒ“ƒg
+	// å‡ºåŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	CLIPED_INCREMENT(m_dwOutputPacketNum);
 	CLIPED_INCREMENT(m_adwOutputPacketNum[wPID]);
 
-	// ‰ºˆÊƒfƒR[ƒ_‚Éƒf[ƒ^o—Í
+	// ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã«ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
 	OutputMedia(dynamic_cast<IMediaData *>(pPacket));
 }
 
 void CTsDescrambler::ResetPidMap(void)
 {
-	// PAT/CAT/TOTˆÈŠOƒAƒ“ƒ}ƒbƒv
+	// PAT/CAT/TOTä»¥å¤–ã‚¢ãƒ³ãƒãƒƒãƒ—
 	for(WORD wPID = 0x0002U ; wPID < 0x2000U ; wPID++){
 		if(wPID != 0x0014U){
 			m_TsInputMap.UnmapPid(wPID);
 			}	
 		}
 
-	// CATƒŠƒZƒbƒg
+	// CATãƒªã‚»ãƒƒãƒˆ
 	m_TsInputMap.ResetPid(0x0001U);
 
-	// TOTƒŠƒZƒbƒg
+	// TOTãƒªã‚»ãƒƒãƒˆ
 	m_TsInputMap.ResetPid(0x0014U);
 	
-	// ESƒvƒƒZƒbƒTƒŠƒZƒbƒg
+	// ESãƒ—ãƒ­ã‚»ãƒƒã‚µãƒªã‚»ãƒƒãƒˆ
 	m_TsOutputMap.ClearPid();
 }
 
 void CTsDescrambler::FlushUnprocPacket(void)
 {
-	// –¢ˆ—ƒpƒPƒbƒg‚ğƒtƒ‰ƒbƒVƒ…‚·‚é
+	// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex < m_PacketBuf.size() ; dwIndex++){
 		OutputPacket(m_PacketBuf[dwIndex]);
 		}
 
-	// ƒoƒbƒtƒ@‚ğƒNƒŠƒA
+	// ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢
 	ClearUnprocPacket();
 }
 
 void CTsDescrambler::PushUnprocPacket(const ITsPacket *pPacket)
 {
-	// –¢ˆ—ƒpƒPƒbƒg‚ğƒoƒbƒtƒ@‚ÉƒvƒbƒVƒ…‚·‚é
+	// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆã‚’ãƒãƒƒãƒ•ã‚¡ã«ãƒ—ãƒƒã‚·ãƒ¥ã™ã‚‹
 	CTsPacket * const pNewPacket = new CTsPacket(NULL);
 	::BON_ASSERT(pNewPacket);
 
@@ -468,7 +468,7 @@ void CTsDescrambler::PushUnprocPacket(const ITsPacket *pPacket)
 
 void CTsDescrambler::ClearUnprocPacket(void)
 {
-	// –¢ˆ—ƒpƒPƒbƒg‚ğƒNƒŠƒA
+	// æœªå‡¦ç†ãƒ‘ã‚±ãƒƒãƒˆã‚’ã‚¯ãƒªã‚¢
 	for(DWORD dwIndex = 0UL ; dwIndex < m_PacketBuf.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_PacketBuf[dwIndex]);
 		}
@@ -478,12 +478,12 @@ void CTsDescrambler::ClearUnprocPacket(void)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ECMˆ—“à•”ƒNƒ‰ƒX
+// ECMå‡¦ç†å†…éƒ¨ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CTsDescrambler::CEcmProcessor::OnPidReset(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// ƒL[ƒNƒŠƒA‚·‚é(Œë‚Á‚½ƒL[‚É‚æ‚é”j‘¹‚ğ–h~‚·‚é‚½‚ß)
+	// ã‚­ãƒ¼ã‚¯ãƒªã‚¢ã™ã‚‹(èª¤ã£ãŸã‚­ãƒ¼ã«ã‚ˆã‚‹ç ´æã‚’é˜²æ­¢ã™ã‚‹ãŸã‚)
 	m_Multi2Decoder.SetScrambleKey(NULL);
 	m_dwDescramblingState = IHalBcasCard::EC_NO_ERROR;
 	
@@ -504,13 +504,13 @@ CTsDescrambler::CEcmProcessor::CEcmProcessor(IBonObject *pOwner)
 	, m_dwLastRetryTime(::GetTickCount() - BCAS_REFRESH_INTERVAL)
 	, m_dwDescramblingState(IHalBcasCard::EC_NO_ERROR)
 {
-	// MULTI2ƒfƒR[ƒ_‚ğ‰Šú‰»
+	// MULTI2ãƒ‡ã‚³ãƒ¼ãƒ€ã‚’åˆæœŸåŒ–
 	m_Multi2Decoder.Initialize(m_pHalBcasCard->GetSystemKey(), m_pHalBcasCard->GetInitialCbc());
 }
 
 CTsDescrambler::CEcmProcessor::~CEcmProcessor(void)
 {
-	// ‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğQÆ‚µ‚Ä‚¢‚éCEsProcessor‚ğƒAƒ“ƒ}ƒbƒv‚·‚é
+	// ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å‚ç…§ã—ã¦ã„ã‚‹CEsProcessorã‚’ã‚¢ãƒ³ãƒãƒƒãƒ—ã™ã‚‹
 	CEsProcessor *pEsProcessor;
 	
 	for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
@@ -524,19 +524,19 @@ CTsDescrambler::CEcmProcessor::~CEcmProcessor(void)
 
 const bool CTsDescrambler::CEcmProcessor::IsEcmReceived(void) const
 {
-	// ECM‚ÌóM—L–³‚ğ•Ô‚·
+	// ECMã®å—ä¿¡æœ‰ç„¡ã‚’è¿”ã™
 	return m_bIsEcmReceived;
 }
 
 const bool CTsDescrambler::CEcmProcessor::DescramblePacket(ITsPacket * const pTsPacket)
 {
-	// IMediaDataƒCƒ“ƒ^ƒtƒF[ƒX–â‚¢‡‚í‚¹
+	// IMediaDataã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å•ã„åˆã‚ã›
 	IMediaData *pMediaData = dynamic_cast<IMediaData *>(pTsPacket);
 
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹‰ğœ
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«è§£é™¤
 	if(pMediaData){
 		if(m_Multi2Decoder.Decode(pTsPacket->GetPayloadData(), (DWORD)pTsPacket->GetPayloadSize(), pTsPacket->m_Header.byTransportScramblingCtrl)){
-			// ƒgƒ‰ƒ“ƒXƒ|[ƒgƒXƒNƒ‰ƒ“ƒuƒ‹§ŒäÄİ’è
+			// ãƒˆãƒ©ãƒ³ã‚¹ãƒãƒ¼ãƒˆã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«åˆ¶å¾¡å†è¨­å®š
 			pMediaData->SetAt(3UL, pMediaData->GetAt(3UL) & 0x3FU);
 			pTsPacket->m_Header.byTransportScramblingCtrl = 0U;
 
@@ -549,33 +549,33 @@ const bool CTsDescrambler::CEcmProcessor::DescramblePacket(ITsPacket * const pTs
 
 const bool CTsDescrambler::CEcmProcessor::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
 {
-	// ƒe[ƒuƒ‹ID‚ğƒ`ƒFƒbƒN
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’ãƒã‚§ãƒƒã‚¯
 	if(pNewSection->GetTableID() != TABLE_ID)return false;
 
-	// ECM‚ğB-CASƒJ[ƒh‚É“n‚µ‚ÄƒL[æ“¾
+	// ECMã‚’B-CASã‚«ãƒ¼ãƒ‰ã«æ¸¡ã—ã¦ã‚­ãƒ¼å–å¾—
 	const BYTE *pKsData = m_pHalBcasCard->GetKsFromEcm(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 
-	// ECMˆ—¸”s‚Íˆê“x‚¾‚¯B-CASƒJ[ƒh‚ğÄ‰Šú‰»‚·‚é
+	// ECMå‡¦ç†å¤±æ•—æ™‚ã¯ä¸€åº¦ã ã‘B-CASã‚«ãƒ¼ãƒ‰ã‚’å†åˆæœŸåŒ–ã™ã‚‹
 	if(!pKsData && (m_pHalBcasCard->GetEcmError() != IHalBcasCard::EC_NOT_CONTRACTED)){
 		if((::GetTickCount() - m_dwLastRetryTime) >= BCAS_REFRESH_INTERVAL){
-			// Ä‰Šú‰»ƒK[ƒhƒCƒ“ƒ^[ƒoƒ‹Œo‰ß‚È‚ç			
+			// å†åˆæœŸåŒ–ã‚¬ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«çµŒéãªã‚‰			
 			if(m_pHalBcasCard->OpenCard()){
 				pKsData = m_pHalBcasCard->GetKsFromEcm(pNewSection->GetPayloadData(), pNewSection->GetPayloadSize());
 				}
 				
-			// ÅIƒŠƒgƒ‰ƒCŠÔXV
+			// æœ€çµ‚ãƒªãƒˆãƒ©ã‚¤æ™‚é–“æ›´æ–°
 			m_dwLastRetryTime = ::GetTickCount();
 			}
 		}
 
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹ƒL[XV
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ã‚­ãƒ¼æ›´æ–°
 	m_Multi2Decoder.SetScrambleKey(pKsData);
 
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	if(pKsData)CLIPED_INCREMENT(m_pTsDescrambler->m_dwEcmProcessNum);
 	m_pTsDescrambler->SendDecoderEvent(EID_ECM_PROCESSED, reinterpret_cast<PVOID>(m_pHalBcasCard->GetEcmError()));
 
-	// •œ†ó‘ÔXV
+	// å¾©å·çŠ¶æ…‹æ›´æ–°
 	m_dwDescramblingState = m_pHalBcasCard->GetEcmError();
 	m_bIsEcmReceived = true;
 
@@ -584,7 +584,7 @@ const bool CTsDescrambler::CEcmProcessor::OnTableUpdate(const IPsiSection *pNewS
 
 
 /////////////////////////////////////////////////////////////////////////////
-// EMMˆ—“à•”ƒNƒ‰ƒX
+// EMMå‡¦ç†å†…éƒ¨ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 CTsDescrambler::CEmmProcessor::CEmmProcessor(IBonObject *pOwner)
@@ -592,37 +592,37 @@ CTsDescrambler::CEmmProcessor::CEmmProcessor(IBonObject *pOwner)
 	, m_pTsDescrambler(dynamic_cast<CTsDescrambler *>(pOwner))
 	, m_pHalBcasCard(m_pTsDescrambler->m_pHalBcasCard)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CTsDescrambler::CEmmProcessor::~CEmmProcessor(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CTsDescrambler::CEmmProcessor::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection)
 {
-	// ƒe[ƒuƒ‹ID‚ğƒ`ƒFƒbƒN
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’ãƒã‚§ãƒƒã‚¯
 	if(pNewSection->GetTableID() != SECTION_TABLE_ID)return false;
 
-	// EMMˆ—‚ª–³Œø‚Ì‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
+	// EMMå‡¦ç†ãŒç„¡åŠ¹ã®ã¨ãã¯ä½•ã‚‚ã—ãªã„
 	if(!m_pTsDescrambler->m_bEnableEmmProcess)return true;
 
-	// ƒZƒNƒVƒ‡ƒ“‚ğ‰ğÍ
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’è§£æ
 	const WORD wDataSize = pNewSection->GetPayloadSize();
 	const BYTE *pHexData = pNewSection->GetPayloadData();
 	
 	WORD wPos = 0U;
 	
 	while((wDataSize - wPos) >= 17U){
-		// EMMƒTƒCƒY‚ğƒ`ƒFƒbƒN
+		// EMMã‚µã‚¤ã‚ºã‚’ãƒã‚§ãƒƒã‚¯
 		const WORD wEmmSize = (WORD)pHexData[wPos + 6U] + 7U;
 		if(((wDataSize - wPos) < wEmmSize) || (wEmmSize < 17U))break;
 
-		// ƒnƒ“ƒhƒ‰ŒÄ‚Ño‚µ
+		// ãƒãƒ³ãƒ‰ãƒ©å‘¼ã³å‡ºã—
 		if(OnEmmBody(&pHexData[wPos], wEmmSize))break;
 		
-		// ‰ğÍˆÊ’uXV
+		// è§£æä½ç½®æ›´æ–°
 		wPos += wEmmSize;
 		}
 
@@ -631,37 +631,37 @@ const bool CTsDescrambler::CEmmProcessor::OnTableUpdate(const IPsiSection *pNewS
 
 const bool CTsDescrambler::CEmmProcessor::OnEmmBody(const BYTE *pEmmData, const WORD wEmmSize)
 {
-	// ©B-CASƒJ[ƒhIDæ“¾
+	// è‡ªB-CASã‚«ãƒ¼ãƒ‰IDå–å¾—
 	const BYTE * const pCardID = m_pHalBcasCard->GetBcasCardID();
 
-	// ©B-CASƒJ[ƒhID‚ÆÆ‡
+	// è‡ªB-CASã‚«ãƒ¼ãƒ‰IDã¨ç…§åˆ
 	for(DWORD dwPos = 0UL ; dwPos < 6UL ; dwPos++){
 		if(pCardID[dwPos] != pEmmData[dwPos])return false;
 		}
 
-	// ƒXƒgƒŠ[ƒ€‚ÌŠÔ‚ğŠm”F‚·‚é
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã®æ™‚é–“ã‚’ç¢ºèªã™ã‚‹
 	CTsTime ValidTime;
-	ValidTime.SetNowTime();									// Œ»İ‚ğæ“¾
-	ValidTime -= EMM_VALID_PERIOD * 24UL * 60UL * 60UL;		// —LŒøŠúŠÔ‚¾‚¯‰ß‹‚É–ß‚·
+	ValidTime.SetNowTime();									// ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—
+	ValidTime -= EMM_VALID_PERIOD * 24UL * 60UL * 60UL;		// æœ‰åŠ¹æœŸé–“ã ã‘éå»ã«æˆ»ã™
 	
 	const ITotTable *pTotTable = dynamic_cast<const ITotTable *>(m_pTsDescrambler->m_TsInputMap.GetMapTarget(0x0014U));
 	if(!pTotTable)return true;
-	CTsTime EmmTime = pTotTable->GetDateTime();				// TOT‚©‚ç‚ğæ“¾
+	CTsTime EmmTime = pTotTable->GetDateTime();				// TOTã‹ã‚‰æ™‚åˆ»ã‚’å–å¾—
 	
-	// —LŒøŠúŠÔ‚æ‚è‰ß‹‚ÌEMMƒf[ƒ^‚Íˆ—‚µ‚È‚¢
+	// æœ‰åŠ¹æœŸé–“ã‚ˆã‚Šéå»ã®EMMãƒ‡ãƒ¼ã‚¿ã¯å‡¦ç†ã—ãªã„
 	if(EmmTime < ValidTime)return true;
 	
-	// B-CASƒJ[ƒh‚ÉEMMƒf[ƒ^‘—M
+	// B-CASã‚«ãƒ¼ãƒ‰ã«EMMãƒ‡ãƒ¼ã‚¿é€ä¿¡
 	if(!m_pHalBcasCard->SendEmmSection(pEmmData, wEmmSize)){
-		// ƒŠƒgƒ‰ƒC
+		// ãƒªãƒˆãƒ©ã‚¤
 		if(!m_pHalBcasCard->SendEmmSection(pEmmData, wEmmSize)){
-			// EMMˆ—¸”s
+			// EMMå‡¦ç†å¤±æ•—
 			m_pTsDescrambler->SendDecoderEvent(EID_EMM_PROCESSED, reinterpret_cast<PVOID>(false));
 			return true;
 			}
 		}
 
-	// ƒCƒxƒ“ƒg’Ê’m
+	// ã‚¤ãƒ™ãƒ³ãƒˆé€šçŸ¥
 	CLIPED_INCREMENT(m_pTsDescrambler->m_dwEmmProcessNum);
 	m_pTsDescrambler->SendDecoderEvent(EID_EMM_PROCESSED, reinterpret_cast<PVOID>(true));
 
@@ -670,39 +670,39 @@ const bool CTsDescrambler::CEmmProcessor::OnEmmBody(const BYTE *pEmmData, const 
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ESˆ—“à•”ƒNƒ‰ƒX
+// ESå‡¦ç†å†…éƒ¨ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 CTsDescrambler::CEsProcessor::CEsProcessor(IBonObject *pOwner)
 	: CBonObject(NULL)
 	, m_pEcmProcessor(dynamic_cast<CEcmProcessor *>(pOwner))
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CTsDescrambler::CEsProcessor::~CEsProcessor(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CTsDescrambler::CEsProcessor::StorePacket(const ITsPacket *pTsPacket)
 {
-	// ƒXƒNƒ‰ƒ“ƒuƒ‹‰ğœ
+	// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«è§£é™¤
 	return m_pEcmProcessor->DescramblePacket(const_cast<ITsPacket *>(pTsPacket));
 }
 
 void CTsDescrambler::CEsProcessor::OnPidReset(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CTsDescrambler::CEsProcessor::OnPidMapped(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CTsDescrambler::CEsProcessor::OnPidUnmapped(ITsPidMapper *pTsPidMapper, const WORD wPID)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	Release();
 }

@@ -1,4 +1,4 @@
-// BonObject.cpp: ƒx[ƒXƒCƒ“ƒ^ƒtƒF[ƒXŠî’êƒNƒ‰ƒX
+ï»¿// BonObject.cpp: ãƒ™ãƒ¼ã‚¹ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,35 +9,35 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// BonƒIƒuƒWƒFƒNƒgŠî’êƒCƒ“ƒ^ƒtƒF[ƒXŠî’êƒNƒ‰ƒX
+// Bonã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåŸºåº•ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CBonObject::Release(void)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	delete this;
 }
 
 const BONGUID CBonObject::GetGuid(void)
 {
-	// ƒNƒ‰ƒX–¼‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹åã‚’è¿”ã™
 	return TypeToGuid(typeid(CBonObject));
 }
 
 CBonObject::CBonObject(IBonObject *pOwner)
 	: m_pOwner(pOwner)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CBonObject::~CBonObject(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 IBonObject * CBonObject::CreateInstance(IBonObject *pOwner)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	return reinterpret_cast<IBonObject *>(new CBonObject(pOwner));
 }
 
@@ -45,15 +45,15 @@ const BONGUID CBonObject::TypeToGuid(const type_info &TypeID)
 {
 	TCHAR szClassName[BON_MAX_CLASS_NAME] = TEXT("");
 
-	// GetGuid()‚ÌƒCƒ“ƒvƒŠƒƒ“ƒg‚ğ’ñ‹Ÿ‚·‚é
+	// GetGuid()ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒˆã‚’æä¾›ã™ã‚‹
 #ifdef _UNICODE
-	// ƒNƒ‰ƒX–¼‚ğUNICODE‚É•ÏŠ·
+	// ã‚¯ãƒ©ã‚¹åã‚’UNICODEã«å¤‰æ›
 	::MultiByteToWideChar(CP_OEMCP, MB_PRECOMPOSED, &(TypeID.name()[6]), -1, szClassName, sizeof(szClassName));
 #else
-	// ƒNƒ‰ƒX–¼‚ğƒRƒs[
+	// ã‚¯ãƒ©ã‚¹åã‚’ã‚³ãƒ”ãƒ¼
 	::_tcscpy(szClassName, &(TypeID.name()[6]));
 #endif
 
-	// GUID‚ğ•Ô‚·
+	// GUIDã‚’è¿”ã™
 	return ::BON_NAME_TO_GUID(szClassName);
 }

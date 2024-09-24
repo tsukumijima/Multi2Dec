@@ -1,4 +1,4 @@
-// TsEpgIf.h: TS EPG ƒCƒ“ƒ^ƒtƒF[ƒX’è‹`
+ï»¿// TsEpgIf.h: TS EPG ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å®šç¾©
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// EITƒAƒCƒeƒ€ƒCƒ“ƒ^ƒtƒF[ƒX
+// EITã‚¢ã‚¤ãƒ†ãƒ ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IEitItem :	public IBonObject
@@ -29,32 +29,32 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// EPGƒAƒCƒeƒ€ƒCƒ“ƒ^ƒtƒF[ƒX
+// EPGã‚¢ã‚¤ãƒ†ãƒ ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IEpgItem :	public IBonObject
 {
 public:
-	enum	// StoreEitItem()AGetStoreState() ƒŠƒ^[ƒ“ƒR[ƒh(‚±‚ê‚ç‚ÌOR)
+	enum	// StoreEitItem()ã€GetStoreState() ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰(ã“ã‚Œã‚‰ã®OR)
 	{
-		SST_EMPTY			= 0x00U,	// ƒf[ƒ^‚È‚µ
-		SST_EVENT_ID		= 0x01U,	// EVENT IDƒXƒgƒAÏ‚İ
-		SST_SHORT_INFO		= 0x02U,	// ’ZŒ`®ƒCƒxƒ“ƒgî•ñƒXƒgƒAÏ‚İ
-		SST_EXTEND_INFO		= 0x04U,	// Šg’£Œ`®ƒCƒxƒ“ƒgî•ñƒXƒgƒAÏ‚İ
-		SST_VIDEO_INFO		= 0x08U,	// ‰f‘œî•ñƒXƒgƒAÏ‚İ
-		SST_AUDIO_INFO		= 0x10U,	// ‰¹ºî•ñƒXƒgƒAÏ‚İ
-		SST_CONTENT_INFO	= 0x20U,	// ƒRƒ“ƒeƒ“ƒgî•ñƒXƒgƒAÏ‚İ
-		SST_SCHEDULE_CHANGE	= 0x20U,	// •ú‘—ƒXƒPƒWƒ…[ƒ‹•Ï‰»ŒŸo
+		SST_EMPTY			= 0x00U,	// ãƒ‡ãƒ¼ã‚¿ãªã—
+		SST_EVENT_ID		= 0x01U,	// EVENT IDã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_SHORT_INFO		= 0x02U,	// çŸ­å½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆæƒ…å ±ã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_EXTEND_INFO		= 0x04U,	// æ‹¡å¼µå½¢å¼ã‚¤ãƒ™ãƒ³ãƒˆæƒ…å ±ã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_VIDEO_INFO		= 0x08U,	// æ˜ åƒæƒ…å ±ã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_AUDIO_INFO		= 0x10U,	// éŸ³å£°æƒ…å ±ã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_CONTENT_INFO	= 0x20U,	// ã‚³ãƒ³ãƒ†ãƒ³ãƒˆæƒ…å ±ã‚¹ãƒˆã‚¢æ¸ˆã¿
+		SST_SCHEDULE_CHANGE	= 0x20U,	// æ”¾é€ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«å¤‰åŒ–æ¤œå‡º
 		SST_COMPLETE		= (SST_EVENT_ID | SST_SHORT_INFO | SST_EXTEND_INFO | SST_VIDEO_INFO | SST_AUDIO_INFO)
 	};
 
-	enum	// GetAudioMode() ƒŠƒ^[ƒ“ƒR[ƒh
+	enum	// GetAudioMode() ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰
 	{
-		ADM_UNDEFINED		= 0x00U,	// –¢’è‹`
-		ADM_MONO			= 0x01U,	// ƒ‚ƒmƒ‰ƒ‹
-		ADM_DUAL			= 0x02U,	// “ñd‰¹º
-		ADM_STEREO			= 0x03U,	// ƒXƒeƒŒƒI
-		ADM_SURROUND		= 0x04U		// ƒTƒ‰ƒEƒ“ƒh
+		ADM_UNDEFINED		= 0x00U,	// æœªå®šç¾©
+		ADM_MONO			= 0x01U,	// ãƒ¢ãƒãƒ©ãƒ«
+		ADM_DUAL			= 0x02U,	// äºŒé‡éŸ³å£°
+		ADM_STEREO			= 0x03U,	// ã‚¹ãƒ†ãƒ¬ã‚ª
+		ADM_SURROUND		= 0x04U		// ã‚µãƒ©ã‚¦ãƒ³ãƒ‰
 	};
 
 	virtual const BYTE StoreEitItem(const IEitItem *pEitItem) = 0;
@@ -62,29 +62,29 @@ public:
 
 	virtual const BYTE GetStoreState(void) const = 0;
 
-// SST_EVENT_IDƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_EVENT_IDã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const WORD GetEventID(void) const = 0;
 	virtual const CTsTime & GetStartTime(void) const = 0;
 	virtual const DWORD GetDuration(void) const = 0;
 	virtual const bool IsScrambled(void) const = 0;
 
-// SST_SHORT_INFOƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_SHORT_INFOã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const DWORD GetEventTitle(LPTSTR lpszDst) const = 0;
 	virtual const DWORD GetEventInfo(LPTSTR lpszDst) const = 0;
 
-// SST_EXTEND_INFOƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_EXTEND_INFOã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const DWORD GetEventDetail(LPTSTR lpszDst) const = 0;
 
-// SST_VIDEO_INFOƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_VIDEO_INFOã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const WORD GetVideoResolution(void) const = 0;
 	virtual const bool IsVideoProgressive(void) const = 0;
 	virtual const bool IsVideoAspectWide(void) const = 0;
 	virtual const bool IsVideoPanAndScan(void) const = 0;
 
-// SST_AUDIO_INFOƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_AUDIO_INFOã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const BYTE GetAudioMode(void) const = 0;
 
-// SST_CONTENT_INFOƒXƒgƒAÏ‚İ‚Å—LŒø
+// SST_CONTENT_INFOã‚¹ãƒˆã‚¢æ¸ˆã¿ã§æœ‰åŠ¹
 	virtual const DWORD GetGenreNum(void) const = 0;
 	virtual const BYTE GetGenreLevel1(const DWORD dwIndex = 0UL) const = 0;
 	virtual const BYTE GetGenreLevel2(const DWORD dwIndex = 0UL) const = 0;

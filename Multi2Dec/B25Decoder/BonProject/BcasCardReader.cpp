@@ -1,4 +1,4 @@
-// BcasCardReader.cpp: B-CASƒJ[ƒhƒŠ[ƒ_ƒNƒ‰ƒX
+ï»¿// BcasCardReader.cpp: B-CASã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -13,26 +13,26 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-// ƒfƒoƒCƒX–¼
-#define DEVICENAME	TEXT("B-CAS ”Ä—pƒXƒ}[ƒgƒJ[ƒhƒŠ[ƒ_")
+// ãƒ‡ãƒã‚¤ã‚¹å
+#define DEVICENAME	TEXT("B-CAS æ±ç”¨ã‚¹ãƒãƒ¼ãƒˆã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€")
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—pƒXƒ}[ƒgƒJ[ƒhƒŠ[ƒ_—p B-CASƒJ[ƒhƒCƒ“ƒ^ƒtƒF[ƒXÀ‘•ƒNƒ‰ƒX
+// æ±ç”¨ã‚¹ãƒãƒ¼ãƒˆã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ç”¨ B-CASã‚«ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å®Ÿè£…ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BONGUID CBcasCardReader::GetDeviceType(void)
 {
-	// ƒfƒoƒCƒX‚Ìƒ^ƒCƒv‚ğ•Ô‚·
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ã‚¿ã‚¤ãƒ—ã‚’è¿”ã™
 	return ::BON_NAME_TO_GUID(TEXT("IHalBcasCard"));
 }
 
 const DWORD CBcasCardReader::GetDeviceName(LPTSTR lpszName)
 {
-	// ƒfƒoƒCƒX–¼‚ğ•Ô‚·
+	// ãƒ‡ãƒã‚¤ã‚¹åã‚’è¿”ã™
 	if(lpszName)::_tcscpy(lpszName, DEVICENAME);
 
 	return ::_tcslen(DEVICENAME);
@@ -40,32 +40,32 @@ const DWORD CBcasCardReader::GetDeviceName(LPTSTR lpszName)
 
 const DWORD CBcasCardReader::GetTotalDeviceNum(void)
 {
-	// B-CASƒJ[ƒh‚ª‘}“ü‚³‚ê‚Ä‚¢‚éƒJ[ƒhƒŠ[ƒ_”‚ğ•Ô‚·
+	// B-CASã‚«ãƒ¼ãƒ‰ãŒæŒ¿å…¥ã•ã‚Œã¦ã„ã‚‹ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€æ•°ã‚’è¿”ã™
 
-	// ƒXƒ}[ƒgƒJ[ƒhƒŠ[ƒ_—ñ‹“
+	// ã‚¹ãƒãƒ¼ãƒˆã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ—æŒ™
 	if(!EnumBcasCardReader())return 0UL;
 	
 	SCARDHANDLE hBcasCard;
 	DWORD dwBcasCardNum = 0UL;
 	DWORD dwActiveProtocol;
 	
-	// ‰Šú‰»s
+	// åˆæœŸåŒ–è©¦è¡Œ
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
 		hBcasCard = NULL;
 		dwActiveProtocol = SCARD_PROTOCOL_UNDEFINED;
 
-		// ƒJ[ƒhƒŠ[ƒ_‚ÉÚ‘±
+		// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ã«æ¥ç¶š
 		if(::SCardConnect(m_ScardContext, m_CardReaderArray[dwIndex].c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T1, &hBcasCard, &dwActiveProtocol) == SCARD_S_SUCCESS){
-			// ƒvƒƒgƒRƒ‹ƒ`ƒFƒbƒN
+			// ãƒ—ãƒ­ãƒˆã‚³ãƒ«ãƒã‚§ãƒƒã‚¯
 			if(dwActiveProtocol == SCARD_PROTOCOL_T1){
-				// ‰Šú‰»ƒRƒ}ƒ“ƒh‘—M
+				// åˆæœŸåŒ–ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 				if(InitialSetting(hBcasCard)){
-					// B-CASƒJ[ƒh”ƒCƒ“ƒNƒŠƒƒ“ƒg
+					// B-CASã‚«ãƒ¼ãƒ‰æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 					dwBcasCardNum++;
 					}
 				}
-			// ƒJ[ƒhƒŠ[ƒ_Ø’f
+			// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ‡æ–­
 			::SCardDisconnect(hBcasCard, SCARD_LEAVE_CARD);	
 			}
 		}
@@ -75,38 +75,38 @@ const DWORD CBcasCardReader::GetTotalDeviceNum(void)
 
 const DWORD CBcasCardReader::GetActiveDeviceNum(void)
 {
-	// ƒXƒ}[ƒgƒJ[ƒhƒŠ[ƒ_‚Í‹¤—p‰Â”\‚È‚½‚ßí‚É0‚ğ•Ô‚·
+	// ã‚¹ãƒãƒ¼ãƒˆã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ã¯å…±ç”¨å¯èƒ½ãªãŸã‚å¸¸ã«0ã‚’è¿”ã™
 	return 0UL;
 }
 
 const bool CBcasCardReader::OpenCard(void)
 {
-	// ˆê’UƒNƒ[ƒY‚·‚é
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
 	CloseCard();
 
-	// ƒXƒ}[ƒgƒJ[ƒhƒŠ[ƒ_—ñ‹“
+	// ã‚¹ãƒãƒ¼ãƒˆã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ—æŒ™
 	if(!EnumBcasCardReader())return false;
 
 	DWORD dwActiveProtocol;
 	
-	// ‰Šú‰»s
+	// åˆæœŸåŒ–è©¦è¡Œ
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
 		m_hBcasCard = NULL;
 		dwActiveProtocol = SCARD_PROTOCOL_UNDEFINED;
 
-		// ƒJ[ƒhƒŠ[ƒ_‚ÉÚ‘±
+		// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ã«æ¥ç¶š
 		if(::SCardConnect(m_ScardContext, m_CardReaderArray[dwIndex].c_str(), SCARD_SHARE_SHARED, SCARD_PROTOCOL_T1, &m_hBcasCard, &dwActiveProtocol) == SCARD_S_SUCCESS){
-			// ƒvƒƒgƒRƒ‹ƒ`ƒFƒbƒN
+			// ãƒ—ãƒ­ãƒˆã‚³ãƒ«ãƒã‚§ãƒƒã‚¯
 			if(dwActiveProtocol == SCARD_PROTOCOL_T1){
-				// ‰Šú‰»ƒRƒ}ƒ“ƒh‘—M
+				// åˆæœŸåŒ–ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 				if(InitialSetting(m_hBcasCard)){
-					// B-CASƒJ[ƒh”ƒCƒ“ƒNƒŠƒƒ“ƒg
+					// B-CASã‚«ãƒ¼ãƒ‰æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 					break;
 					}
 				}
 
-			// ƒJ[ƒhƒŠ[ƒ_Ø’f
+			// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ‡æ–­
 			::SCardDisconnect(m_hBcasCard, SCARD_LEAVE_CARD);
 			m_hBcasCard = NULL;
 			}
@@ -117,7 +117,7 @@ const bool CBcasCardReader::OpenCard(void)
 
 void CBcasCardReader::CloseCard(void)
 {
-	// ƒJ[ƒhƒŠ[ƒ_Ø’f
+	// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ‡æ–­
 	if(m_hBcasCard){
 		::SCardDisconnect(m_hBcasCard, SCARD_LEAVE_CARD);
 		m_hBcasCard = NULL;
@@ -126,25 +126,25 @@ void CBcasCardReader::CloseCard(void)
 
 const bool CBcasCardReader::IsInteractive(void)
 {
-	// ‘o•ûŒü’ÊM‚Ì‰Â”Û‚ğ•Ô‚·
+	// åŒæ–¹å‘é€šä¿¡ã®å¯å¦ã‚’è¿”ã™
 	return true;
 }
 
 const BYTE * CBcasCardReader::GetBcasCardID(void)
 {
-	// Card ID ‚ğ•Ô‚·
+	// Card ID ã‚’è¿”ã™
 	return (m_hBcasCard)? m_BcasCardInfo.BcasCardID : NULL;
 }
 
 const BYTE * CBcasCardReader::GetInitialCbc(void)
 {
-	// Descrambler CBC Initial Value ‚ğ•Ô‚·
+	// Descrambler CBC Initial Value ã‚’è¿”ã™
 	return (m_hBcasCard)? m_BcasCardInfo.InitialCbc : NULL;
 }
 
 const BYTE * CBcasCardReader::GetSystemKey(void)
 {
-	// Descrambling System Key ‚ğ•Ô‚·
+	// Descrambling System Key ã‚’è¿”ã™
 	return (m_hBcasCard)? m_BcasCardInfo.SystemKey : NULL;
 }
 
@@ -152,61 +152,61 @@ const BYTE * CBcasCardReader::GetKsFromEcm(const BYTE *pEcmData, const DWORD dwE
 {
 	static const BYTE abyEcmReceiveCmd[] = {0x90U, 0x34U, 0x00U, 0x00U};
 
-	// uECM Receive Commandv‚ğˆ—‚·‚é
+	// ã€ŒECM Receive Commandã€ã‚’å‡¦ç†ã™ã‚‹
 	if(!m_hBcasCard){
 		m_dwEcmError = EC_NO_ERROR;
 		return NULL;
 		}
 
-	// ECMƒTƒCƒY‚ğƒ`ƒFƒbƒN
+	// ECMã‚µã‚¤ã‚ºã‚’ãƒã‚§ãƒƒã‚¯
 	if(!pEcmData || (dwEcmSize < 30UL) || (dwEcmSize > 256UL)){
 		m_dwEcmError = EC_BADARGUMENT;
 		return NULL;
 		}
 
-	// ƒoƒbƒtƒ@€”õ
+	// ãƒãƒƒãƒ•ã‚¡æº–å‚™
 	DWORD dwRecvSize = 0UL;
 	BYTE SendData[1024];
 	BYTE RecvData[1024];
 	::ZeroMemory(RecvData, sizeof(RecvData));
 
-	// ƒRƒ}ƒ“ƒh\’z
+	// ã‚³ãƒãƒ³ãƒ‰æ§‹ç¯‰
 	::CopyMemory(SendData, abyEcmReceiveCmd, sizeof(abyEcmReceiveCmd));			// CLA, INS, P1, P2
 	SendData[sizeof(abyEcmReceiveCmd)] = (BYTE)dwEcmSize;						// COMMAND DATA LENGTH
 	::CopyMemory(&SendData[sizeof(abyEcmReceiveCmd) + 1], pEcmData, dwEcmSize);	// ECM
 	SendData[sizeof(abyEcmReceiveCmd) + dwEcmSize + 1] = 0x00U;					// RESPONSE DATA LENGTH
 
-	// ƒRƒ}ƒ“ƒh‘—M
+	// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 	if(!TransmitCommand(m_hBcasCard, SendData, sizeof(abyEcmReceiveCmd) + dwEcmSize + 2UL, RecvData, sizeof(RecvData), &dwRecvSize)){
 		::ZeroMemory(&m_EcmStatus, sizeof(m_EcmStatus));
 		m_dwEcmError = EC_TRANSMIT_ERROR;
 		return NULL;
 		}
 
-	// ƒTƒCƒYƒ`ƒFƒbƒN
+	// ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 	if(dwRecvSize != 25UL){
 		::ZeroMemory(&m_EcmStatus, sizeof(m_EcmStatus));
 		m_dwEcmError = EC_TRANSMIT_ERROR;
 		return NULL;
 		}	
 	
-	// ƒŒƒXƒ|ƒ“ƒX‰ğÍ
+	// ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æ
 	::CopyMemory(m_EcmStatus.KsData, &RecvData[6], sizeof(m_EcmStatus.KsData));
 
-	// ƒŠƒ^[ƒ“ƒR[ƒh‰ğÍ
+	// ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰è§£æ
 	switch(((WORD)RecvData[4] << 8) | (WORD)RecvData[5]){
-		// w“üÏ‚İ: ‹’®’†
-		case 0x0200U :	// Œã•¥‚¢PPV
-		case 0x0400U :	// ‘O•¥‚¢PPV
-		case 0x0800U :	// ƒeƒBƒA
+		// è³¼å…¥æ¸ˆã¿: è¦–è´ä¸­
+		case 0x0200U :	// å¾Œæ‰•ã„PPV
+		case 0x0400U :	// å‰æ‰•ã„PPV
+		case 0x0800U :	// ãƒ†ã‚£ã‚¢
 		
-		// w“ü‰Â: ƒvƒŒƒrƒ…[’†
-		case 0x4480U :	// Œã•¥‚¢PPV
-		case 0x4280U :	// ‘O•¥‚¢PPV
+		// è³¼å…¥å¯: ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­
+		case 0x4480U :	// å¾Œæ‰•ã„PPV
+		case 0x4280U :	// å‰æ‰•ã„PPV
 			m_dwEcmError = EC_NO_ERROR;
 			return m_EcmStatus.KsData;
 		
-		// ã‹LˆÈŠO(‹’®•s‰Â)
+		// ä¸Šè¨˜ä»¥å¤–(è¦–è´ä¸å¯)
 		default :
 			m_dwEcmError = EC_NOT_CONTRACTED;
 			return NULL;
@@ -215,7 +215,7 @@ const BYTE * CBcasCardReader::GetKsFromEcm(const BYTE *pEcmData, const DWORD dwE
 
 const DWORD CBcasCardReader::GetEcmError(void)
 {
-	// ECMˆ—ƒGƒ‰[ƒR[ƒh‚ğ•Ô‚·
+	// ECMå‡¦ç†ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™
 	return m_dwEcmError;
 }
 
@@ -223,40 +223,40 @@ const bool CBcasCardReader::SendEmmSection(const BYTE *pEmmData, const DWORD dwE
 {
 	static const BYTE abyEmmReceiveCmd[] = {0x90U, 0x36U, 0x00U, 0x00U};
 
-	// uEMM Receive Commandv‚ğˆ—‚·‚é
+	// ã€ŒEMM Receive Commandã€ã‚’å‡¦ç†ã™ã‚‹
 	if(!m_hBcasCard)return false;
 
-	// EMMƒTƒCƒY‚ğƒ`ƒFƒbƒN
+	// EMMã‚µã‚¤ã‚ºã‚’ãƒã‚§ãƒƒã‚¯
 	if(!pEmmData || (dwEmmSize < 17UL) || (dwEmmSize > 263UL))return false;
 
-	// ƒoƒbƒtƒ@€”õ
+	// ãƒãƒƒãƒ•ã‚¡æº–å‚™
 	DWORD dwRecvSize = 0UL;
 	BYTE SendData[1024];
 	BYTE RecvData[1024];
 	::ZeroMemory(RecvData, sizeof(RecvData));
 
-	// ƒRƒ}ƒ“ƒh\’z
+	// ã‚³ãƒãƒ³ãƒ‰æ§‹ç¯‰
 	::CopyMemory(SendData, abyEmmReceiveCmd, sizeof(abyEmmReceiveCmd));			// CLA, INS, P1, P2
 	SendData[sizeof(abyEmmReceiveCmd)] = (BYTE)dwEmmSize;						// COMMAND DATA LENGTH
 	::CopyMemory(&SendData[sizeof(abyEmmReceiveCmd) + 1], pEmmData, dwEmmSize);	// EMM
 	SendData[sizeof(abyEmmReceiveCmd) + dwEmmSize + 1] = 0x00U;					// RESPONSE DATA LENGTH
 
-	// ƒRƒ}ƒ“ƒh‘—M
+	// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 	if(!TransmitCommand(m_hBcasCard, SendData, sizeof(abyEmmReceiveCmd) + dwEmmSize + 2UL, RecvData, sizeof(RecvData), &dwRecvSize))return false;
 
-	// ƒTƒCƒYƒ`ƒFƒbƒN
+	// ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 	if(dwRecvSize != 8UL)return false;
 	
-	// ƒŠƒ^[ƒ“ƒR[ƒh‰ğÍ
+	// ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰è§£æ
 	switch(((WORD)RecvData[4] << 8) | (WORD)RecvData[5]){
-		case 0x2100U :	// ³íI—¹
+		case 0x2100U :	// æ­£å¸¸çµ‚äº†
 			return true;
 
-		case 0xA102U :	// ”ñ‰^—p(‰^—pŠOƒvƒƒgƒRƒ‹”Ô†)
-		case 0xA107U :	// ƒZƒLƒ…ƒŠƒeƒBƒGƒ‰[(EMM‰ü‚´‚ñƒGƒ‰[)
+		case 0xA102U :	// éé‹ç”¨(é‹ç”¨å¤–ãƒ—ãƒ­ãƒˆã‚³ãƒ«ç•ªå·)
+		case 0xA107U :	// ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã‚¨ãƒ©ãƒ¼(EMMæ”¹ã–ã‚“ã‚¨ãƒ©ãƒ¼)
 			return false;
 		
-		// ã‹LˆÈŠO(—áŠO)
+		// ä¸Šè¨˜ä»¥å¤–(ä¾‹å¤–)
 		default :
 			return false;
 		}
@@ -266,43 +266,43 @@ const WORD CBcasCardReader::GetPowerCtrlInfo(POWERCTRLINFO *pPowerCtrlInfo)
 {
 	BYTE abyReqPowerCtrlCmd[] = {0x90U, 0x80U, 0x00U, 0x00U, 0x01U, 0x00U, 0x00U};
 
-	// ’Ê“d§Œäî•ñ‚ğæ“¾‚·‚é
+	// é€šé›»åˆ¶å¾¡æƒ…å ±ã‚’å–å¾—ã™ã‚‹
 	if(!m_hBcasCard)return 0U;
 
-	// ƒoƒbƒtƒ@€”õ
+	// ãƒãƒƒãƒ•ã‚¡æº–å‚™
 	DWORD dwRecvSize = 0UL;
 	BYTE RecvData[1024];
 	::ZeroMemory(RecvData, sizeof(RecvData));
 
-	// ƒRƒ}ƒ“ƒh‘—M
+	// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 	if(!TransmitCommand(m_hBcasCard, abyReqPowerCtrlCmd, sizeof(abyReqPowerCtrlCmd), RecvData, sizeof(RecvData), &dwRecvSize))return 0U;
 
-	// óMƒTƒCƒYƒ`ƒFƒbƒN
+	// å—ä¿¡ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 	if(dwRecvSize != 20UL)return 0U;		
 
-	// ƒŠƒ^[ƒ“ƒR[ƒh‰ğÍ
+	// ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰è§£æ
 	if((((WORD)RecvData[4] << 8) | (WORD)RecvData[5]) != 0x2100U)return 0U;
 
-	// ƒŒƒXƒ|ƒ“ƒX‰ğÍ
+	// ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æ
 	const WORD wInfoNum = (WORD)RecvData[7] + 1U;
-	if(!pPowerCtrlInfo)return wInfoNum;		// ˆø”‚ªNULL‚Ì‚Æ‚«‚Í•K—v‚Èƒoƒbƒtƒ@”‚ğ•Ô‚·
+	if(!pPowerCtrlInfo)return wInfoNum;		// å¼•æ•°ãŒNULLã®ã¨ãã¯å¿…è¦ãªãƒãƒƒãƒ•ã‚¡æ•°ã‚’è¿”ã™
 
 	CTsTime TsTime;
 
 	for(WORD wIndex = 0U ; wIndex < wInfoNum ; wIndex++){
-		// ƒRƒ}ƒ“ƒhİ’è
+		// ã‚³ãƒãƒ³ãƒ‰è¨­å®š
 		abyReqPowerCtrlCmd[5] = (BYTE)wIndex;
 
-		// ƒRƒ}ƒ“ƒh‘—M
+		// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 		if(!TransmitCommand(m_hBcasCard, abyReqPowerCtrlCmd, sizeof(abyReqPowerCtrlCmd), RecvData, sizeof(RecvData), &dwRecvSize))return 0U;
 
-		// óMƒTƒCƒYƒ`ƒFƒbƒN
+		// å—ä¿¡ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 		if(dwRecvSize != 20UL)return 0U;		
 
-		// ƒŠƒ^[ƒ“ƒR[ƒh‰ğÍ
+		// ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰è§£æ
 		if((((WORD)RecvData[4] << 8) | (WORD)RecvData[5]) != 0x2100U)return 0U;
 		
-		// ƒŒƒXƒ|ƒ“ƒX‰ğÍ
+		// ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æ
 		TsTime.ClearTime();
 		CAribTime::SplitAribMjd(((WORD)RecvData[9] << 8) | (WORD)RecvData[10], &TsTime.wYear, &TsTime.wMonth, &TsTime.wDay, &TsTime.wDayOfWeek);
 		TsTime -= (DWORD)RecvData[11] * 24UL * 60UL * 60UL;
@@ -323,11 +323,11 @@ CBcasCardReader::CBcasCardReader(IBonObject *pOwner)
 	, m_hBcasCard(NULL)
 	, m_dwEcmError(EC_NOT_OPEN)
 {
-	// “à•”ó‘Ô‰Šú‰»
+	// å†…éƒ¨çŠ¶æ…‹åˆæœŸåŒ–
 	::ZeroMemory(&m_BcasCardInfo, sizeof(m_BcasCardInfo));
 	::ZeroMemory(&m_EcmStatus, sizeof(m_EcmStatus));
 
-	// ƒŠƒ\[ƒXƒ}ƒl[ƒWƒƒƒRƒ“ƒeƒLƒXƒgŠm—§
+	// ãƒªã‚½ãƒ¼ã‚¹ãƒãƒãƒ¼ã‚¸ãƒ£ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆç¢ºç«‹
 	::SCardEstablishContext(SCARD_SCOPE_USER, NULL, NULL, &m_ScardContext);
 }
 
@@ -335,25 +335,25 @@ CBcasCardReader::~CBcasCardReader(void)
 {
 	CloseCard();
 
-	// ƒŠƒ\[ƒXƒ}ƒl[ƒWƒƒƒRƒ“ƒeƒLƒXƒg‚ÌŠJ•ú
+	// ãƒªã‚½ãƒ¼ã‚¹ãƒãƒãƒ¼ã‚¸ãƒ£ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®é–‹æ”¾
 	if(m_ScardContext)::SCardReleaseContext(m_ScardContext);
 }
 
 const bool CBcasCardReader::EnumBcasCardReader(void)
 {
-	// ƒJ[ƒhƒŠ[ƒ_‚ğ—ñ‹“‚·‚é
+	// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€ã‚’åˆ—æŒ™ã™ã‚‹
 	DWORD dwBuffSize = 0UL;
 	
-	// ƒoƒbƒtƒ@ƒTƒCƒYæ“¾
+	// ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºå–å¾—
 	if(::SCardListReaders(m_ScardContext, NULL, NULL, &dwBuffSize) != SCARD_S_SUCCESS)return false;
 
-	// ƒoƒbƒtƒ@Šm•Û
+	// ãƒãƒƒãƒ•ã‚¡ç¢ºä¿
 	std::auto_ptr<TCHAR> szReaders(new TCHAR[dwBuffSize]);
 
-	// ƒJ[ƒhƒŠ[ƒ_—ñ‹“
+	// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åˆ—æŒ™
 	if(::SCardListReaders(m_ScardContext, NULL, szReaders.get(), &dwBuffSize) != SCARD_S_SUCCESS)return false;
 
-	// ƒJ[ƒhƒŠ[ƒ_–¼•Û‘¶
+	// ã‚«ãƒ¼ãƒ‰ãƒªãƒ¼ãƒ€åä¿å­˜
 	LPTSTR lpszCurReader = szReaders.get();
 	m_CardReaderArray.clear();
 			
@@ -369,10 +369,10 @@ const bool CBcasCardReader::TransmitCommand(const SCARDHANDLE hBcasCard, const B
 {
 	DWORD dwRecvSize = dwMaxRecv;
 
-	// ƒf[ƒ^‘—óM
+	// ãƒ‡ãƒ¼ã‚¿é€å—ä¿¡
 	DWORD dwReturn = ::SCardTransmit(hBcasCard, SCARD_PCI_T1, pSendData, dwSendSize, NULL, pRecvData, &dwRecvSize);
 	
-	// óMƒTƒCƒYŠi”[
+	// å—ä¿¡ã‚µã‚¤ã‚ºæ ¼ç´
 	if(pdwRecvSize)*pdwRecvSize = dwRecvSize;
 
 	return (dwReturn == SCARD_S_SUCCESS)? true : false;
@@ -382,26 +382,26 @@ const bool CBcasCardReader::InitialSetting(const SCARDHANDLE hBcasCard)
 {
 	static const BYTE abyInitSettingCmd[] = {0x90U, 0x30U, 0x00U, 0x00U, 0x00U};
 
-	// uInitial Setting Conditions Commandv‚ğˆ—‚·‚é
+	// ã€ŒInitial Setting Conditions Commandã€ã‚’å‡¦ç†ã™ã‚‹
 	if(!hBcasCard)return false;
 
-	// ƒoƒbƒtƒ@€”õ
+	// ãƒãƒƒãƒ•ã‚¡æº–å‚™
 	DWORD dwRecvSize = 0UL;
 	BYTE RecvData[1024];
 	::ZeroMemory(RecvData, sizeof(RecvData));
 	
-	// ƒRƒ}ƒ“ƒh‘—M
+	// ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
 	if(!TransmitCommand(hBcasCard, abyInitSettingCmd, sizeof(abyInitSettingCmd), RecvData, sizeof(RecvData), &dwRecvSize))return false;
 
-	// óMƒTƒCƒYƒ`ƒFƒbƒN
+	// å—ä¿¡ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 	if(dwRecvSize < 57UL)return false;		
 
-	// ƒŒƒXƒ|ƒ“ƒX‰ğÍ
+	// ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æ
 	::CopyMemory(m_BcasCardInfo.BcasCardID, &RecvData[8],   6UL);	// +8	Card ID
 	::CopyMemory(m_BcasCardInfo.SystemKey,  &RecvData[16], 32UL);	// +16	Descrambling system key
 	::CopyMemory(m_BcasCardInfo.InitialCbc, &RecvData[48],  8UL);	// +48	Descrambler CBC initial value
 
-	// ECMƒXƒe[ƒ^ƒX‰Šú‰»
+	// ECMã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹åˆæœŸåŒ–
 	::ZeroMemory(&m_EcmStatus, sizeof(m_EcmStatus));
 
 	return true;

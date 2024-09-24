@@ -1,4 +1,4 @@
-// IniCfgStorage.cpp: ”Ä—pƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒgƒŒ[ƒWƒNƒ‰ƒX(INIƒtƒ@ƒCƒ‹”Å)
+ï»¿// IniCfgStorage.cpp: æ±ç”¨ã‚³ãƒ³ãƒ•ã‚£ã‚®ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹(INIãƒ•ã‚¡ã‚¤ãƒ«ç‰ˆ)
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,29 +10,29 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-// ƒfƒtƒHƒ‹ƒg‚ÌƒZƒNƒVƒ‡ƒ“–¼
+// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³å
 #define ROOT_SECTNAME		TEXT("General")		// [General]
 
-#define MAX_SECTNAME_LEN	256UL				// Å‘åƒZƒNƒVƒ‡ƒ“–¼’·
-#define MAX_SECTNAME_NUM	256UL				// Å‘åƒZƒNƒVƒ‡ƒ“”
-#define MAX_VALNAME_LEN		256UL				// Å‘åƒAƒCƒeƒ€–¼’·
-#define MAX_VALNAME_NUM		256UL				// Å‘åƒAƒCƒeƒ€”
-#define MAX_TEXTVAL_LEN		65536UL				// Å‘åƒeƒLƒXƒgƒAƒCƒeƒ€’·
+#define MAX_SECTNAME_LEN	256UL				// æœ€å¤§ã‚»ã‚¯ã‚·ãƒ§ãƒ³åé•·
+#define MAX_SECTNAME_NUM	256UL				// æœ€å¤§ã‚»ã‚¯ã‚·ãƒ§ãƒ³æ•°
+#define MAX_VALNAME_LEN		256UL				// æœ€å¤§ã‚¢ã‚¤ãƒ†ãƒ åé•·
+#define MAX_VALNAME_NUM		256UL				// æœ€å¤§ã‚¢ã‚¤ãƒ†ãƒ æ•°
+#define MAX_TEXTVAL_LEN		65536UL				// æœ€å¤§ãƒ†ã‚­ã‚¹ãƒˆã‚¢ã‚¤ãƒ†ãƒ é•·
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—pƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒgƒŒ[ƒWƒNƒ‰ƒX(INIƒtƒ@ƒCƒ‹”Å)
+// æ±ç”¨ã‚³ãƒ³ãƒ•ã‚£ã‚®ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¯ãƒ©ã‚¹(INIãƒ•ã‚¡ã‚¤ãƒ«ç‰ˆ)
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CIniCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	CloseStorage();
 
-	// Àsƒtƒ@ƒCƒ‹‚ÌƒpƒX–¼‚ğæ“¾
+	// å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹åã‚’å–å¾—
 	TCHAR szDrive[_MAX_DRIVE + 1] = TEXT("\0");
 	TCHAR szDir[_MAX_DIR + 1]	  = TEXT("\0");
 	TCHAR szFile[_MAX_FNAME + 1]  = TEXT("\0");
@@ -41,13 +41,13 @@ const bool CIniCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 	::_tsplitpath(m_szFileName, szDrive, szDir, szFile, NULL);
 	::_tmakepath(m_szFileName, szDrive, szDir, szFile, TEXT("ini"));	
 
-	// ƒZƒNƒVƒ‡ƒ“–¼‚ğİ’è
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’è¨­å®š
 	::_tcscpy(m_szSectName, (lpszPathName)? lpszPathName : ROOT_SECTNAME);
 
-	// ƒZƒNƒVƒ‡ƒ“‚Ì‘¶İ‚ğƒ`ƒFƒbƒN
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®å­˜åœ¨ã‚’ãƒã‚§ãƒƒã‚¯
 	if(!bCreate){
 		if(!IsSectionExist(m_szSectName)){
-			// ƒZƒNƒVƒ‡ƒ“‚ªŒ©‚Â‚©‚ç‚È‚¢
+			// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãŒè¦‹ã¤ã‹ã‚‰ãªã„
 			CloseStorage();
 			return false;
 			}
@@ -58,7 +58,7 @@ const bool CIniCfgStorage::OpenStorage(LPCTSTR lpszPathName, const bool bCreate)
 
 const bool CIniCfgStorage::CloseStorage(void)
 {
-	// ƒtƒ@ƒCƒ‹–¼AƒZƒNƒVƒ‡ƒ“–¼‚ğƒNƒŠƒA‚·‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã€ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 	m_szFileName[0] = TEXT('\0');
 	m_szSectName[0] = TEXT('\0');
 
@@ -69,20 +69,20 @@ IConfigStorage * CIniCfgStorage::OpenSection(LPCTSTR lpszSection, const bool bCr
 {
 	if(!m_szFileName[0] || !lpszSection)return NULL;
 
-	// ƒZƒNƒVƒ‡ƒ“‚Ì‘¶İ‚ğƒ`ƒFƒbƒN
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®å­˜åœ¨ã‚’ãƒã‚§ãƒƒã‚¯
 	if(!bCreate){
-		// ì¬ƒ‚[ƒh‚Å‚È‚¢‚Æ‚«‚ÍƒZƒNƒVƒ‡ƒ“‚ª‚È‚¯‚ê‚ÎƒGƒ‰[
+		// ä½œæˆãƒ¢ãƒ¼ãƒ‰ã§ãªã„ã¨ãã¯ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãŒãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼
 		if(!IsSectionExist(lpszSection))return NULL;
 		}
 
-	// V‚µ‚¢ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// æ–°ã—ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	CIniCfgStorage *pNewInstance = new CIniCfgStorage(NULL);
 	if(!pNewInstance)return NULL;
 		
-	// ƒtƒ@ƒCƒ‹–¼‚ğİ’è
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¨­å®š
 	::_tcscpy(pNewInstance->m_szFileName, m_szFileName);
 
-	// V‚µ‚¢ƒCƒ“ƒXƒ^ƒ“ƒX‚ÉƒZƒNƒVƒ‡ƒ“–¼İ’è
+	// æ–°ã—ã„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã«ã‚»ã‚¯ã‚·ãƒ§ãƒ³åè¨­å®š
 	GetSectionPath(pNewInstance->m_szSectName, lpszSection);
 		
 	return pNewInstance;
@@ -92,21 +92,21 @@ const DWORD CIniCfgStorage::GetSectionNum(void)
 {
 	if(!m_szFileName[0])return false;
 
-	// ƒZƒNƒVƒ‡ƒ“–¼‚ğ—ñ‹“‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szSections[MAX_SECTNAME_LEN * MAX_SECTNAME_NUM] = TEXT("\0");
 
 	const DWORD dwRet = ::GetPrivateProfileSectionNames(szSections, sizeof(szSections) / sizeof(szSections[0]), m_szFileName);
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szSections) / sizeof(szSections[0]))))return false;
 
-	// ƒZƒNƒVƒ‡ƒ“”‚ğƒJƒEƒ“ƒg‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 	DWORD dwSectNum = 0UL;
 	LPCTSTR lpszFindPos = szSections;
 
 	while(*lpszFindPos){
-		// ƒZƒNƒVƒ‡ƒ“”ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// ã‚»ã‚¯ã‚·ãƒ§ãƒ³æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		if(IsSubSectionPath(lpszFindPos))dwSectNum++;
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
 
@@ -117,21 +117,21 @@ const DWORD CIniCfgStorage::EnumSection(const DWORD dwIndex, LPTSTR lpszSection)
 {
 	if(!m_szFileName[0])return 0UL;
 
-	// ƒZƒNƒVƒ‡ƒ“–¼‚ğ—ñ‹“‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szSections[MAX_SECTNAME_LEN * MAX_SECTNAME_NUM] = TEXT("\0");
 
 	const DWORD dwRet = ::GetPrivateProfileSectionNames(szSections, sizeof(szSections) / sizeof(szSections[0]), m_szFileName);
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szSections) / sizeof(szSections[0]))))return 0UL;
 
-	// ƒZƒNƒVƒ‡ƒ“”‚ğƒJƒEƒ“ƒg‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 	DWORD dwSectNum = 0UL;
 	LPCTSTR lpszFindPos = szSections;
 
 	while(*lpszFindPos){
-		// ƒZƒNƒVƒ‡ƒ“”ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// ã‚»ã‚¯ã‚·ãƒ§ãƒ³æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		if(IsSubSectionPath(lpszFindPos)){
 			if(dwSectNum == dwIndex){
-				// ƒCƒ“ƒfƒbƒNƒXˆê’v
+				// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä¸€è‡´
 				if(lpszSection)::_tcscpy(lpszSection, lpszFindPos);
 				return ::_tcslen(lpszFindPos);
 				}
@@ -139,7 +139,7 @@ const DWORD CIniCfgStorage::EnumSection(const DWORD dwIndex, LPTSTR lpszSection)
 			dwSectNum++;
 			}
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
 
@@ -150,14 +150,14 @@ const bool CIniCfgStorage::DeleteSection(LPCTSTR lpszSection)
 {
 	if(!m_szFileName[0] || !lpszSection)return false;
 
-	// ƒZƒNƒVƒ‡ƒ“‚Ì‘¶İ‚ğƒ`ƒFƒbƒN
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®å­˜åœ¨ã‚’ãƒã‚§ãƒƒã‚¯
 	if(!IsSectionExist(lpszSection))return false;
 
-	// ƒZƒNƒVƒ‡ƒ“ƒpƒX¶¬
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ‘ã‚¹ç”Ÿæˆ
 	TCHAR szPath[MAX_SECTNAME_NUM];
 	GetSectionPath(szPath, lpszSection);
 
-	// ƒZƒNƒVƒ‡ƒ“‚ğíœ
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’å‰Šé™¤
 	return (::WritePrivateProfileSection(szPath, NULL, m_szFileName))? true : false;
 }
 
@@ -165,25 +165,25 @@ const DWORD CIniCfgStorage::GetItemNum(void)
 {
 	if(!m_szFileName[0])return 0UL;
 
-	// ƒAƒCƒeƒ€‚ğ—ñ‹“‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szItems[MAX_VALNAME_LEN * MAX_VALNAME_NUM] = TEXT("\0");
 	const DWORD dwRet = ::GetPrivateProfileString(m_szSectName, NULL, NULL, szItems, sizeof(szItems) / sizeof(szItems[0]), m_szFileName);
 
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szItems) / sizeof(szItems[0]))))return 0UL;
 
-	// ƒAƒCƒeƒ€”‚ğƒJƒEƒ“ƒg‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 	DWORD dwItemNum = 0UL;
 	LPCTSTR lpszFindPos = szItems;
 
 	while(*lpszFindPos){
-		// ƒAƒCƒeƒ€”ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		dwItemNum++;
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
 
-	// ƒAƒCƒeƒ€”‚ğ•Ô‚·
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’è¿”ã™
 	return dwItemNum;
 }
 
@@ -191,25 +191,25 @@ const DWORD CIniCfgStorage::EnumItem(const DWORD dwIndex, LPTSTR lpszItem)
 {
 	if(!m_szFileName[0])return 0UL;
 
-	// ƒAƒCƒeƒ€‚ğ—ñ‹“‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szItems[MAX_VALNAME_LEN * MAX_VALNAME_NUM] = TEXT("\0");
 	const DWORD dwRet = ::GetPrivateProfileString(m_szSectName, NULL, NULL, szItems, sizeof(szItems) / sizeof(szItems[0]), m_szFileName);
 
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szItems) / sizeof(szItems[0]))))return 0UL;
 
-	// ƒAƒCƒeƒ€”‚ğƒJƒEƒ“ƒg‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 	DWORD dwItemNum = 0UL;
 	LPTSTR lpszFindPos = szItems;
 
 	while(*lpszFindPos){
-		// ƒAƒCƒeƒ€”ƒCƒ“ƒNƒŠƒƒ“ƒg
+		// ã‚¢ã‚¤ãƒ†ãƒ æ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		if(dwItemNum == dwIndex){
-			// ƒCƒ“ƒfƒbƒNƒXˆê’v
+			// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä¸€è‡´
 			if(lpszItem)::_tcscpy(lpszItem, lpszFindPos);
 			return ::_tcslen(lpszFindPos);
 			}		
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		dwItemNum++;
 		}
@@ -221,7 +221,7 @@ const DWORD CIniCfgStorage::GetItemType(LPCTSTR lpszItem)
 {
 	if(!m_szFileName[0] || !lpszItem)return ITEM_TYPE_INVALID;
 
-	// ƒAƒCƒeƒ€ƒ^ƒCƒv‚ğ•Ô‚·(INIƒtƒ@ƒCƒ‹‚Ìê‡‚Íí‚ÉƒeƒLƒXƒg)
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚¿ã‚¤ãƒ—ã‚’è¿”ã™(INIãƒ•ã‚¡ã‚¤ãƒ«ã®å ´åˆã¯å¸¸ã«ãƒ†ã‚­ã‚¹ãƒˆ)
 	return (IsItemExist(lpszItem))? ITEM_TYPE_TEXT : ITEM_TYPE_INVALID;
 }
 
@@ -229,7 +229,7 @@ const bool CIniCfgStorage::DeleteItem(LPCTSTR lpszItem)
 {
 	if(!m_szFileName[0] || !lpszItem)return false;
 
-	// ƒAƒCƒeƒ€‚ğíœ‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚’å‰Šé™¤ã™ã‚‹
 	return (::WritePrivateProfileString(m_szSectName, lpszItem, NULL, m_szFileName))? true : false;
 }
 
@@ -237,7 +237,7 @@ const bool CIniCfgStorage::SetBoolItem(LPCTSTR lpszItem, const bool bValue)
 {
 	if(!m_szFileName[0] || !lpszItem)return false;
 	
-	// BOOL‚ğƒZ[ƒu‚·‚é
+	// BOOLã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::WritePrivateProfileString(m_szSectName, lpszItem, (bValue)? TEXT("1") : TEXT("0"), m_szFileName))? true : false;
 }
 
@@ -248,7 +248,7 @@ const bool CIniCfgStorage::SetIntItem(LPCTSTR lpszItem, const DWORD dwValue)
 	TCHAR szValue[16];
 	::_stprintf(szValue, TEXT("%lu"), dwValue);
 
-	// DWORD‚ğƒZ[ƒu‚·‚é
+	// DWORDã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::WritePrivateProfileString(m_szSectName, lpszItem, szValue, m_szFileName))? true : false;
 }
 
@@ -256,7 +256,7 @@ const bool CIniCfgStorage::SetTextItem(LPCTSTR lpszItem, LPCTSTR lpszValue)
 {
 	if(!m_szFileName[0] || !lpszItem || !lpszValue)return false;
 
-	// •¶š—ñ‚ğƒZ[ƒu‚·‚é
+	// æ–‡å­—åˆ—ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹
 	return (::WritePrivateProfileString(m_szSectName, lpszItem, lpszValue, m_szFileName))? true : false;
 }
 
@@ -264,7 +264,7 @@ const bool CIniCfgStorage::GetBoolItem(LPCTSTR lpszItem, const bool bDefault)
 {
 	if(!m_szFileName[0] || !lpszItem)return false;
 
-	// BOOL‚ğƒ[ƒh‚·‚é
+	// BOOLã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	return (::GetPrivateProfileInt(m_szSectName, lpszItem, (bDefault)? 1UL : 0UL, m_szFileName))? true : false;
 }
 
@@ -272,10 +272,10 @@ const DWORD CIniCfgStorage::GetIntItem(LPCTSTR lpszItem, const DWORD dwDefault, 
 {
 	if(!m_szFileName[0] || !lpszItem)return false;
 
-	// DWORD‚ğƒ[ƒh‚·‚é
+	// DWORDã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	const DWORD dwValue = (DWORD)::GetPrivateProfileInt(m_szSectName, lpszItem, dwDefault, m_szFileName);
 	
-	// ”ÍˆÍ‚ğƒ`ƒFƒbƒN
+	// ç¯„å›²ã‚’ãƒã‚§ãƒƒã‚¯
 	return ((dwValue >= dwMin) && (dwValue <= dwMax))? dwValue : dwDefault;
 }
 
@@ -286,18 +286,18 @@ const DWORD CIniCfgStorage::GetTextItem(LPCTSTR lpszItem, LPTSTR lpszValue, LPCT
 	TCHAR szValue[MAX_TEXTVAL_LEN] = TEXT("\0");
 	if(lpszDefault)::_tcscpy(szValue, lpszDefault);
 
-	// •¶š—ñ‚ğƒ[ƒh‚·‚é
+	// æ–‡å­—åˆ—ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	const DWORD dwRet = ::GetPrivateProfileString(m_szSectName, lpszItem, (lpszDefault)? lpszDefault : TEXT(""), szValue, sizeof(szValue) / sizeof(szValue[0]), m_szFileName);
 
-	// •¶š”‚ğƒ`ƒFƒbƒN
+	// æ–‡å­—æ•°ã‚’ãƒã‚§ãƒƒã‚¯
 	if(dwRet > dwMaxLen){
 		::_tcscpy(szValue, (lpszDefault)? lpszDefault : TEXT(""));
 		}
 		
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszValue)::_tcscpy(lpszValue, szValue);
 	
-	// •¶š”‚ğ•Ô‚·
+	// æ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szValue);
 }
 
@@ -310,7 +310,7 @@ CIniCfgStorage::CIniCfgStorage(IBonObject *pOwner)
 
 CIniCfgStorage::~CIniCfgStorage(void)
 {
-	// ƒXƒgƒŒ[ƒW‚ğƒNƒ[ƒY‚·‚é
+	// ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
 	CloseStorage();
 }
 
@@ -318,13 +318,13 @@ void CIniCfgStorage::GetSectionPath(LPTSTR lpszPath, LPCTSTR lpszSection) const
 {
 	if(!m_szFileName[0] || !lpszPath || !lpszSection)::DebugBreak();
 
-	// ƒZƒNƒVƒ‡ƒ“ƒpƒX‚ğ¶¬‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ‘ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
 	if(!::_tcscmp(m_szSectName, ROOT_SECTNAME)){
-		// ƒ‹[ƒg’¼‰º
+		// ãƒ«ãƒ¼ãƒˆç›´ä¸‹
 		::_tcscpy(lpszPath, lpszSection);
 		}
 	else{
-		// ƒTƒuƒZƒNƒVƒ‡ƒ“ˆÈ‰º
+		// ã‚µãƒ–ã‚»ã‚¯ã‚·ãƒ§ãƒ³ä»¥ä¸‹
 		::_stprintf(lpszPath, TEXT("%s\\%s"), m_szSectName, lpszSection);
 		}
 }
@@ -333,34 +333,34 @@ const bool CIniCfgStorage::IsSectionExist(LPCTSTR lpszSection) const
 {
 	if(!m_szFileName[0] || !lpszSection)::DebugBreak();
 
-	// ƒZƒNƒVƒ‡ƒ“–¼‚ğ—ñ‹“‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szSections[MAX_SECTNAME_LEN * MAX_SECTNAME_NUM] = TEXT("\0");
 
 	const DWORD dwRet = ::GetPrivateProfileSectionNames(szSections, sizeof(szSections) / sizeof(szSections[0]), m_szFileName);
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szSections) / sizeof(szSections[0]))))return false;
 
-	// ŒŸõƒZƒNƒVƒ‡ƒ“–¼¶¬
+	// æ¤œç´¢ã‚»ã‚¯ã‚·ãƒ§ãƒ³åç”Ÿæˆ
 	TCHAR szFindSection[MAX_SECTNAME_NUM];
 
 	if(!::_tcscmp(m_szSectName, ROOT_SECTNAME)){
-		// ƒ‹[ƒg’¼‰º
+		// ãƒ«ãƒ¼ãƒˆç›´ä¸‹
 		::_tcscpy(szFindSection, lpszSection);
 		}
 	else{
-		// ƒTƒuƒZƒNƒVƒ‡ƒ“ˆÈ‰º
+		// ã‚µãƒ–ã‚»ã‚¯ã‚·ãƒ§ãƒ³ä»¥ä¸‹
 		::_stprintf(szFindSection, TEXT("%s\\%s"), m_szSectName, lpszSection);
 		}
 
-	// ƒZƒNƒVƒ‡ƒ“‚ğŒŸõ‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’æ¤œç´¢ã™ã‚‹
 	LPCTSTR lpszFindPos = szSections;
 
 	while(*lpszFindPos){
 		if(!::_tcscmp(lpszFindPos, szFindSection)){
-			// ƒZƒNƒVƒ‡ƒ“–¼ˆê’v
+			// ã‚»ã‚¯ã‚·ãƒ§ãƒ³åä¸€è‡´
 			return true;
 			}
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
 
@@ -372,17 +372,17 @@ const bool CIniCfgStorage::IsSubSectionPath(LPCTSTR lpszPath) const
 	if(!m_szFileName[0] || !lpszPath)::DebugBreak();
 
 	if(!::_tcscmp(m_szSectName, ROOT_SECTNAME)){
-		// ƒ‹[ƒg’¼‰º
+		// ãƒ«ãƒ¼ãƒˆç›´ä¸‹
 		if(!::_tcschr(lpszPath, TEXT('\\')))return true;
 		}
 	else{
-		// ƒTƒuƒZƒNƒVƒ‡ƒ“ˆÈ‰º
+		// ã‚µãƒ–ã‚»ã‚¯ã‚·ãƒ§ãƒ³ä»¥ä¸‹
 		const DWORD dwParentLen = ::_tcslen(m_szSectName) + 1UL;
 
 		if((DWORD)::_tcslen(lpszPath) > dwParentLen){
-			// eƒZƒNƒVƒ‡ƒ“–¼‚æ‚è’·‚¢
+			// è¦ªã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚ˆã‚Šé•·ã„
 			if(!::_tcsnicmp(lpszPath, m_szSectName, dwParentLen)){
-				// ŒŸõƒZƒNƒVƒ‡ƒ“–¼‚Ån‚Ü‚é					
+				// æ¤œç´¢ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã§å§‹ã¾ã‚‹					
 				if(!::_tcschr(&lpszPath[dwParentLen], TEXT('\\')))return true;
 				}
 			}
@@ -395,19 +395,19 @@ const bool CIniCfgStorage::IsItemExist(LPCTSTR lpszItem) const
 {
 	if(!m_szFileName[0] || !lpszItem)::DebugBreak();
 
-	// ƒAƒCƒeƒ€‚ğ—ñ‹“‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚’åˆ—æŒ™ã™ã‚‹
 	TCHAR szItems[MAX_VALNAME_LEN * MAX_VALNAME_NUM] = TEXT("\0");
 	const DWORD dwRet = ::GetPrivateProfileString(m_szSectName, NULL, NULL, szItems, sizeof(szItems) / sizeof(szItems[0]), m_szFileName);
 
 	if(!dwRet || ((dwRet + 2UL) == (sizeof(szItems) / sizeof(szItems[0]))))return false;
 
-	// ƒAƒCƒeƒ€‚ğŒŸõ‚·‚é
+	// ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ¤œç´¢ã™ã‚‹
 	LPCTSTR lpszFindPos = szItems;
 
 	while(*lpszFindPos){
 		if(!::_tcsicmp(lpszFindPos, lpszItem))return true;
 		
-		// ŒŸõˆÊ’uXV
+		// æ¤œç´¢ä½ç½®æ›´æ–°
 		lpszFindPos += (::_tcslen(lpszFindPos) + 1UL);
 		}
 

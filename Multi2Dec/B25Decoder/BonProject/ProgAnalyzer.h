@@ -1,4 +1,4 @@
-// ProgAnalyzer.h: ƒvƒƒOƒ‰ƒ€ƒAƒiƒ‰ƒCƒUƒfƒR[ƒ_
+ï»¿// ProgAnalyzer.h: ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -11,10 +11,10 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒvƒƒOƒ‰ƒ€ƒAƒiƒ‰ƒCƒUƒfƒR[ƒ_
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
-// Input	#0	: ITsPacket		TSƒpƒPƒbƒg
-// Output	#0	: ITsPacket		TSƒpƒPƒbƒg
+// Input	#0	: ITsPacket		TSãƒ‘ã‚±ãƒƒãƒˆ
+// Output	#0	: ITsPacket		TSãƒ‘ã‚±ãƒƒãƒˆ
 /////////////////////////////////////////////////////////////////////////////
 
 class CProgAnalyzer :	public CMediaDecoder,
@@ -79,24 +79,24 @@ protected:
 // CProgAnalyzer
 	struct PROGRAM_ITEM
 	{
-		bool bAvailable;			// —LŒøƒtƒ‰ƒO
-		WORD wProgramID;			// ƒvƒƒOƒ‰ƒ€ID
-		WORD wVideoPID;				// ‰f‘œ‚ÌPID
-		WORD wAudioPID;				// ‰¹º‚ÌPID
-		WORD wPcrPID;				// PCR‚ÌPID
-		TCHAR szServiceName[256];	// ƒT[ƒrƒX–¼
-		IEpgItem *pCurEpgItem;		// Œ»ÝEPGî•ñ
-		IEpgItem *pNextEpgItem;		// ŽŸEPGî•ñ
+		bool bAvailable;			// æœ‰åŠ¹ãƒ•ãƒ©ã‚°
+		WORD wProgramID;			// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ID
+		WORD wVideoPID;				// æ˜ åƒã®PID
+		WORD wAudioPID;				// éŸ³å£°ã®PID
+		WORD wPcrPID;				// PCRã®PID
+		TCHAR szServiceName[256];	// ã‚µãƒ¼ãƒ“ã‚¹å
+		IEpgItem *pCurEpgItem;		// ç¾åœ¨EPGæƒ…å ±
+		IEpgItem *pNextEpgItem;		// æ¬¡EPGæƒ…å ±
 	};
 
 	typedef std::vector<PROGRAM_ITEM> ProgramList;
 
 	struct PROGRAM_CONTEXT
 	{
-		WORD wNetworkID;			// ƒlƒbƒgƒ[ƒNID
+		WORD wNetworkID;			// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ID
 		WORD wTsID;					// TS ID
-		WORD wCurProgramID;			// Œ»ÝƒvƒƒOƒ‰ƒ€ID
-		TCHAR szNetworkName[256];	// ƒlƒbƒgƒ[ƒN–¼
+		WORD wCurProgramID;			// ç¾åœ¨ãƒ—ãƒ­ã‚°ãƒ©ãƒ ID
+		TCHAR szNetworkName[256];	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯å
 		ProgramList ProgList;
 	};
 

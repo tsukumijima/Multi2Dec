@@ -1,4 +1,4 @@
-// TsTable.h: TSƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+ï»¿// TsTable.h: TSãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x00] PATƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x00] PATãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CPatTable :	public CPsiTableBase,
@@ -45,8 +45,8 @@ protected:
 
 	struct TAG_PATITEM
 	{
-		WORD wProgramID;	// •ú‘—”Ô‘g”Ô†ID
-		WORD wPID;			// NIT or PMT‚ÌPID
+		WORD wProgramID;	// æ”¾é€ç•ªçµ„ç•ªå·ID
+		WORD wPID;			// NIT or PMTã®PID
 	};
 
 	WORD m_wTsID;			// TS ID
@@ -59,7 +59,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x01] CATƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x01] CATãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CCatTable :	public CPsiTableBase,
@@ -83,14 +83,14 @@ protected:
 // CPsiTableBase
 	virtual const bool OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection);
 
-	CDescBlock m_DescBlock;		// ‹Lqq—Ìˆæ
+	CDescBlock m_DescBlock;		// è¨˜è¿°å­é ˜åŸŸ
 
 	ICatTable::IHandler * const m_pHandler;
 };
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x02] PMTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x02] PMTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CPmtTable :	public CPsiTableBase,
@@ -122,14 +122,14 @@ protected:
 
 	struct TAG_PMTITEM
 	{
-		BYTE byStreamTypeID;		// ƒXƒgƒŠ[ƒ€Œ`®ID
-		WORD wEsPID;				// ƒGƒŒƒƒ“ƒ^ƒŠPID
-		CDescBlock *pDescBlock;		// ‹Lqq—Ìˆæ2
+		BYTE byStreamTypeID;		// ã‚¹ãƒˆãƒªãƒ¼ãƒ å½¢å¼ID
+		WORD wEsPID;				// ã‚¨ãƒ¬ãƒ¡ãƒ³ã‚¿ãƒªPID
+		CDescBlock *pDescBlock;		// è¨˜è¿°å­é ˜åŸŸ2
 	};
 
-	WORD m_wProgramID;				// •ú‘—”Ô‘g”Ô†ID
+	WORD m_wProgramID;				// æ”¾é€ç•ªçµ„ç•ªå·ID
 	WORD m_wPcrPID;					// PCR PID
-	CDescBlock m_DescBlock;			// ‹Lqq—Ìˆæ1
+	CDescBlock m_DescBlock;			// è¨˜è¿°å­é ˜åŸŸ1
 
 	std::vector<TAG_PMTITEM> m_EsInfoArray;
 
@@ -138,7 +138,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x40] NITƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x40] NITãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CNitTable :	public CPsiTableBase,
@@ -170,12 +170,12 @@ protected:
 	struct TAG_NITITEM
 	{
 		WORD wTsID;					// TS ID
-		WORD wOrgNetworkID;			// ƒIƒŠƒWƒiƒ‹ƒlƒbƒgƒ[ƒNID
-		CDescBlock *pDescBlock;		// TS‹Lqq—Ìˆæ
+		WORD wOrgNetworkID;			// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ID
+		CDescBlock *pDescBlock;		// TSè¨˜è¿°å­é ˜åŸŸ
 	};
 
-	WORD m_wNetworkID;				// ƒlƒbƒgƒ[ƒNID
-	CDescBlock m_NwDescBlock;		// ƒlƒbƒgƒ[ƒN‹Lqq—Ìˆæ
+	WORD m_wNetworkID;				// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ID
+	CDescBlock m_NwDescBlock;		// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯è¨˜è¿°å­é ˜åŸŸ
 
 	std::vector<TAG_NITITEM> m_TsInfoArray;
 
@@ -185,7 +185,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x42] SDTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x42] SDTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CSdtTable :	public CPsiTableBase,
@@ -220,16 +220,16 @@ protected:
 
 	struct TAG_SDTITEM
 	{
-		WORD wServiceID;				// ƒT[ƒrƒXID
-		bool bIsEitSchedule;			// EITƒXƒPƒWƒ…[ƒ‹ƒtƒ‰ƒO
-		bool IsEitPresentFollowing;		// EITŒ»İ/Ÿƒtƒ‰ƒO
-		BYTE byRunningStatus;			// isó‘Ô
-		bool bIsScrambling;				// ƒXƒNƒ‰ƒ“ƒuƒ‹ƒtƒ‰ƒO
-		CDescBlock *pDescBlock;			// ‹Lqq—Ìˆæ
+		WORD wServiceID;				// ã‚µãƒ¼ãƒ“ã‚¹ID
+		bool bIsEitSchedule;			// EITã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ•ãƒ©ã‚°
+		bool IsEitPresentFollowing;		// EITç¾åœ¨/æ¬¡ãƒ•ãƒ©ã‚°
+		BYTE byRunningStatus;			// é€²è¡ŒçŠ¶æ…‹
+		bool bIsScrambling;				// ã‚¹ã‚¯ãƒ©ãƒ³ãƒ–ãƒ«ãƒ•ãƒ©ã‚°
+		CDescBlock *pDescBlock;			// è¨˜è¿°å­é ˜åŸŸ
 	};
 
 	WORD m_wTsID;						// TS ID
-	WORD m_wOrgNetworkID;				// ƒIƒŠƒWƒiƒ‹ƒlƒbƒgƒ[ƒNID
+	WORD m_wOrgNetworkID;				// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ID
 
 	std::vector<TAG_SDTITEM> m_SdtItemArray;
 
@@ -238,7 +238,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x4E-0x6F] EITƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x4E-0x6F] EITãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CEitTable :	public CPsiTableBase,
@@ -276,7 +276,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// [0x73] TOTƒe[ƒuƒ‹Šî’êƒNƒ‰ƒX
+// [0x73] TOTãƒ†ãƒ¼ãƒ–ãƒ«åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CTotTable :	public CPsiTableBase,
@@ -301,8 +301,8 @@ protected:
 // CPsiTableBase
 	virtual const bool OnTableUpdate(const IPsiSection *pNewSection, const IPsiSection *pLastSection);
 
-	CTsTime m_DateTime;			// Œ»İ“ú•t/
-	CDescBlock m_DescBlock;		// ‹Lqq—Ìˆæ
+	CTsTime m_DateTime;			// ç¾åœ¨æ—¥ä»˜/æ™‚åˆ»
+	CDescBlock m_DescBlock;		// è¨˜è¿°å­é ˜åŸŸ
 
 	ITotTable::IHandler * const m_pHandler;
 };

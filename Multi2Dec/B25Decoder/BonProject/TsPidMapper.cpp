@@ -1,4 +1,4 @@
-// TsPidMapper.cpp: PIDƒ}ƒbƒpŠî’êƒNƒ‰ƒX
+ï»¿// TsPidMapper.cpp: PIDãƒãƒƒãƒ‘åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,7 +8,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ITsPidMapperŠî’êƒNƒ‰ƒX
+// ITsPidMapperåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CTsPidMapper::StorePacket(const ITsPacket *pTsPacket)
@@ -17,23 +17,23 @@ const bool CTsPidMapper::StorePacket(const ITsPacket *pTsPacket)
 
 	const WORD wPID = pTsPacket->GetPID();
 	
-	if(wPID >= 0x2000U)return false;				// PID”ÍˆÍŠO
-	if(!m_apMapTarget[wPID])return false;			// PIDƒ}ƒbƒvƒ^[ƒQƒbƒg‚È‚µ
+	if(wPID >= 0x2000U)return false;				// PIDç¯„å›²å¤–
+	if(!m_apMapTarget[wPID])return false;			// PIDãƒãƒƒãƒ—ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãªã—
 
-	// PIDƒ}ƒbƒvƒ^[ƒQƒbƒg‚ÉƒpƒPƒbƒg“ü—Í
+	// PIDãƒãƒƒãƒ—ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«ãƒ‘ã‚±ãƒƒãƒˆå…¥åŠ›
 	return m_apMapTarget[wPID]->StorePacket(pTsPacket);
 }
 
 void CTsPidMapper::ResetPid(const WORD wPID)
 {
 	if(wPID < 0x2000U){
-		// w’èƒ^[ƒQƒbƒg‚ğƒŠƒZƒbƒg
+		// æŒ‡å®šã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒªã‚»ãƒƒãƒˆ
 		if(m_apMapTarget[wPID]){
 			m_apMapTarget[wPID]->OnPidReset(this, wPID);
 			}
 		}
 	else{
-		// ‘Sƒ^[ƒQƒbƒg‚ğƒŠƒZƒbƒg
+		// å…¨ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒªã‚»ãƒƒãƒˆ
 		for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 			if(m_apMapTarget[wPID]){
 				m_apMapTarget[wPID]->OnPidReset(this, wPID);
@@ -46,14 +46,14 @@ const bool CTsPidMapper::MapPid(const WORD wPID, ITsPidMapTarget *pTsPidMapTarge
 {
 	if((wPID >= 0x2000U) || !pTsPidMapTarget)return false;
 
-	// Œ»İ‚Ìƒ^[ƒQƒbƒg‚ğƒAƒ“ƒ}ƒbƒv
+	// ç¾åœ¨ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã‚¢ãƒ³ãƒãƒƒãƒ—
 	UnmapPid(wPID);
 
-	// V‚µ‚¢ƒ^[ƒQƒbƒg‚ğƒ}ƒbƒv
+	// æ–°ã—ã„ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒãƒƒãƒ—
 	m_apMapTarget[wPID] = pTsPidMapTarget;
 	m_wMapTargetNum++;
 	
-	// ƒnƒ“ƒhƒ‰ŒÄ‚Ño‚µ
+	// ãƒãƒ³ãƒ‰ãƒ©å‘¼ã³å‡ºã—
 	pTsPidMapTarget->OnPidMapped(this, wPID);
 
 	return true;
@@ -65,12 +65,12 @@ const bool CTsPidMapper::UnmapPid(const WORD wPID)
 
 	if(!m_apMapTarget[wPID])return false;
 
-	// Œ»İ‚Ìƒ^[ƒQƒbƒg‚ğƒAƒ“ƒ}ƒbƒv
+	// ç¾åœ¨ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã‚¢ãƒ³ãƒãƒƒãƒ—
 	ITsPidMapTarget * const pOldTarget = m_apMapTarget[wPID];
 	m_apMapTarget[wPID] = NULL;
 	m_wMapTargetNum--;
 
-	// ƒnƒ“ƒhƒ‰ŒÄ‚Ño‚µ
+	// ãƒãƒ³ãƒ‰ãƒ©å‘¼ã³å‡ºã—
 	pOldTarget->OnPidUnmapped(this, wPID);
 
 	return true;
@@ -78,7 +78,7 @@ const bool CTsPidMapper::UnmapPid(const WORD wPID)
 
 void CTsPidMapper::ClearPid(void)
 {
-	// ‘Sƒ^[ƒQƒbƒg‚ğƒAƒ“ƒ}ƒbƒv
+	// å…¨ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ã‚¢ãƒ³ãƒãƒƒãƒ—
 	for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 		UnmapPid(wPID);
 		}
@@ -86,13 +86,13 @@ void CTsPidMapper::ClearPid(void)
 
 ITsPidMapTarget * CTsPidMapper::GetMapTarget(const WORD wPID) const
 {
-	// ƒ}ƒbƒv‚³‚ê‚Ä‚¢‚éƒ^[ƒQƒbƒg‚ğ•Ô‚·
+	// ãƒãƒƒãƒ—ã•ã‚Œã¦ã„ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¿”ã™
 	return (wPID <= 0x1FFFU)? m_apMapTarget[wPID] : NULL;
 }
 
 const WORD CTsPidMapper::GetMapNum(void) const
 {
-	// ƒ}ƒbƒvÏ‚İPID”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ—æ¸ˆã¿PIDæ•°ã‚’è¿”ã™
 	return m_wMapTargetNum;
 }
 
@@ -100,7 +100,7 @@ CTsPidMapper::CTsPidMapper(IBonObject *pOwner)
 	: CBonObject(pOwner)
 	, m_wMapTargetNum(0U)
 {
-	// PIDƒ}ƒbƒv‰Šú‰»
+	// PIDãƒãƒƒãƒ—åˆæœŸåŒ–
 	::ZeroMemory(m_apMapTarget, sizeof(m_apMapTarget));
 }
 

@@ -1,4 +1,4 @@
-// TsSection.cpp: PSIƒZƒNƒVƒ‡ƒ“Šî’êƒNƒ‰ƒX
+ï»¿// TsSection.cpp: PSIã‚»ã‚¯ã‚·ãƒ§ãƒ³åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,24 +8,24 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// PSIƒZƒNƒVƒ‡ƒ“Šî’êƒNƒ‰ƒX
+// PSIã‚»ã‚¯ã‚·ãƒ§ãƒ³åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CPsiSection::ParseHeader(const bool bIsExtended)
 {
 	const DWORD dwHeaderSize = (bIsExtended)? 8UL : 3UL;
 
-	// ƒwƒbƒ_ƒTƒCƒYƒ`ƒFƒbƒN
+	// ãƒ˜ãƒƒãƒ€ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
 	if(m_dwDataSize < dwHeaderSize)return false;
 
-	// •W€Œ`®ƒwƒbƒ_‰ğÍ
+	// æ¨™æº–å½¢å¼ãƒ˜ãƒƒãƒ€è§£æ
 	m_Header.byTableID					= m_pData[0];									// +0
 	m_Header.bSectionSyntaxIndicator	= (m_pData[1] & 0x80U)? true : false;			// +1 bit7
 	m_Header.bPrivateIndicator			= (m_pData[1] & 0x40U)? true : false;			// +1 bit6
 	m_Header.wSectionLength = ((WORD)(m_pData[1] & 0x0FU) << 8) | (WORD)m_pData[2];		// +1 bit5-0, +2
 
 	if(m_Header.bSectionSyntaxIndicator && bIsExtended){
-		// Šg’£Œ`®‚Ìƒwƒbƒ_‰ğÍ
+		// æ‹¡å¼µå½¢å¼ã®ãƒ˜ãƒƒãƒ€è§£æ
 		m_Header.wTableIdExtension		= (WORD)m_pData[3] << 8 | (WORD)m_pData[4];		// +3, +4
 		m_Header.byVersionNo			= (m_pData[5] & 0x3EU) >> 1;					// +5 bit5-1
 		m_Header.bCurrentNextIndicator	= (m_pData[5] & 0x01U)? true : false;			// +5 bit0
@@ -33,20 +33,20 @@ const bool CPsiSection::ParseHeader(const bool bIsExtended)
 		m_Header.byLastSectionNumber	= m_pData[7];									// +7
 		}
 
-	// ƒwƒbƒ_‚ÌƒtƒH[ƒ}ƒbƒg“K‡«‚ğƒ`ƒFƒbƒN‚·‚é
-	if((m_pData[1] & 0x30U) != 0x30U)return false;										// ŒÅ’èƒrƒbƒgˆÙí
-	else if(m_Header.wSectionLength > 4093U)return false;								// ƒZƒNƒVƒ‡ƒ“’·ˆÙí
+	// ãƒ˜ãƒƒãƒ€ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆé©åˆæ€§ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+	if((m_pData[1] & 0x30U) != 0x30U)return false;										// å›ºå®šãƒ“ãƒƒãƒˆç•°å¸¸
+	else if(m_Header.wSectionLength > 4093U)return false;								// ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ç•°å¸¸
 	else if(m_Header.bSectionSyntaxIndicator){
-		// Šg’£Œ`®‚ÌƒGƒ‰[ƒ`ƒFƒbƒN
-		if(!bIsExtended)return false;													// –Ú“I‚Ìƒwƒbƒ_‚Å‚Í‚È‚¢
-		else if((m_pData[5] & 0xC0U) != 0xC0U)return false;								// ŒÅ’èƒrƒbƒgˆÙí
-		else if(m_Header.bySectionNumber > m_Header.byLastSectionNumber)return false;	// ƒZƒNƒVƒ‡ƒ“”Ô†ˆÙí
-		else if(m_Header.wSectionLength < 9U)return false;								// ƒZƒNƒVƒ‡ƒ“’·ˆÙí
+		// æ‹¡å¼µå½¢å¼ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯
+		if(!bIsExtended)return false;													// ç›®çš„ã®ãƒ˜ãƒƒãƒ€ã§ã¯ãªã„
+		else if((m_pData[5] & 0xC0U) != 0xC0U)return false;								// å›ºå®šãƒ“ãƒƒãƒˆç•°å¸¸
+		else if(m_Header.bySectionNumber > m_Header.byLastSectionNumber)return false;	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ç•°å¸¸
+		else if(m_Header.wSectionLength < 9U)return false;								// ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ç•°å¸¸
 		}
 	else{
-		// •W€Œ`®‚ÌƒGƒ‰[ƒ`ƒFƒbƒN	
-		if(bIsExtended)return false;													// –Ú“I‚Ìƒwƒbƒ_‚Å‚Í‚È‚¢
-		else if(m_Header.wSectionLength < 4U)return false;								// ƒZƒNƒVƒ‡ƒ“’·ˆÙí
+		// æ¨™æº–å½¢å¼ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯	
+		if(bIsExtended)return false;													// ç›®çš„ã®ãƒ˜ãƒƒãƒ€ã§ã¯ãªã„
+		else if(m_Header.wSectionLength < 4U)return false;								// ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ç•°å¸¸
 		}
 
 	return true;
@@ -54,14 +54,14 @@ const bool CPsiSection::ParseHeader(const bool bIsExtended)
 
 void CPsiSection::Reset(void)
 {
-	// ƒf[ƒ^‚ğƒŠƒZƒbƒg‚·‚é
+	// ãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	ClearSize();	
 	::ZeroMemory(&m_Header, sizeof(m_Header));
 }
 
 BYTE * CPsiSection::GetPayloadData(void) const
 {
-	// ƒyƒCƒ[ƒhƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+	// ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
 	const DWORD dwHeaderSize = (m_Header.bSectionSyntaxIndicator)? 8UL : 3UL;
 
 	return (m_dwDataSize > dwHeaderSize)? &m_pData[dwHeaderSize] : NULL;
@@ -69,79 +69,79 @@ BYTE * CPsiSection::GetPayloadData(void) const
 
 const WORD CPsiSection::GetPayloadSize(void) const
 {
-	// ÀÛ‚É•Û‚µ‚Ä‚¢‚éƒyƒCƒ[ƒhƒTƒCƒY‚ğ•Ô‚·(¦ƒwƒbƒ_‚ÌƒZƒNƒVƒ‡ƒ“’·‚Å‚Í‚È‚¢)
+	// å®Ÿéš›ã«ä¿æŒã—ã¦ã„ã‚‹ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ã‚µã‚¤ã‚ºã‚’è¿”ã™(â€»ãƒ˜ãƒƒãƒ€ã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ã§ã¯ãªã„)
 	const DWORD dwHeaderSize = (m_Header.bSectionSyntaxIndicator)? 8UL : 3UL;
 
 	if(m_dwDataSize <= dwHeaderSize){
 		return 0U;
 		}
 	else if(m_Header.bSectionSyntaxIndicator){
-		// Šg’£ƒZƒNƒVƒ‡ƒ“
+		// æ‹¡å¼µã‚»ã‚¯ã‚·ãƒ§ãƒ³
 		return (m_dwDataSize >= (m_Header.wSectionLength + 3UL))? (m_Header.wSectionLength - 9U) : (WORD)(m_dwDataSize - dwHeaderSize);
 		}
 	else{
-		// •W€ƒZƒNƒVƒ‡ƒ“
+		// æ¨™æº–ã‚»ã‚¯ã‚·ãƒ§ãƒ³
 		return (m_dwDataSize >= (m_Header.wSectionLength + 3UL))? m_Header.wSectionLength : (WORD)(m_dwDataSize - dwHeaderSize);
 		}
 }
 
 const BYTE CPsiSection::GetTableID(void) const
 {
-	// ƒe[ƒuƒ‹ID‚ğ•Ô‚·
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’è¿”ã™
 	return m_Header.byTableID;
 }
 
 const bool CPsiSection::IsExtendedSection(void) const
 {
-	// ƒZƒNƒVƒ‡ƒ“ƒVƒ“ƒ^ƒbƒNƒXƒCƒ“ƒWƒP[ƒ^‚ğ•Ô‚·
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚·ãƒ³ã‚¿ãƒƒã‚¯ã‚¹ã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿ã‚’è¿”ã™
 	return m_Header.bSectionSyntaxIndicator;
 }
 
 const bool CPsiSection::IsPrivate(void) const
 {
-	// ƒvƒ‰ƒCƒx[ƒgƒCƒ“ƒWƒP[ƒ^‚ğ•Ô‚·
+	// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿ã‚’è¿”ã™
 	return m_Header.bPrivateIndicator;
 }
 
 const WORD CPsiSection::GetSectionLength(void) const
 {
-	// ƒZƒNƒVƒ‡ƒ“’·‚ğ•Ô‚·
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³é•·ã‚’è¿”ã™
 	return m_Header.wSectionLength;
 }
 
 const WORD CPsiSection::GetTableIdExtension(void) const
 {
-	// ƒe[ƒuƒ‹IDŠg’£‚ğ•Ô‚·
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDæ‹¡å¼µã‚’è¿”ã™
 	return m_Header.wTableIdExtension;
 }
 
 const BYTE CPsiSection::GetVersionNo(void) const
 {
-	// ƒo[ƒWƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	return m_Header.byVersionNo;
 }
 
 const bool CPsiSection::IsCurrentNext(void) const
 {
-	// ƒJƒŒƒ“ƒgƒlƒNƒXƒgƒCƒ“ƒWƒP[ƒ^‚ğ•Ô‚·
+	// ã‚«ãƒ¬ãƒ³ãƒˆãƒã‚¯ã‚¹ãƒˆã‚¤ãƒ³ã‚¸ã‚±ãƒ¼ã‚¿ã‚’è¿”ã™
 	return m_Header.bCurrentNextIndicator;
 }
 
 const BYTE CPsiSection::GetSectionNumber(void) const
 {
-	// ƒZƒNƒVƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	return m_Header.bySectionNumber;
 }
 
 const BYTE CPsiSection::GetLastSectionNumber(void) const
 {
-	// ƒ‰ƒXƒgƒZƒNƒVƒ‡ƒ“”Ô†‚ğ•Ô‚·
+	// ãƒ©ã‚¹ãƒˆã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”ã™
 	return m_Header.byLastSectionNumber;
 }
 
 const DWORD CPsiSection::GetSectionCrc(void) const
 {
-	// CRC‚ğ•Ô‚·
+	// CRCã‚’è¿”ã™
 	if(!m_Header.bSectionSyntaxIndicator)return 0UL;
 	else if(m_dwDataSize <= 12UL)return 0U;
 	else if(m_dwDataSize < (m_Header.wSectionLength + 3UL))return 0U;
@@ -153,14 +153,14 @@ const DWORD CPsiSection::GetSectionCrc(void) const
 
 const bool CPsiSection::CopySection(const IPsiSection *pSrc)
 {
-	// IMediaDataƒCƒ“ƒ^ƒtƒF[ƒX‚ğæ“¾
+	// IMediaDataã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å–å¾—
 	const IMediaData * const pMediaData = dynamic_cast<const IMediaData *>(pSrc);
 	if(!pMediaData)return false;
 
-	// ƒZƒNƒVƒ‡ƒ“ƒf[ƒ^ƒRƒs[
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼
 	if(CMediaData::CopyData(pMediaData) != GetSize())return false;
 	
-	// ƒwƒbƒ_ƒRƒs[
+	// ãƒ˜ãƒƒãƒ€ã‚³ãƒ”ãƒ¼
 	m_Header.byTableID					= pSrc->GetTableID();
 	m_Header.bSectionSyntaxIndicator	= pSrc->IsExtendedSection();
 	m_Header.bPrivateIndicator			= pSrc->IsPrivate();
@@ -180,25 +180,25 @@ const DWORD CPsiSection::CompareSection(const IPsiSection *pSrc) const
 
 	DWORD dwReturn = CR_IDENTICAL;
 
-	// ƒe[ƒuƒ‹ID‚ğƒ`ƒFƒbƒN
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDã‚’ãƒã‚§ãƒƒã‚¯
 	if(GetTableID() != pSrc->GetTableID())dwReturn |= CR_TABLE_ID;
 
-	// ƒe[ƒuƒ‹IDŠg’£‚ğƒ`ƒFƒbƒN
+	// ãƒ†ãƒ¼ãƒ–ãƒ«IDæ‹¡å¼µã‚’ãƒã‚§ãƒƒã‚¯
 	if(GetTableIdExtension() != pSrc->GetTableIdExtension())dwReturn |= CR_EXTENSION;
 
-	// ƒZƒNƒVƒ‡ƒ“”Ô†
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·
 	if(GetSectionNumber() != pSrc->GetSectionNumber())dwReturn |= CR_EXTENSION;
 
-	// ƒ‰ƒXƒgƒZƒNƒVƒ‡ƒ“”Ô†
+	// ãƒ©ã‚¹ãƒˆã‚»ã‚¯ã‚·ãƒ§ãƒ³ç•ªå·
 	if(GetLastSectionNumber() != pSrc->GetLastSectionNumber())dwReturn |= CR_EXTENSION;
 
-	// ƒZƒNƒVƒ‡ƒ“‚Ì“à—e‚ğ”äŠr‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®å†…å®¹ã‚’æ¯”è¼ƒã™ã‚‹
 	if(GetPayloadSize() != pSrc->GetPayloadSize())dwReturn |= CR_PAYLOAD;
 
 	const BYTE *pSrcData = GetPayloadData();
 	const BYTE *pDstData = pSrc->GetPayloadData();
 	
-	// ƒyƒCƒ[ƒhƒoƒCƒiƒŠ”äŠr
+	// ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ãƒã‚¤ãƒŠãƒªæ¯”è¼ƒ
 	for(DWORD dwPos = 0 ; dwPos < GetPayloadSize() ; dwPos++){
 		if(pSrcData[dwPos] != pDstData[dwPos]){
 			dwReturn |= CR_PAYLOAD;
@@ -206,25 +206,25 @@ const DWORD CPsiSection::CompareSection(const IPsiSection *pSrc) const
 			}
 		}
 		
-	// CRC”äŠr
+	// CRCæ¯”è¼ƒ
 	if(GetSectionCrc() != pSrc->GetSectionCrc())dwReturn |= CR_OTHER_ALL;
 	
 	
-	// ˆê’v‚·‚é
+	// ä¸€è‡´ã™ã‚‹
 	return dwReturn;
 }
 
 const DWORD CPsiSection::CopyData(const IMediaData *pSrc)
 {
-	// IPsiSectionƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+	// IPsiSectionã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 	const IPsiSection * const pPsiSection = dynamic_cast<const IPsiSection *>(pSrc);
 
 	if(pPsiSection){
-		// ITsPacket‚Æ‚µ‚ÄƒRƒs[
+		// ITsPacketã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return (CopySection(pPsiSection))? GetSize() : 0UL;
 		}
 	else{
-		// IMediaData‚Æ‚µ‚ÄƒRƒs[
+		// IMediaDataã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return CMediaData::CopyData(pSrc);
 		}
 }
@@ -232,7 +232,7 @@ const DWORD CPsiSection::CopyData(const IMediaData *pSrc)
 CPsiSection::CPsiSection(IBonObject *pOwner)
 	: CMediaData(pOwner)
 {
-	// ƒf[ƒ^‰Šú‰»
+	// ãƒ‡ãƒ¼ã‚¿åˆæœŸåŒ–
 	Reset();
 }
 
@@ -243,12 +243,12 @@ CPsiSection::~CPsiSection(void)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IPsiSectionParserŠî’êƒNƒ‰ƒX
+// IPsiSectionParseråŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 void CPsiSectionParser::SetExtSection(const bool bExtSection)
 {
-	// •W€ƒZƒNƒVƒ‡ƒ“‚ÆŠg’£ƒZƒNƒVƒ‡ƒ“‚ğİ’è‚·‚é
+	// æ¨™æº–ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã¨æ‹¡å¼µã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’è¨­å®šã™ã‚‹
 	if(m_bTargetExt != bExtSection){
 		m_bTargetExt = bExtSection;
 		Reset();
@@ -265,16 +265,16 @@ const bool CPsiSectionParser::StorePacket(const ITsPacket *pTsPacket)
 	const BYTE byUnitStartPos = (pTsPacket->m_Header.bPayloadUnitStartIndicator)? (pData[0] + 1U) : 0U;
 
 	if(byUnitStartPos){
-		// [ƒwƒbƒ_’f•Ğ | ƒyƒCƒ[ƒh’f•Ğ] + [ƒXƒ^ƒbƒtƒBƒ“ƒOƒoƒCƒg] + ƒwƒbƒ_æ“ª + [ƒwƒbƒ_’f•Ğ] + [ƒyƒCƒ[ƒh’f•Ğ] + [ƒXƒ^ƒbƒtƒBƒ“ƒOƒoƒCƒg]
+		// [ãƒ˜ãƒƒãƒ€æ–­ç‰‡ | ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰æ–­ç‰‡] + [ã‚¹ã‚¿ãƒƒãƒ•ã‚£ãƒ³ã‚°ãƒã‚¤ãƒˆ] + ãƒ˜ãƒƒãƒ€å…ˆé ­ + [ãƒ˜ãƒƒãƒ€æ–­ç‰‡] + [ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰æ–­ç‰‡] + [ã‚¹ã‚¿ãƒƒãƒ•ã‚£ãƒ³ã‚°ãƒã‚¤ãƒˆ]
 		BYTE byPos = 1U;
 		
 		if(byUnitStartPos > 1U){
-			// ƒ†ƒjƒbƒgŠJnˆÊ’u‚ªæ“ª‚Å‚Í‚È‚¢ê‡(’f•Ğ‚ª‚ ‚éê‡)
+			// ãƒ¦ãƒ‹ãƒƒãƒˆé–‹å§‹ä½ç½®ãŒå…ˆé ­ã§ã¯ãªã„å ´åˆ(æ–­ç‰‡ãŒã‚ã‚‹å ´åˆ)
 			byPos += StoreHeader(&pData[byPos], bySize - byPos);
 			byPos += StorePayload(&pData[byPos], bySize - byPos);
 			}
 		
-		// ƒ†ƒjƒbƒgŠJnˆÊ’u‚©‚çV‹KƒZƒNƒVƒ‡ƒ“‚ÌƒXƒgƒA‚ğŠJn‚·‚é
+		// ãƒ¦ãƒ‹ãƒƒãƒˆé–‹å§‹ä½ç½®ã‹ã‚‰æ–°è¦ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒˆã‚¢ã‚’é–‹å§‹ã™ã‚‹
 		m_bIsStoring = false;
 		m_PsiSection.ClearSize();
 
@@ -283,7 +283,7 @@ const bool CPsiSectionParser::StorePacket(const ITsPacket *pTsPacket)
 		byPos += StorePayload(&pData[byPos], bySize - byPos);
 		}
 	else{
-		// [ƒwƒbƒ_’f•Ğ] + ƒyƒCƒ[ƒh + [ƒXƒ^ƒbƒtƒBƒ“ƒOƒoƒCƒg]
+		// [ãƒ˜ãƒƒãƒ€æ–­ç‰‡] + ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ + [ã‚¹ã‚¿ãƒƒãƒ•ã‚£ãƒ³ã‚°ãƒã‚¤ãƒˆ]
 		BYTE byPos = 0U;
 		byPos += StoreHeader(&pData[byPos], bySize - byPos);
 		byPos += StorePayload(&pData[byPos], bySize - byPos);
@@ -294,7 +294,7 @@ const bool CPsiSectionParser::StorePacket(const ITsPacket *pTsPacket)
 
 void CPsiSectionParser::Reset(void)
 {
-	// ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	m_bIsStoring = false;
 	m_wStoreSize = 0U;
 	m_dwCrcErrorNum = 0UL;
@@ -303,7 +303,7 @@ void CPsiSectionParser::Reset(void)
 
 const DWORD CPsiSectionParser::GetCrcErrorNum(void) const
 {
-	// CRCƒGƒ‰[”‚ğ•Ô‚·
+	// CRCã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™
 	return m_dwCrcErrorNum;
 }
 
@@ -324,30 +324,30 @@ CPsiSectionParser::~CPsiSectionParser(void)
 
 const BYTE CPsiSectionParser::StoreHeader(const BYTE *pPayload, const BYTE byRemain)
 {
-	// ƒwƒbƒ_‚ğ‰ğÍ‚µ‚ÄƒZƒNƒVƒ‡ƒ“‚ÌƒXƒgƒA‚ğŠJn‚·‚é
+	// ãƒ˜ãƒƒãƒ€ã‚’è§£æã—ã¦ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒˆã‚¢ã‚’é–‹å§‹ã™ã‚‹
 	if(m_bIsStoring)return 0U;
 
 	const BYTE byHeaderSize = (m_bTargetExt)? 8U : 3U;
 	const BYTE byHeaderRemain = byHeaderSize - (BYTE)m_PsiSection.GetSize();
 
 	if(byRemain >= byHeaderRemain){
-		// ƒwƒbƒ_ƒXƒgƒAŠ®—¹Aƒwƒbƒ_‚ğ‰ğÍ‚µ‚ÄƒyƒCƒ[ƒh‚ÌƒXƒgƒA‚ğŠJn‚·‚é
+		// ãƒ˜ãƒƒãƒ€ã‚¹ãƒˆã‚¢å®Œäº†ã€ãƒ˜ãƒƒãƒ€ã‚’è§£æã—ã¦ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ã®ã‚¹ãƒˆã‚¢ã‚’é–‹å§‹ã™ã‚‹
 		m_PsiSection.AddData(pPayload, byHeaderRemain);
 		if(m_PsiSection.ParseHeader(m_bTargetExt)){
-			// ƒwƒbƒ_ƒtƒH[ƒ}ƒbƒgOKAƒwƒbƒ_‚Ì‚İ‚ÌCRC‚ğŒvZ‚·‚é
+			// ãƒ˜ãƒƒãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆOKã€ãƒ˜ãƒƒãƒ€ã®ã¿ã®CRCã‚’è¨ˆç®—ã™ã‚‹
 			m_wStoreSize = m_PsiSection.GetSectionLength() + 3U;
 			m_dwStoreCrc = CalcCrc(pPayload, byHeaderSize);
 			m_bIsStoring = true;
 			return byHeaderRemain;
 			}
 		else{
-			// ƒwƒbƒ_ƒGƒ‰[
+			// ãƒ˜ãƒƒãƒ€ã‚¨ãƒ©ãƒ¼
 			m_PsiSection.Reset();
 			return byRemain;
 			}
 		}
 	else{
-		// ƒwƒbƒ_ƒXƒgƒA–¢Š®—¹AŸ‚Ìƒf[ƒ^‚ğ‘Ò‚Â
+		// ãƒ˜ãƒƒãƒ€ã‚¹ãƒˆã‚¢æœªå®Œäº†ã€æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’å¾…ã¤
 		m_PsiSection.AddData(pPayload, byRemain);
 		return byRemain;
 		}
@@ -355,32 +355,32 @@ const BYTE CPsiSectionParser::StoreHeader(const BYTE *pPayload, const BYTE byRem
 
 const BYTE CPsiSectionParser::StorePayload(const BYTE *pPayload, const BYTE byRemain)
 {
-	// ƒZƒNƒVƒ‡ƒ“‚ÌƒXƒgƒA‚ğŠ®—¹‚·‚é
+	// ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒˆã‚¢ã‚’å®Œäº†ã™ã‚‹
 	if(!m_bIsStoring)return 0U;
 	
 	const WORD wStoreRemain = m_wStoreSize - (WORD)m_PsiSection.GetSize();
 
 	if(wStoreRemain <= (WORD)byRemain){
-		// ƒXƒgƒAŠ®—¹
+		// ã‚¹ãƒˆã‚¢å®Œäº†
 		m_PsiSection.AddData(pPayload, wStoreRemain);
 				
 		if(!CalcCrc(pPayload, wStoreRemain, m_dwStoreCrc)){
-			// CRC³íAƒnƒ“ƒhƒ‰‚ÉƒZƒNƒVƒ‡ƒ“‚ğ“n‚·
+			// CRCæ­£å¸¸ã€ãƒãƒ³ãƒ‰ãƒ©ã«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚’æ¸¡ã™
 			if(m_pHandler)m_pHandler->OnPsiSection(this, &m_PsiSection);
 			}
 		else{
-			// CRCˆÙí
+			// CRCç•°å¸¸
 			if(m_dwCrcErrorNum < 0xFFFFFFFFUL)m_dwCrcErrorNum++;
 			}
 		
-		// ó‘Ô‚ğ‰Šú‰»‚µAŸ‚ÌƒZƒNƒVƒ‡ƒ“óM‚É”õ‚¦‚é
+		// çŠ¶æ…‹ã‚’åˆæœŸåŒ–ã—ã€æ¬¡ã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³å—ä¿¡ã«å‚™ãˆã‚‹
 		m_PsiSection.Reset();
 		m_bIsStoring = false;
 
 		return (BYTE)wStoreRemain;
 		}
 	else{
-		// ƒXƒgƒA–¢Š®—¹AŸ‚ÌƒyƒCƒ[ƒh‚ğ‘Ò‚Â
+		// ã‚¹ãƒˆã‚¢æœªå®Œäº†ã€æ¬¡ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ã‚’å¾…ã¤
 		m_PsiSection.AddData(pPayload, byRemain);
 		m_dwStoreCrc = CalcCrc(pPayload, byRemain, m_dwStoreCrc);
 		return byRemain;
@@ -389,7 +389,7 @@ const BYTE CPsiSectionParser::StorePayload(const BYTE *pPayload, const BYTE byRe
 
 const DWORD CPsiSectionParser::CalcCrc(const BYTE *pData, const WORD wDataSize, DWORD dwCurCrc)
 {
-	// CRC32ŒvZ
+	// CRC32è¨ˆç®—
 	static const DWORD CrcTable[256] = {
 		0x00000000UL, 0x04C11DB7UL, 0x09823B6EUL, 0x0D4326D9UL,	0x130476DCUL, 0x17C56B6BUL, 0x1A864DB2UL, 0x1E475005UL,	0x2608EDB8UL, 0x22C9F00FUL, 0x2F8AD6D6UL, 0x2B4BCB61UL,	0x350C9B64UL, 0x31CD86D3UL, 0x3C8EA00AUL, 0x384FBDBDUL,
 		0x4C11DB70UL, 0x48D0C6C7UL, 0x4593E01EUL, 0x4152FDA9UL,	0x5F15ADACUL, 0x5BD4B01BUL, 0x569796C2UL, 0x52568B75UL,	0x6A1936C8UL, 0x6ED82B7FUL, 0x639B0DA6UL, 0x675A1011UL,	0x791D4014UL, 0x7DDC5DA3UL, 0x709F7B7AUL, 0x745E66CDUL,

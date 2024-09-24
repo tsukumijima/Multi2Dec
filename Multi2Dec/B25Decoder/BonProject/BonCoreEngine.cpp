@@ -1,4 +1,4 @@
-// BonCoreEngine.cpp: BonƒRƒAƒGƒ“ƒWƒ“ƒNƒ‰ƒX
+ï»¿// BonCoreEngine.cpp: Bonã‚³ã‚¢ã‚¨ãƒ³ã‚¸ãƒ³ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,12 +9,12 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CBonCoreEngineƒNƒ‰ƒX
+// CBonCoreEngineã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const BONGUID CBonCoreEngine::BonNameToGuid(LPCTSTR lpszName)
 {
-	// ƒ‚ƒWƒ…[ƒ‹/ƒNƒ‰ƒX–¼‚ğBONGUID‚É•ÏŠ·‚·‚é
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«/ã‚¯ãƒ©ã‚¹åã‚’BONGUIDã«å¤‰æ›ã™ã‚‹
 	if(!lpszName)return BCID_NULL;
 	
 	const DWORD dwNameLen = ::_tcslen(lpszName);
@@ -28,7 +28,7 @@ IBonObject * CBonCoreEngine::BonCreateInstance(LPCTSTR lpszClassName, IBonObject
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// —v‹‚³‚ê‚½ƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
+	// è¦æ±‚ã•ã‚ŒãŸã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
 	const BonClassMap::iterator itClass = m_ClassMap.find(BonNameToGuid(lpszClassName));
 	
 	return (itClass != m_ClassMap.end())? (itClass->second.pfnClassFactory)(pOwner) : NULL;
@@ -38,60 +38,60 @@ const bool CBonCoreEngine::RegisterBonModule(LPCTSTR lpszModulePath)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ŒŸõƒtƒ@ƒCƒ‹ƒpƒX‚ğ\’z‚·‚é
+	// æ¤œç´¢ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ§‹ç¯‰ã™ã‚‹
 	TCHAR szPath[_MAX_PATH]	  = TEXT("");
 	TCHAR szDrive[_MAX_DRIVE] = TEXT("");
 	TCHAR szDir[_MAX_DIR]     = TEXT("");
 
 	if(lpszModulePath){
-		// ƒpƒXw’è
+		// ãƒ‘ã‚¹æŒ‡å®š
 		::_tcscpy(szPath, lpszModulePath);
 		}
 	else{
-		// ƒfƒtƒHƒ‹ƒgƒpƒX(ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒtƒHƒ‹ƒ_)
+		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ã‚¹(ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ã‚©ãƒ«ãƒ€)
 		::GetModuleFileName(NULL, szPath, _MAX_PATH);
 		}
 
 	::_tsplitpath(szPath, szDrive, szDir, NULL, NULL);
 	::_tmakepath(szPath, szDrive, szDir, TEXT("bon_*"), TEXT("dll"));
 
-	// ƒtƒ@ƒCƒ‹‚ğŒŸõ‚µ‚ÄƒI[ƒvƒ“‚·‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ¤œç´¢ã—ã¦ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
 	WIN32_FIND_DATA FindData;
 	HANDLE hFileFind = ::FindFirstFile(szPath, &FindData);
 	if(hFileFind == INVALID_HANDLE_VALUE)return false;
 
 	do{
-		// ƒtƒ@ƒCƒ‹–¼‚Ì’·‚³‚ğƒ`ƒFƒbƒN
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã®é•·ã•ã‚’ãƒã‚§ãƒƒã‚¯
 		if(::_tcslen(FindData.cFileName) < 9)continue;
 	
-		// ƒ‚ƒWƒ…[ƒ‹–¼İ’è(ubon_vƒTƒtƒBƒbƒNƒX‚ğœ‹‚µ‚½‚à‚Ì)
+		// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åè¨­å®š(ã€Œbon_ã€ã‚µãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚’é™¤å»ã—ãŸã‚‚ã®)
 		::_tsplitpath(&FindData.cFileName[4], NULL, NULL, szPath, NULL);
 		m_CurModuleInfo.strModuleName = szPath;
 
-		// Šù‘¶‚Ìƒ‚ƒWƒ…[ƒ‹‚ğƒ`ƒFƒbƒN
+		// æ—¢å­˜ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯
 		if(QueryBonModule(m_CurModuleInfo.strModuleName.c_str()))continue;
 
-		// ƒI[ƒvƒ“‘O‚Ìƒtƒ@ƒNƒgƒŠ[”‚ğ‘Ş”ğ
+		// ã‚ªãƒ¼ãƒ—ãƒ³å‰ã®ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼æ•°ã‚’é€€é¿
 		const DWORD dwLastClassNum = m_ClassMap.size();
 		m_CurModuleInfo.ClassList.clear();
 
-		// DLL‚ğŠJ‚­
+		// DLLã‚’é–‹ã
 		::_tmakepath(szPath, szDrive, szDir, FindData.cFileName, NULL);	
 		if(!(m_CurModuleInfo.hModule = ::LoadLibrary(szPath)))continue;
 		
-		// “o˜^‚³‚ê‚½ƒtƒ@ƒNƒgƒŠ[”‚ğŠm”F
+		// ç™»éŒ²ã•ã‚ŒãŸãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼æ•°ã‚’ç¢ºèª
 		if(m_ClassMap.size() == dwLastClassNum){
-			// 1‚Â‚à“o˜^‚³‚ê‚È‚©‚Á‚½‚Ì‚ÅŠJ•ú‚·‚é
+			// 1ã¤ã‚‚ç™»éŒ²ã•ã‚Œãªã‹ã£ãŸã®ã§é–‹æ”¾ã™ã‚‹
 			::FreeLibrary(m_CurModuleInfo.hModule);
 			continue;
 			}
 	
-		// ƒ}ƒbƒv‚É’Ç‰Á
+		// ãƒãƒƒãƒ—ã«è¿½åŠ 
 		m_ModuleMap[BonNameToGuid(m_CurModuleInfo.strModuleName.c_str())] = m_CurModuleInfo;
 		}
 	while(::FindNextFile(hFileFind, &FindData));
 
-	// ŒŸõI—¹
+	// æ¤œç´¢çµ‚äº†
 	::FindClose(hFileFind);
 	m_CurModuleInfo.hModule = NULL;
 
@@ -102,7 +102,7 @@ const bool CBonCoreEngine::QueryBonModule(LPCTSTR lpszModuleName)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// GUID‚ğƒL[‚Éƒ‚ƒWƒ…[ƒ‹‚Ì—L–³‚ğŒŸõ‚·‚é
+	// GUIDã‚’ã‚­ãƒ¼ã«ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®æœ‰ç„¡ã‚’æ¤œç´¢ã™ã‚‹
 	return (m_ModuleMap.find(BonNameToGuid(lpszModuleName)) != m_ModuleMap.end())? true : false;
 }
 
@@ -110,7 +110,7 @@ const DWORD CBonCoreEngine::GetBonModuleNum(void)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ƒ‚ƒWƒ…[ƒ‹”‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«æ•°ã‚’è¿”ã™
 	return m_ModuleMap.size();
 }
 
@@ -120,11 +120,11 @@ const BONGUID CBonCoreEngine::EnumBonModule(const DWORD dwIndex)
 
 	if(dwIndex >= m_ModuleMap.size())return BMID_NULL;
 
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚Ì—v‘f‚ğæ“¾
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®è¦ç´ ã‚’å–å¾—
 	BonModuleMap::iterator itModule = m_ModuleMap.begin();
 	for(DWORD dwPos = 0UL ; dwPos < dwIndex ; dwPos++)itModule++;
 	
-	// ƒ‚ƒWƒ…[ƒ‹‚ÌGUID‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®GUIDã‚’è¿”ã™
 	return itModule->first;
 }
 
@@ -132,14 +132,14 @@ const DWORD CBonCoreEngine::GetBonModuleName(const BONGUID ModuleId, LPTSTR lpsz
 {
 	CBlockLock AutoLock(&m_Lock);
 	
-	// ƒ‚ƒWƒ…[ƒ‹‚ğŒŸõ
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’æ¤œç´¢
 	const BonModuleMap::iterator itModule = m_ModuleMap.find(ModuleId);
 	if(itModule == m_ModuleMap.end())return 0UL;
 	
-	// ƒ‚ƒWƒ…[ƒ‹–¼‚ğŠi”[
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åã‚’æ ¼ç´
 	if(lpszModuleName)::_tcscpy(lpszModuleName, itModule->second.strModuleName.c_str());
 	
-	// ƒ‚ƒWƒ…[ƒ‹–¼’·‚ğ•Ô‚·
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åé•·ã‚’è¿”ã™
 	return itModule->second.strModuleName.length();
 }
 
@@ -147,11 +147,11 @@ const BONGUID CBonCoreEngine::EnumBonModuleClass(const BONGUID ModuleId, const D
 {
 	CBlockLock AutoLock(&m_Lock);
 	
-	// ƒ‚ƒWƒ…[ƒ‹‚ğŒŸõ
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’æ¤œç´¢
 	const BonModuleMap::iterator itModule = m_ModuleMap.find(ModuleId);
 	if(itModule == m_ModuleMap.end())return BCID_NULL;
 	
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚ÌƒNƒ‰ƒX‚ÌGUID‚ğ•Ô‚·
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®ã‚¯ãƒ©ã‚¹ã®GUIDã‚’è¿”ã™
 	return (dwIndex < itModule->second.ClassList.size())? itModule->second.ClassList[dwIndex] : BCID_NULL;
 }
 
@@ -159,17 +159,17 @@ const bool CBonCoreEngine::RegisterBonClass(LPCTSTR lpszClassName, const CLASSFA
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// GUIDŒvZ
+	// GUIDè¨ˆç®—
 	const BONGUID ClassId = BonNameToGuid(lpszClassName);
 	if(!pfnClassFactory || (ClassId == BCID_NULL) || !m_CurModuleInfo.hModule)return false;
 
-	// Šù‘¶‚ÌƒNƒ‰ƒX‚ğŒŸõ
+	// æ—¢å­˜ã®ã‚¯ãƒ©ã‚¹ã‚’æ¤œç´¢
 	if(QueryBonClass(lpszClassName)){
-		// Šù‘¶‚ÌƒNƒ‰ƒX‚Æƒvƒ‰ƒCƒIƒŠƒeƒB‚ğ”äŠr
+		// æ—¢å­˜ã®ã‚¯ãƒ©ã‚¹ã¨ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’æ¯”è¼ƒ
 		if(dwPriority <= m_ClassMap[ClassId].dwPriority)return false;
 		}
 
-	// ƒ}ƒbƒv‚É’Ç‰Á
+	// ãƒãƒƒãƒ—ã«è¿½åŠ 
 	BON_CLASS_INFO ClassInfo;
 	ClassInfo.strClassName = lpszClassName;
 	ClassInfo.pfnClassFactory = pfnClassFactory;
@@ -186,7 +186,7 @@ const bool CBonCoreEngine::QueryBonClass(LPCTSTR lpszClassName)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// GUID‚ğƒL[‚ÉƒNƒ‰ƒX‚Ì—L–³‚ğŒŸõ‚·‚é
+	// GUIDã‚’ã‚­ãƒ¼ã«ã‚¯ãƒ©ã‚¹ã®æœ‰ç„¡ã‚’æ¤œç´¢ã™ã‚‹
 	return (m_ClassMap.find(BonNameToGuid(lpszClassName)) != m_ClassMap.end())? true : false;
 }
 
@@ -194,7 +194,7 @@ const DWORD CBonCoreEngine::GetBonClassNum(void)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ƒNƒ‰ƒX”‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹æ•°ã‚’è¿”ã™
 	return m_ClassMap.size();
 }
 
@@ -204,11 +204,11 @@ const BONGUID CBonCoreEngine::EnumBonClass(const DWORD dwIndex)
 
 	if(dwIndex >= m_ClassMap.size())return BCID_NULL;
 
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚Ì—v‘f‚ğæ“¾
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®è¦ç´ ã‚’å–å¾—
 	BonClassMap::iterator itClass = m_ClassMap.begin();
 	for(DWORD dwPos = 0UL ; dwPos < dwIndex ; dwPos++)itClass++;
 	
-	// ƒNƒ‰ƒX‚ÌGUID‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹ã®GUIDã‚’è¿”ã™
 	return itClass->first;
 }
 
@@ -216,14 +216,14 @@ const DWORD CBonCoreEngine::GetBonClassName(const BONGUID ClassId, LPTSTR lpszCl
 {
 	CBlockLock AutoLock(&m_Lock);
 	
-	// ƒNƒ‰ƒX‚ğŒŸõ
+	// ã‚¯ãƒ©ã‚¹ã‚’æ¤œç´¢
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return 0UL;
 	
-	// ƒNƒ‰ƒX–¼‚ğŠi”[
+	// ã‚¯ãƒ©ã‚¹åã‚’æ ¼ç´
 	if(lpszClassName)::_tcscpy(lpszClassName, itClass->second.strClassName.c_str());
 	
-	// ƒNƒ‰ƒX–¼’·‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹åé•·ã‚’è¿”ã™
 	return itClass->second.strClassName.length();
 }
 
@@ -231,11 +231,11 @@ const DWORD CBonCoreEngine::GetBonClassPriority(const BONGUID ClassId)
 {
 	CBlockLock AutoLock(&m_Lock);
 	
-	// ƒNƒ‰ƒX‚ğŒŸõ
+	// ã‚¯ãƒ©ã‚¹ã‚’æ¤œç´¢
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return 0xFFFFFFFFUL;
 	
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚ÌƒNƒ‰ƒX‚ÌGUID‚ğ•Ô‚·
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®ã‚¯ãƒ©ã‚¹ã®GUIDã‚’è¿”ã™
 	return itClass->second.dwPriority;
 }
 
@@ -243,11 +243,11 @@ const BONGUID CBonCoreEngine::GetBonClassModule(const BONGUID ClassId)
 {
 	CBlockLock AutoLock(&m_Lock);
 	
-	// ƒNƒ‰ƒX‚ğŒŸõ
+	// ã‚¯ãƒ©ã‚¹ã‚’æ¤œç´¢
 	const BonClassMap::iterator itClass = m_ClassMap.find(ClassId);
 	if(itClass == m_ClassMap.end())return BMID_NULL;
 	
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚ÌƒNƒ‰ƒX‚ÌGUID‚ğ•Ô‚·
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®ã‚¯ãƒ©ã‚¹ã®GUIDã‚’è¿”ã™
 	return itClass->second.ModuleId;
 }
 
@@ -255,7 +255,7 @@ IBonObject * CBonCoreEngine::GetStockInstance(LPCTSTR lpszClassName)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// —v‹‚³‚ê‚½ƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ•Ô‚·
+	// è¦æ±‚ã•ã‚ŒãŸã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¿”ã™
 	const BonInstanceMap::iterator itInstance = m_InstanceMap.find(BonNameToGuid(lpszClassName));
 	
 	return (itInstance != m_InstanceMap.end())? itInstance->second.pInstance : NULL;
@@ -265,11 +265,11 @@ const bool CBonCoreEngine::RegisterStockInstance(LPCTSTR lpszClassName, IBonObje
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ƒNƒ‰ƒX–¼‚©‚çGUIDŒvZ
+	// ã‚¯ãƒ©ã‚¹åã‹ã‚‰GUIDè¨ˆç®—
 	const BONGUID ClassId = BonNameToGuid(lpszClassName);
 	if(ClassId == BCID_NULL)return false;
 	
-	// ƒ}ƒbƒv‚É’Ç‰Á
+	// ãƒãƒƒãƒ—ã«è¿½åŠ 
 	BON_INSTANCE_INFO InstanceInfo;
 	InstanceInfo.strClassName = lpszClassName;
 	InstanceInfo.pInstance = pInstance;
@@ -283,11 +283,11 @@ const bool CBonCoreEngine::UnregisterStockInstance(LPCTSTR lpszClassName)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğŒŸõ
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æ¤œç´¢
 	const BonInstanceMap::iterator itInstance = m_InstanceMap.find(BonNameToGuid(lpszClassName));
 	if(itInstance == m_InstanceMap.end())return false;
 
-	// ƒ}ƒbƒv‚©‚çíœ
+	// ãƒãƒƒãƒ—ã‹ã‚‰å‰Šé™¤
 	m_InstanceMap.erase(itInstance);
 
 	return true;
@@ -299,14 +299,14 @@ const DWORD CBonCoreEngine::EnumStockInstance(const DWORD dwIndex, LPTSTR lpszCl
 
 	if(dwIndex >= m_InstanceMap.size())return NULL;
 
-	// ƒCƒ“ƒfƒbƒNƒXˆÊ’u‚Ì—v‘f‚ğæ“¾
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½ç½®ã®è¦ç´ ã‚’å–å¾—
 	BonInstanceMap::iterator itInstance = m_InstanceMap.begin();
 	for(DWORD dwPos = 0UL ; dwPos < dwIndex ; dwPos++)itInstance++;
 
-	// ƒNƒ‰ƒX–¼‚ğŠi”[
+	// ã‚¯ãƒ©ã‚¹åã‚’æ ¼ç´
 	if(lpszClassName)::_tcscpy(lpszClassName, itInstance->second.strClassName.c_str());
 	
-	// ƒNƒ‰ƒX–¼’·‚ğ•Ô‚·
+	// ã‚¯ãƒ©ã‚¹åé•·ã‚’è¿”ã™
 	return itInstance->second.strClassName.length();
 }
 
@@ -325,15 +325,15 @@ void CBonCoreEngine::Startup(const HINSTANCE hInstance)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ˆê’UƒVƒƒƒbƒgƒ_ƒEƒ“
+	// ä¸€æ—¦ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³
 	Shutdown();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹•Û‘¶
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«ä¿å­˜
 	m_hInstance = hInstance;
 	m_CurModuleInfo.hModule = hInstance;
 	m_CurModuleInfo.strModuleName = TEXT("CoreEngine");
 	
-	// ©ƒCƒ“ƒXƒ^ƒ“ƒX‚ğƒXƒgƒbƒNƒ}ƒbƒv‚É“o˜^
+	// è‡ªã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã‚¹ãƒˆãƒƒã‚¯ãƒãƒƒãƒ—ã«ç™»éŒ²
 	RegisterStockInstance(TEXT("CBonCoreEngine"), static_cast<CBonObject *>(this));
 }
 
@@ -341,34 +341,34 @@ void CBonCoreEngine::Shutdown(void)
 {
 	CBlockLock AutoLock(&m_Lock);
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒXƒ}ƒbƒvƒNƒŠƒA
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒƒãƒ—ã‚¯ãƒªã‚¢
 	for(BonInstanceMap::iterator itInstance = m_InstanceMap.begin() ; itInstance != m_InstanceMap.end() ; itInstance++){
-		// ©g‚ÌƒCƒ“ƒXƒ^ƒ“ƒXˆÈŠO‚Å‚ ‚ê‚ÎƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+		// è‡ªèº«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä»¥å¤–ã§ã‚ã‚Œã°ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 		if(itInstance->second.pInstance != static_cast<CBonObject *>(this)){
-			// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+			// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 			itInstance->second.pInstance->Release();
 			}
 		}
 
 	m_InstanceMap.clear();
 		
-	// ƒNƒ‰ƒXƒ}ƒbƒvƒNƒŠƒA
+	// ã‚¯ãƒ©ã‚¹ãƒãƒƒãƒ—ã‚¯ãƒªã‚¢
 	m_ClassMap.clear();
 
-	// ƒ‚ƒWƒ…[ƒ‹ƒ}ƒbƒvƒNƒŠƒA
+	// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚¯ãƒªã‚¢
 	for(BonModuleMap::iterator itModule = m_ModuleMap.begin() ; itModule != m_ModuleMap.end() ; itModule++){
 		::FreeLibrary(itModule->second.hModule);
 		}
 	
 	m_ModuleMap.clear();
 	
-	// ó‘Ô‰Šú‰»
+	// çŠ¶æ…‹åˆæœŸåŒ–
 	m_CurModuleInfo.hModule = NULL;
 }
 
 const DWORD CBonCoreEngine::CalcCrc(const BYTE *pData, const DWORD dwDataSize)
 {
-	// CRC32ŒvZ
+	// CRC32è¨ˆç®—
 	static const DWORD CrcTable[256] = {
 		0x00000000UL, 0x04C11DB7UL, 0x09823B6EUL, 0x0D4326D9UL,	0x130476DCUL, 0x17C56B6BUL, 0x1A864DB2UL, 0x1E475005UL,	0x2608EDB8UL, 0x22C9F00FUL, 0x2F8AD6D6UL, 0x2B4BCB61UL,	0x350C9B64UL, 0x31CD86D3UL, 0x3C8EA00AUL, 0x384FBDBDUL,
 		0x4C11DB70UL, 0x48D0C6C7UL, 0x4593E01EUL, 0x4152FDA9UL,	0x5F15ADACUL, 0x5BD4B01BUL, 0x569796C2UL, 0x52568B75UL,	0x6A1936C8UL, 0x6ED82B7FUL, 0x639B0DA6UL, 0x675A1011UL,	0x791D4014UL, 0x7DDC5DA3UL, 0x709F7B7AUL, 0x745E66CDUL,

@@ -1,4 +1,4 @@
-// BonGlobal.h: ƒOƒ[ƒoƒ‹ŠÖ”’è‹`
+ï»¿// BonGlobal.h: ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°å®šç¾©
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒOƒ[ƒoƒ‹ŠÖ”éŒ¾ (ƒIƒuƒWƒFƒNƒg¶¬ƒƒ\ƒbƒh)
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°å®£è¨€ (ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆãƒ¡ã‚½ãƒƒãƒ‰)
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef BONSDK_IMPLEMENT
@@ -18,7 +18,7 @@
 #include <typeinfo.h>
 
 
-// BonƒRƒAƒGƒ“ƒWƒ“API
+// Bonã‚³ã‚¢ã‚¨ãƒ³ã‚¸ãƒ³API
 extern "C"
 {
 
@@ -39,32 +39,32 @@ BONAPI const bool UNREGISTER_STOCK_INSTANCE(LPCTSTR lpszClassName);
 
 }
 
-// ƒ†[ƒeƒBƒŠƒeƒB[ƒƒ\ƒbƒh
+// ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ãƒ¡ã‚½ãƒƒãƒ‰
 template <class T> const bool BON_REGISTER_CLASS(const DWORD dwPriority = 0UL)
 {
 #ifdef _UNICODE
 	WCHAR szClassName[BON_MAX_CLASS_NAME] = TEXT("");
 
-	// ƒNƒ‰ƒX–¼‚ðUNICODE‚É•ÏŠ·
+	// ã‚¯ãƒ©ã‚¹åã‚’UNICODEã«å¤‰æ›
 	::MultiByteToWideChar(CP_OEMCP, MB_PRECOMPOSED, &(typeid(T).name()[6]), -1, szClassName, sizeof(szClassName) / sizeof(*szClassName));
 
-	// ƒNƒ‰ƒXƒtƒ@ƒNƒgƒŠ[“o˜^
+	// ã‚¯ãƒ©ã‚¹ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ç™»éŒ²
 	return ::REGISTER_BON_CLASS(szClassName, T::CreateInstance, dwPriority);
 #else
-	// ƒNƒ‰ƒXƒtƒ@ƒNƒgƒŠ[“o˜^
+	// ã‚¯ãƒ©ã‚¹ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ç™»éŒ²
 	return ::REGISTER_BON_CLASS(&(typeid(T).name()[6]), T::CreateInstance, dwPriority);
 #endif
 }
 
 template <class T> T BON_SAFE_CREATE(LPCTSTR lpszBCId, IBonObject *pOwner = NULL)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	IBonObject *pNewInstance = ::BON_CREATE_INSTANCE(lpszBCId, pOwner);
 
-	// ƒCƒ“ƒ^ƒtƒF[ƒXŽæ“¾
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 	T pDestInterface = dynamic_cast<T>(pNewInstance);
 
-	// –Ú“I‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚ðŽÀ‘•‚µ‚Ä‚¢‚È‚¢ê‡‚ÍƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ç›®çš„ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®Ÿè£…ã—ã¦ã„ãªã„å ´åˆã¯ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	if(pNewInstance && !pDestInterface)pNewInstance->Release();
 
 	return pDestInterface;

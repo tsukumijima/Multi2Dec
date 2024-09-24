@@ -1,4 +1,4 @@
-// IoObjectIf.h: “üo—ÍƒIƒuƒWƒFƒNƒgƒCƒ“ƒ^ƒtƒF[ƒX
+ï»¿// IoObjectIf.h: å…¥å‡ºåŠ›ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// •W€ƒtƒ@ƒCƒ‹ƒXƒgƒŒ[ƒWƒCƒ“ƒ^ƒtƒF[ƒX
+// æ¨™æº–ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class ISmartFile :				public IBonObject
@@ -14,8 +14,8 @@ class ISmartFile :				public IBonObject
 public:
 	enum
 	{
-		MF_READ			= 0x00000001UL,		// “Ç‚İo‚µƒ‚[ƒh
-		MF_WRITE		= 0x00000002UL		// ‘‚«‚İƒ‚[ƒh
+		MF_READ			= 0x00000001UL,		// èª­ã¿å‡ºã—ãƒ¢ãƒ¼ãƒ‰
+		MF_WRITE		= 0x00000002UL		// æ›¸ãè¾¼ã¿ãƒ¢ãƒ¼ãƒ‰
 	};
 
 	virtual const bool Open(LPCTSTR lpszFileName, const DWORD dwModeFlags = MF_READ, const DWORD dwBuffSize = 0UL) = 0;
@@ -37,27 +37,27 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// •W€ƒ\ƒPƒbƒgƒCƒ“ƒ^ƒtƒF[ƒX
+// æ¨™æº–ã‚½ã‚±ãƒƒãƒˆã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class ISmartSocket :			public IBonObject
 {
 public:
-	enum	// HostNameToIPAddr()–ß‚è’l
+	enum	// HostNameToIPAddr()æˆ»ã‚Šå€¤
 	{
 		INVALID_IPADDR = 0xFFFFFFFFUL
 	};
 
-	enum	// GetLastError()–ß‚è’l
+	enum	// GetLastError()æˆ»ã‚Šå€¤
 	{
-		EC_NO_ERROR			= 0UL,	// ³íI—¹
-		EC_SOCK_ERROR		= 1UL,	// ƒ\ƒPƒbƒgƒGƒ‰[
-		EC_TIME_OUT			= 2UL,	// ƒ^ƒCƒ€ƒAƒEƒg
-		EC_INVALID_SOCK		= 3UL,	// ƒ\ƒPƒbƒg‚ª–³Œø
-		EC_INVALID_PARAM	= 4UL	// ƒpƒ‰ƒ[ƒ^‚ª–³Œø
+		EC_NO_ERROR			= 0UL,	// æ­£å¸¸çµ‚äº†
+		EC_SOCK_ERROR		= 1UL,	// ã‚½ã‚±ãƒƒãƒˆã‚¨ãƒ©ãƒ¼
+		EC_TIME_OUT			= 2UL,	// ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆ
+		EC_INVALID_SOCK		= 3UL,	// ã‚½ã‚±ãƒƒãƒˆãŒç„¡åŠ¹
+		EC_INVALID_PARAM	= 4UL	// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒç„¡åŠ¹
 	};
 
-// TCPƒ\ƒPƒbƒg
+// TCPã‚½ã‚±ãƒƒãƒˆ
 	virtual const bool Connect(LPCTSTR lpszHostName, const WORD wPort, const DWORD dwTimeout = 0UL) = 0;
 	virtual const bool Connect(const DWORD dwIP, const WORD wPort, const DWORD dwTimeout = 0UL) = 0;
 
@@ -72,14 +72,14 @@ public:
 	virtual const bool GetLocalAddr(DWORD *pdwIP, WORD *pwPort = NULL) = 0;
 	virtual const bool GetPeerAddr(DWORD *pdwIP, WORD *pwPort = NULL) = 0;
 
-// UDPƒ\ƒPƒbƒg
+// UDPã‚½ã‚±ãƒƒãƒˆ
 	virtual const bool Bind(const WORD wPort = 0U) = 0;
 
 	virtual const DWORD SendTo(const DWORD dwIP, const WORD wPort, const BYTE *pData, const DWORD dwLen, const DWORD dwTimeout = 0UL) = 0;
 	virtual const DWORD SendTo(LPCTSTR lpszHostName, const WORD wPort, const BYTE *pData, const DWORD dwLen, const DWORD dwTimeout = 0UL) = 0;
 	virtual const DWORD RecvFrom(BYTE *pData, const DWORD dwLen, DWORD *pdwIP = NULL, WORD *pwPort = NULL, const DWORD dwTimeout = 0UL) = 0;
 
-// ‹¤’Ê
+// å…±é€š
 	virtual void Close(void) = 0;
 
 	virtual const DWORD HostNameToIPAddr(LPCTSTR lpszHostName) = 0;

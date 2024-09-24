@@ -1,4 +1,4 @@
-// ModCatalogBase.cpp: ƒ‚ƒWƒ…[ƒ‹ƒJƒ^ƒƒOŠî’êƒNƒ‰ƒX
+ï»¿// ModCatalogBase.cpp: ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚«ã‚¿ãƒ­ã‚°åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -13,50 +13,50 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒ‚ƒWƒ…[ƒ‹ƒJƒ^ƒƒOŠî’êƒNƒ‰ƒX
+// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚«ã‚¿ãƒ­ã‚°åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const WORD CModCatalogBase::GetVersion(void)
 {
 	if(!m_hModule){
-		// ƒo[ƒWƒ‡ƒ“ƒŠƒ\[ƒX‚©‚çæ“¾‚µ‚È‚¢ê‡
+		// ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãƒªã‚½ãƒ¼ã‚¹ã‹ã‚‰å–å¾—ã—ãªã„å ´åˆ
 		return m_wVersion;
 		}
 
 	WORD wVersion = 0x0000U;
 
 	try{
-		// ƒ‚ƒWƒ…[ƒ‹‚Ìƒtƒ@ƒCƒ‹–¼‚ğæ“¾
+		// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—
 		TCHAR szFileName[_MAX_PATH + 1];
 		if(!::GetModuleFileName(m_hModule, szFileName, sizeof(szFileName) - 1))throw ::BON_EXPECTION();
 
-		// ƒo[ƒWƒ‡ƒ“î•ñƒŠƒ\[ƒX‚ÌƒTƒCƒY‚ğæ“¾
+		// ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ãƒªã‚½ãƒ¼ã‚¹ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 		DWORD dwHandle = 0;
 		DWORD dwLength = ::GetFileVersionInfoSize(szFileName, &dwHandle);
 		if(!dwLength)throw ::BON_EXPECTION();
 
-		// ƒo[ƒWƒ‡ƒ“î•ñƒŠƒ\[ƒXƒ[ƒh
+		// ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ãƒªã‚½ãƒ¼ã‚¹ãƒ­ãƒ¼ãƒ‰
 		CMediaData Buffer((const BYTE)0x00U, dwLength + 1UL);
 		if(!::GetFileVersionInfo(szFileName, 0, dwLength, Buffer.GetData()))throw ::BON_EXPECTION();
 
-		// LangCodepage‚ğæ“¾
+		// LangCodepageã‚’å–å¾—
 		DWORD *pdwLang;
 		TCHAR szSubBlock[50] = TEXT("\\VarFileInfo\\Translation");
 		if(!::VerQueryValue(Buffer.GetData(), szSubBlock, (void **)&pdwLang, (PUINT)&dwLength))throw ::BON_EXPECTION();
 
-		// î•ñ‚ğæ“¾‚·‚é
+		// æƒ…å ±ã‚’å–å¾—ã™ã‚‹
 		LPTSTR lpszBuffer;
 		::_stprintf(szSubBlock, TEXT("\\StringFileInfo\\%04x%04x\\ProductVersion"), LOWORD(*pdwLang), HIWORD(*pdwLang));
 		if(!::VerQueryValue(Buffer.GetData(), szSubBlock, (void **)&lpszBuffer, (PUINT)&dwLength))throw ::BON_EXPECTION();
 		
-		// ®Œ`‚·‚é
+		// æ•´å½¢ã™ã‚‹
 		DWORD adwVers[4] = {0UL, 0UL, 0UL, 0UL};
 		::_stscanf(lpszBuffer, TEXT("%lu,%lu,%lu,%lu"), &adwVers[0], &adwVers[1], &adwVers[2], &adwVers[3]);
 		
 		wVersion = (WORD)(((adwVers[0] & 0xFUL) << 12) | ((adwVers[1] & 0xFUL) << 8) | ((adwVers[2] & 0xFUL) << 4) | ((adwVers[3] & 0xFUL) << 0));
 		}
 	catch(CBonException &Exception){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		Exception.Notify();
 		return 0x0000U;
 		}
@@ -66,28 +66,28 @@ const WORD CModCatalogBase::GetVersion(void)
 
 const DWORD CModCatalogBase::GetComment(LPTSTR lpszComment)
 {
-	// ƒRƒƒ“ƒg‚ğ•Ô‚·
+	// ã‚³ãƒ¡ãƒ³ãƒˆã‚’è¿”ã™
 	if(lpszComment)::_tcscpy(lpszComment, m_lpszComment);
 	return ::_tcslen(m_lpszComment);
 }
 
 const DWORD CModCatalogBase::GetAuthor(LPTSTR lpszAuthor)
 {
-	// ìÒ–¼‚ğ•Ô‚·
+	// ä½œè€…åã‚’è¿”ã™
 	if(lpszAuthor)::_tcscpy(lpszAuthor, m_lpszAuthor);
 	return ::_tcslen(m_lpszAuthor);
 }
 
 const DWORD CModCatalogBase::GetWebsite(LPTSTR lpszWebsite)
 {
-	// ˜A—æ‚ğ•Ô‚·
+	// é€£çµ¡å…ˆã‚’è¿”ã™
 	if(lpszWebsite)::_tcscpy(lpszWebsite, m_lpszWebsite);
 	return ::_tcslen(m_lpszWebsite);
 }
 
 const BONGUID CModCatalogBase::EnumClass(LPCTSTR lpszBIId, const DWORD dwIndex)
 {
-	// w’è‚³‚ê‚½ƒCƒ“ƒ^ƒtƒF[ƒX‚É‘Î‰‚·‚éƒNƒ‰ƒX‚ğ—ñ‹“‚·‚é
+	// æŒ‡å®šã•ã‚ŒãŸã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã«å¯¾å¿œã™ã‚‹ã‚¯ãƒ©ã‚¹ã‚’åˆ—æŒ™ã™ã‚‹
 	for(DWORD dwInfoPos = 0UL, dwClassPos = 0UL ; dwInfoPos < m_dwClassNum ; dwInfoPos++){
 		if(!::_tcscmp(m_pClassInfo[dwInfoPos].szBIId, lpszBIId)){
 			if(dwClassPos++ == dwIndex){
@@ -101,10 +101,10 @@ const BONGUID CModCatalogBase::EnumClass(LPCTSTR lpszBIId, const DWORD dwIndex)
 
 const DWORD CModCatalogBase::GetClassDesc(const BONGUID ClassId, LPTSTR lpszDescription)
 {
-	// w’è‚³‚ê‚½GUID‚ÌƒNƒ‰ƒX‚ğŒŸõ‚·‚é
+	// æŒ‡å®šã•ã‚ŒãŸGUIDã®ã‚¯ãƒ©ã‚¹ã‚’æ¤œç´¢ã™ã‚‹
 	for(DWORD dwInfoPos = 0UL ; dwInfoPos < m_dwClassNum ; dwInfoPos++){
 		if(::BON_NAME_TO_GUID(m_pClassInfo[dwInfoPos].szBCId) == ClassId){
-			// GUID‚ªˆê’vAà–¾‚ğ•Ô‚·
+			// GUIDãŒä¸€è‡´ã€èª¬æ˜ã‚’è¿”ã™
 			if(lpszDescription)::_tcscpy(lpszDescription, m_pClassInfo[dwInfoPos].szDesc);
 			return ::_tcslen(m_pClassInfo[dwInfoPos].szDesc);
 			}
@@ -123,7 +123,7 @@ CModCatalogBase::CModCatalogBase(IBonObject *pOwner)
 	, m_lpszAuthor(NULL)
 	, m_lpszWebsite(NULL)
 {
-	// g—p‚µ‚Ä‚Í‚È‚ç‚È‚¢
+	// ä½¿ç”¨ã—ã¦ã¯ãªã‚‰ãªã„
 	::BON_ASSERT(false);
 }
 
@@ -137,7 +137,7 @@ CModCatalogBase::CModCatalogBase(IBonObject *pOwner, const MOD_CLASS_INFO *pClas
 	, m_lpszAuthor(lpszAuthor)
 	, m_lpszWebsite(lpszWebsite)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CModCatalogBase::CModCatalogBase(IBonObject *pOwner, const MOD_CLASS_INFO *pClassInfo, const DWORD dwClassNum, const WORD wVersion, const LPCTSTR lpszComment, const LPCTSTR lpszAuthor, const LPCTSTR lpszWebsite)
@@ -150,10 +150,10 @@ CModCatalogBase::CModCatalogBase(IBonObject *pOwner, const MOD_CLASS_INFO *pClas
 	, m_lpszAuthor(lpszAuthor)
 	, m_lpszWebsite(lpszWebsite)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CModCatalogBase::~CModCatalogBase(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }

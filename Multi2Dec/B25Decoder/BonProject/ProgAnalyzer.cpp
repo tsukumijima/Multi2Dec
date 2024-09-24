@@ -1,4 +1,4 @@
-// ProgAnalyzer.cpp: ƒvƒƒOƒ‰ƒ€ƒAƒiƒ‰ƒCƒUƒfƒR[ƒ_
+ï»¿// ProgAnalyzer.cpp: ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -10,19 +10,19 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒvƒƒOƒ‰ƒ€ƒAƒiƒ‰ƒCƒUƒfƒR[ƒ_
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CProgAnalyzer::InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex)
 {
-	// “ü—Íƒpƒ‰ƒ[ƒ^ƒ`ƒFƒbƒN
+	// å…¥åŠ›ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒã‚§ãƒƒã‚¯
 	ITsPacket * const pTspacket = dynamic_cast<ITsPacket *>(pMediaData);
 	if(!pTspacket || (dwInputIndex >= GetInputNum()))return false;
 
-	// PIDƒ}ƒbƒv‚É“ü—Í
+	// PIDãƒãƒƒãƒ—ã«å…¥åŠ›
 	m_TsPidMapper.StorePacket(pTspacket);
 
-	// ‰ºˆÊƒfƒR[ƒ_‚Éƒf[ƒ^o—Í
+	// ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã«ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
 	OutputMedia(pMediaData);
 
 	return true;
@@ -30,19 +30,19 @@ const bool CProgAnalyzer::InputMedia(IMediaData *pMediaData, const DWORD dwInput
 
 const WORD CProgAnalyzer::GetNetworkID(void)
 {
-	// ƒIƒŠƒWƒiƒ‹ƒlƒbƒgƒ[ƒNID‚ğ•Ô‚·
+	// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯IDã‚’è¿”ã™
 	return m_ProgContext.wNetworkID;
 }
 
 const WORD CProgAnalyzer::GetTsID(void)
 {
-	// TS ID‚ğ•Ô‚·
+	// TS IDã‚’è¿”ã™
 	return m_ProgContext.wTsID;
 }
 
 const DWORD CProgAnalyzer::GetProgramNum(void)
 {
-	// —LŒø‚ÈƒvƒƒOƒ‰ƒ€”‚ğ•Ô‚·
+	// æœ‰åŠ¹ãªãƒ—ãƒ­ã‚°ãƒ©ãƒ æ•°ã‚’è¿”ã™
 	DWORD dwNum = 0UL;
 	
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
@@ -54,7 +54,7 @@ const DWORD CProgAnalyzer::GetProgramNum(void)
 
 const WORD CProgAnalyzer::GetProgramID(const DWORD dwIndex)
 {
-	// ƒvƒƒOƒ‰ƒ€ID‚ğ•Ô‚·
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‚’è¿”ã™
 	DWORD dwPos = 0UL;
 	
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
@@ -68,57 +68,57 @@ const WORD CProgAnalyzer::GetProgramID(const DWORD dwIndex)
 
 const WORD CProgAnalyzer::GetProgramVideoPID(const WORD wProgramID)
 {
-	// ‰f‘œPID‚ğ•Ô‚·
+	// æ˜ åƒPIDã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	return (pItem)? pItem->wVideoPID : TS_INVALID_PID;
 }
 
 const WORD CProgAnalyzer::GetProgramAudioPID(const WORD wProgramID)
 {
-	// ‰¹ºPID‚ğ•Ô‚·
+	// éŸ³å£°PIDã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	return (pItem)? pItem->wAudioPID : TS_INVALID_PID;
 }
 
 const WORD CProgAnalyzer::GetProgramPcrPID(const WORD wProgramID)
 {
-	// PCR‚ÌPID‚ğ•Ô‚·
+	// PCRã®PIDã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	return (pItem)? pItem->wPcrPID : TS_INVALID_PID;
 }
 
 const DWORD CProgAnalyzer::GetNetworkName(LPTSTR lpszNetworkName)
 {
-	// ƒlƒbƒgƒ[ƒN–¼‚ğ•Ô‚·
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯åã‚’è¿”ã™
 	if(lpszNetworkName)::_tcscpy(lpszNetworkName, m_ProgContext.szNetworkName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(m_ProgContext.szNetworkName);
 }
 
 const DWORD CProgAnalyzer::GetServiceName(LPTSTR lpszServiceName, const WORD wProgramID)
 {
-	// ƒT[ƒrƒX–¼‚ğ•Ô‚·
+	// ã‚µãƒ¼ãƒ“ã‚¹åã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	if(!pItem)return 0UL;
 	
-	// ƒoƒbƒtƒ@‚ÉƒRƒs[
+	// ãƒãƒƒãƒ•ã‚¡ã«ã‚³ãƒ”ãƒ¼
 	if(lpszServiceName)::_tcscpy(lpszServiceName, pItem->szServiceName);
 
-	// ƒoƒbƒtƒ@‚É•K—v‚È•¶š”‚ğ•Ô‚·
+	// ãƒãƒƒãƒ•ã‚¡ã«å¿…è¦ãªæ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(pItem->szServiceName);
 }
 
 const bool CProgAnalyzer::GetStreamTime(SYSTEMTIME *pStreamTime)
 {
-	// ƒXƒgƒŠ[ƒ€‚ÌŠÔ‚ğ•Ô‚·
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã®æ™‚é–“ã‚’è¿”ã™
 	ITotTable *pTotTable = dynamic_cast<ITotTable *>(m_TsPidMapper.GetMapTarget(0x0014U));
 	::BON_ASSERT(pTotTable != NULL);
 	
 	CTsTime StreamTime = pTotTable->GetDateTime();
 	if(StreamTime.IsEmpty())return false;
 
-	// ŠÔ‚ğƒZƒbƒg	
+	// æ™‚é–“ã‚’ã‚»ãƒƒãƒˆ	
 	if(pStreamTime)*pStreamTime = StreamTime;
 	
 	return true;
@@ -126,20 +126,20 @@ const bool CProgAnalyzer::GetStreamTime(SYSTEMTIME *pStreamTime)
 
 const WORD CProgAnalyzer::GetCurrentProgramID(void)
 {
-	// Œ»İ‚ÌƒvƒƒOƒ‰ƒ€ID‚ğ•Ô‚·
+	// ç¾åœ¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‚’è¿”ã™
 	return m_ProgContext.wCurProgramID;
 }
 
 const bool CProgAnalyzer::SetCurrentProgramID(const WORD wProgramID)
 {
-	// Œ»İ‚ÌƒvƒƒOƒ‰ƒ€ID‚ğİ’è‚·‚é
+	// ç¾åœ¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‚’è¨­å®šã™ã‚‹
 	if(wProgramID){
-		// w’èƒvƒƒOƒ‰ƒ€ID‚É•ÏX
+		// æŒ‡å®šãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã«å¤‰æ›´
 		if(FindProgramItem(wProgramID))return false;
 		m_ProgContext.wCurProgramID = wProgramID;
 		}
 	else{
-		// ƒfƒtƒHƒ‹ƒgƒvƒƒOƒ‰ƒ€ID‚É•ÏX(PAT‚ÌÅ‰‚ÌƒvƒƒOƒ‰ƒ€ID)
+		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã«å¤‰æ›´(PATã®æœ€åˆã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ID)
 		if(!m_ProgContext.ProgList.size())return false;
 		m_ProgContext.wCurProgramID = m_ProgContext.ProgList[0].wProgramID;
 		}
@@ -149,14 +149,14 @@ const bool CProgAnalyzer::SetCurrentProgramID(const WORD wProgramID)
 
 const IEpgItem * CProgAnalyzer::GetCurrentEpgInfo(const WORD wProgramID)
 {
-	// Œ»İ‚ÌEPGî•ñ‚ğ•Ô‚·
+	// ç¾åœ¨ã®EPGæƒ…å ±ã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	return (pItem)? pItem->pCurEpgItem : NULL;
 }
 
 const IEpgItem * CProgAnalyzer::GetNextEpgInfo(const WORD wProgramID)
 {
-	// Ÿ‚ÌEPGî•ñ‚ğ•Ô‚·
+	// æ¬¡ã®EPGæƒ…å ±ã‚’è¿”ã™
 	const PROGRAM_ITEM * pItem = FindProgramItem(wProgramID);
 	return (pItem)? pItem->pNextEpgItem : NULL;
 }
@@ -165,28 +165,28 @@ CProgAnalyzer::CProgAnalyzer(IBonObject *pOwner)
 	: CMediaDecoder(pOwner, 1UL, 1UL)
 	, m_TsPidMapper(NULL)
 {
-	// PATƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// PATãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsPidMapper.MapPid(0x0000U, dynamic_cast<ITsPidMapTarget *>(CPatTable::CreateInstance(dynamic_cast<IPatTable::IHandler *>(this))));
 
-	// NITƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// NITãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsPidMapper.MapPid(0x0010U, dynamic_cast<ITsPidMapTarget *>(CNitTable::CreateInstance(dynamic_cast<INitTable::IHandler *>(this))));
 
-	// SDTƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// SDTãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsPidMapper.MapPid(0x0011U, dynamic_cast<ITsPidMapTarget *>(CSdtTable::CreateInstance(dynamic_cast<ISdtTable::IHandler *>(this))));
 
-	// EITƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// EITãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsPidMapper.MapPid(0x0012U, dynamic_cast<ITsPidMapTarget *>(CEitTable::CreateInstance(dynamic_cast<IEitTable::IHandler *>(this))));
 
-	// TOTƒe[ƒuƒ‹‚ğPIDƒ}ƒbƒv‚É’Ç‰Á
+	// TOTãƒ†ãƒ¼ãƒ–ãƒ«ã‚’PIDãƒãƒƒãƒ—ã«è¿½åŠ 
 	m_TsPidMapper.MapPid(0x0014U, dynamic_cast<ITsPidMapTarget *>(CTotTable::CreateInstance(dynamic_cast<ITotTable::IHandler *>(this))));
 
-	// ó‘ÔƒŠƒZƒbƒg
+	// çŠ¶æ…‹ãƒªã‚»ãƒƒãƒˆ
 	OnReset();
 }
 
 CProgAnalyzer::~CProgAnalyzer(void)
 {
-	// ƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
 		BON_SAFE_RELEASE(itProgram->pCurEpgItem);
 		BON_SAFE_RELEASE(itProgram->pNextEpgItem);
@@ -200,7 +200,7 @@ const bool CProgAnalyzer::OnPlay(void)
 
 const bool CProgAnalyzer::OnReset(void)
 {
-	// ƒRƒ“ƒeƒLƒXƒgƒŠƒZƒbƒg
+	// ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒªã‚»ãƒƒãƒˆ
 	m_ProgContext.wNetworkID = 0x0000U;
 	m_ProgContext.wTsID = 0x0000U;
 	m_ProgContext.wCurProgramID = 0x0000U;
@@ -213,10 +213,10 @@ const bool CProgAnalyzer::OnReset(void)
 
 	m_ProgContext.ProgList.clear();
 
-	// PIDƒ}ƒbƒvƒŠƒZƒbƒg
+	// PIDãƒãƒƒãƒ—ãƒªã‚»ãƒƒãƒˆ
 	ResetPidMap();
 
-	// PATƒŠƒZƒbƒg
+	// PATãƒªã‚»ãƒƒãƒˆ
 	m_TsPidMapper.ResetPid(0x0000U);
 
 	return true;
@@ -224,22 +224,22 @@ const bool CProgAnalyzer::OnReset(void)
 
 void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 {
-	// TS ID‚Ì•Ï‰»‚ğƒ`ƒFƒbƒN‚·‚é
+	// TS IDã®å¤‰åŒ–ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	if(m_ProgContext.wTsID != pPatTable->GetTsID()){
-		// TS ID‚ª•Ï‰»‚µ‚½‚Æ‚«‚Íó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+		// TS IDãŒå¤‰åŒ–ã—ãŸã¨ãã¯çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 		ResetPidMap();
 		m_ProgContext.wTsID = pPatTable->GetTsID();
 		}
 
-	// PMTƒe[ƒuƒ‹‚ğƒ}ƒbƒv
+	// PMTãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒãƒƒãƒ—
 	for(DWORD dwIndex = 0UL ; dwIndex < pPatTable->GetProgramNum() ; dwIndex++){
 		m_TsPidMapper.MapPid(pPatTable->GetPmtPID(dwIndex), dynamic_cast<ITsPidMapTarget *>(CPmtTable::CreateInstance(dynamic_cast<IPmtTable::IHandler *>(this))));
 		}
 
-	// ‘¶İ‚µ‚È‚¢ƒvƒƒOƒ‰ƒ€ID‚ğíœ‚·‚é
+	// å­˜åœ¨ã—ãªã„ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‚’å‰Šé™¤ã™ã‚‹
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; ){
 
-		// PAT‚ğŒŸõ
+		// PATã‚’æ¤œç´¢
 		bool bFound = false;
 	
 		for(DWORD dwIndex = 0UL ; (dwIndex < pPatTable->GetProgramNum()) && !bFound; dwIndex++){
@@ -249,7 +249,7 @@ void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 			}
 
 		if(!bFound){
-			// ƒvƒƒOƒ‰ƒ€ƒŠƒXƒg‚©‚çíœ
+			// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
 			BON_SAFE_RELEASE(itProgram->pCurEpgItem);
 			BON_SAFE_RELEASE(itProgram->pNextEpgItem);
 
@@ -261,11 +261,11 @@ void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 			}
 		}
 
-	// V‹K‚ÌƒvƒƒOƒ‰ƒ€ID‚ğ’Ç‰Á‚·‚é
+	// æ–°è¦ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‚’è¿½åŠ ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex < pPatTable->GetProgramNum() ; dwIndex++){
 		if(FindProgramItem(pPatTable->GetProgramID(dwIndex)))continue;
 
-		// ƒvƒƒOƒ‰ƒ€ID‚ª¸‡‚É‚È‚é‚æ‚¤‚É‘}“ü
+		// ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDãŒæ˜‡é †ã«ãªã‚‹ã‚ˆã†ã«æŒ¿å…¥
 		ProgramList::iterator itProgram = m_ProgContext.ProgList.begin();
 
 		for( ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
@@ -287,61 +287,61 @@ void CProgAnalyzer::OnPatTable(const IPatTable *pPatTable)
 		m_ProgContext.ProgList.insert(itProgram, NewItem);
 		}
 
-	// Œ»İ‚ÌƒvƒƒOƒ‰ƒ€ID‚Ì•ÏX‚ğ”»’è‚·‚é
+	// ç¾åœ¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã®å¤‰æ›´ã‚’åˆ¤å®šã™ã‚‹
 	if(!FindProgramItem(m_ProgContext.wCurProgramID)){
-		// V‹K‚ÌƒvƒƒOƒ‰ƒ€ID‚É•ÏX
+		// æ–°è¦ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã«å¤‰æ›´
 		m_ProgContext.wCurProgramID = (m_ProgContext.ProgList.size())? m_ProgContext.ProgList[0].wProgramID : 0x0000U;
 		}
 }
 
 void CProgAnalyzer::OnPmtTable(const IPmtTable *pPmtTable)
 {
-	// ƒvƒƒOƒ‰ƒ€î•ñ‚ğXV‚·‚é
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
 	PROGRAM_ITEM *pProgItem = FindProgramItem(pPmtTable->GetProgramID());
 	if(!pProgItem)return;
 
-	// PCR‚ÌPIDXV
+	// PCRã®PIDæ›´æ–°
 	pProgItem->wPcrPID = pPmtTable->GetPcrPID();
 
-	// ‰f‘œ/‰¹º‚ÌPIDXV
+	// æ˜ åƒ/éŸ³å£°ã®PIDæ›´æ–°
 	for(DWORD dwIndex = 0UL ; dwIndex < pPmtTable->GetEsNum() ; dwIndex++){
 		switch(pPmtTable->GetStreamTypeID(dwIndex)){
-			case 0x02U :	// ITU-TŠ©H.262|ISO/IEC 13818-2‰f‘œ
+			case 0x02U :	// ITU-Tå‹§å‘ŠH.262|ISO/IEC 13818-2æ˜ åƒ
 				pProgItem->wVideoPID = pPmtTable->GetEsPID(dwIndex);
 				break;
 				
-			case 0x0FU :	// ISO/IEC 13818-7‰¹ºiADTSƒgƒ‰ƒ“ƒXƒ|[ƒg\‘¢j
+			case 0x0FU :	// ISO/IEC 13818-7éŸ³å£°ï¼ˆADTSãƒˆãƒ©ãƒ³ã‚¹ãƒãƒ¼ãƒˆæ§‹é€ ï¼‰
 				pProgItem->wAudioPID = pPmtTable->GetEsPID(dwIndex);
 				break;
 			}
 		}
 
-	// —LŒøƒtƒ‰ƒOXV
+	// æœ‰åŠ¹ãƒ•ãƒ©ã‚°æ›´æ–°
 	if((pProgItem->wVideoPID != TS_INVALID_PID) && (pProgItem->wAudioPID != TS_INVALID_PID)){
-		// MPEG2‰f‘œ‚ÆAAC‰¹º‚ª‚ ‚éƒvƒƒOƒ‰ƒ€‚ğ—LŒø‚Æ‚·‚é
+		// MPEG2æ˜ åƒã¨AACéŸ³å£°ãŒã‚ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’æœ‰åŠ¹ã¨ã™ã‚‹
 		pProgItem->bAvailable = true;
 		}
 }
 
 void CProgAnalyzer::OnNitTable(const INitTable *pNitTable)
 {
-	// ƒlƒbƒgƒ[ƒNIDXV
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯IDæ›´æ–°
 	m_ProgContext.wNetworkID = pNitTable->GetNetworkID();
 
-	// ƒlƒbƒgƒ[ƒN–¼XV
+	// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯åæ›´æ–°
 	const INetworkNameDesc *pNetworkNameDesc = dynamic_cast<const INetworkNameDesc *>(pNitTable->GetNetworkDesc()->GetDescByTag(INetworkNameDesc::DESC_TAG));
 	if(pNetworkNameDesc)pNetworkNameDesc->GetNetworkName(m_ProgContext.szNetworkName);
 }
 
 void CProgAnalyzer::OnSdtTable(const ISdtTable *pSdtTable)
 {
-	// ƒT[ƒrƒXî•ñ‚ğXV‚·‚é
+	// ã‚µãƒ¼ãƒ“ã‚¹æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
 	for(DWORD dwIndex = 0UL ; dwIndex < pSdtTable->GetServiceNum() ; dwIndex++){
 		const WORD wServiceID = pSdtTable->GetServiceID(dwIndex);
 		PROGRAM_ITEM *pProgItem = FindProgramItem(wServiceID);
 		if(!pProgItem)continue;
 
-		// ƒT[ƒrƒXî•ñXV	
+		// ã‚µãƒ¼ãƒ“ã‚¹æƒ…å ±æ›´æ–°	
 		const IServiceDesc *pServiceDesc = dynamic_cast<const IServiceDesc *>(pSdtTable->GetServiceDesc(wServiceID)->GetDescByTag(IServiceDesc::DESC_TAG));
 		if(!pServiceDesc)continue;
 
@@ -351,12 +351,12 @@ void CProgAnalyzer::OnSdtTable(const ISdtTable *pSdtTable)
 
 void CProgAnalyzer::OnTotTable(const ITotTable *pTotTable)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CProgAnalyzer::OnEitTable(const IEitTable *pEitTable, const IEitItem *pEitItem)
 {
-	// EPGî•ñ‚ğXV‚·‚é
+	// EPGæƒ…å ±ã‚’æ›´æ–°ã™ã‚‹
 	if(pEitTable->GetOrgNetworkID() != GetNetworkID())return;
 	if(pEitTable->GetTsID() != GetTsID())return;
 	
@@ -364,12 +364,12 @@ void CProgAnalyzer::OnEitTable(const IEitTable *pEitTable, const IEitItem *pEitI
 	if(!pProgItem)return;
 
 	if(pEitTable->GetTableID() == IEitTable::TABLE_ID_CURORNEXT_SELF){
-		// Œ»İ or Ÿ‚ÌEPGî•ñƒXƒgƒA
+		// ç¾åœ¨ or æ¬¡ã®EPGæƒ…å ±ã‚¹ãƒˆã‚¢
 		switch(pEitTable->GetSectionNumber()){
 			case 0U :
 				if(pProgItem->pCurEpgItem->StoreEitItem(pEitItem)){
-					// ”Ô‘gî•ñXVƒCƒxƒ“ƒg
-//					TCHAR szInfo[4096] = TEXT("–¢óM");
+					// ç•ªçµ„æƒ…å ±æ›´æ–°ã‚¤ãƒ™ãƒ³ãƒˆ
+//					TCHAR szInfo[4096] = TEXT("æœªå—ä¿¡");
 //					pProgItem->pCurEpgItem->GetEventDetail(szInfo);
 //					::BON_TRACE(TEXT("Info: %04X\n%s\n\n"), pProgItem->pCurEpgItem->GetEventID(), szInfo);
 					}
@@ -377,23 +377,23 @@ void CProgAnalyzer::OnEitTable(const IEitTable *pEitTable, const IEitItem *pEitI
 
 			case 1U :
 				if(pProgItem->pNextEpgItem->StoreEitItem(pEitItem)){
-					// ”Ô‘gî•ñXVƒCƒxƒ“ƒg
+					// ç•ªçµ„æƒ…å ±æ›´æ–°ã‚¤ãƒ™ãƒ³ãƒˆ
 					}
 				break; 
 
 			default :
-				// ‹KŠiã‚Í‚ ‚è‚¦‚È‚¢
+				// è¦æ ¼ä¸Šã¯ã‚ã‚Šãˆãªã„
 				break;
 			}
 		}
 	else{
-		// ƒXƒPƒWƒ…[ƒ‹Ï‚İEPGî•ñƒXƒgƒA
+		// ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«æ¸ˆã¿EPGæƒ…å ±ã‚¹ãƒˆã‚¢
 		}	
 }
 
 void CProgAnalyzer::ResetPidMap(void)
 {
-	// NIT/SDT/TOTƒŠƒZƒbƒgA‚»‚êˆÈŠO‚ÍƒAƒ“ƒ}ƒbƒv
+	// NIT/SDT/TOTãƒªã‚»ãƒƒãƒˆã€ãã‚Œä»¥å¤–ã¯ã‚¢ãƒ³ãƒãƒƒãƒ—
 	for(WORD wPID = 0x0000U ; wPID < 0x2000U ; wPID++){
 		switch(wPID){
 			case 0x0000 :	// PAT
@@ -403,12 +403,12 @@ void CProgAnalyzer::ResetPidMap(void)
 			case 0x0011 :	// SDT
 			case 0x0012 :	// EIT
 			case 0x0014 :	// TOT
-				// ƒŠƒZƒbƒg
+				// ãƒªã‚»ãƒƒãƒˆ
 				m_TsPidMapper.ResetPid(wPID);
 				break;
 			
 			default :
-				// ƒAƒ“ƒ}ƒbƒv
+				// ã‚¢ãƒ³ãƒãƒƒãƒ—
 				m_TsPidMapper.UnmapPid(wPID);
 				break;			
 			}
@@ -417,10 +417,10 @@ void CProgAnalyzer::ResetPidMap(void)
 
 CProgAnalyzer::PROGRAM_ITEM * CProgAnalyzer::FindProgramItem(WORD wProgramID)
 {
-	// ƒvƒƒOƒ‰ƒ€IDÈ—ª‚ÍŒ»İ‚ÌƒvƒƒOƒ‰ƒ€‚ğŒŸõ‚·‚é
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDçœç•¥æ™‚ã¯ç¾åœ¨ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’æ¤œç´¢ã™ã‚‹
 	if(!wProgramID)wProgramID = GetCurrentProgramID();
 
-	// ƒvƒƒOƒ‰ƒ€ID‚©‚ç‘Î‰‚·‚éƒAƒCƒeƒ€‚ğŒŸõ‚µ‚Ä•Ô‚·
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ IDã‹ã‚‰å¯¾å¿œã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ¤œç´¢ã—ã¦è¿”ã™
 	for(ProgramList::iterator itProgram = m_ProgContext.ProgList.begin() ; itProgram != m_ProgContext.ProgList.end() ; itProgram++){
 		if(itProgram->wProgramID == wProgramID){
 			return &(*itProgram);

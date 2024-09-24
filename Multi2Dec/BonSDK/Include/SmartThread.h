@@ -1,4 +1,4 @@
-// SmartThread.h: ƒXƒ}[ƒgƒXƒŒƒbƒhƒNƒ‰ƒX
+ï»¿// SmartThread.h: ã‚¹ãƒãƒ¼ãƒˆã‚¹ãƒ¬ãƒƒãƒ‰ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,13 +6,13 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒXƒ}[ƒgƒXƒŒƒbƒhƒNƒ‰ƒX
+// ã‚¹ãƒãƒ¼ãƒˆã‚¹ãƒ¬ãƒƒãƒ‰ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 template <class T> class CSmartThread
 {
 public:
-	// ƒXƒŒƒbƒhƒƒ\ƒbƒhŒ^
+	// ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ¡ã‚½ãƒƒãƒ‰å‹
 	typedef void (T::*TAGET_FUNC)(CSmartThread *pThread, bool &bKillSignal, PVOID pParam);
 
 	CSmartThread(void)
@@ -36,25 +36,25 @@ public:
 	{
 		if(!pOwner || !pTargetFunc)return false;
 		
-		// ŠJ•ú‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍŠJ•ú‚·‚é
+		// é–‹æ”¾ã•ã‚Œã¦ã„ãªã„å ´åˆã¯é–‹æ”¾ã™ã‚‹
 		if(m_hThread)::CloseHandle(m_hThread);
 	
-		// ŠÖ”ƒ|ƒCƒ“ƒ^Aƒpƒ‰ƒ[ƒ^•Û‘¶
+		// é–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä¿å­˜
 		m_pThreadOwner = pOwner;
 		m_pTargetFunc = pTargetFunc;
 		m_pThreadParam = pThreadParam;
 		
-		// ƒVƒOƒiƒ‹ƒNƒŠƒA
+		// ã‚·ã‚°ãƒŠãƒ«ã‚¯ãƒªã‚¢
 		m_bSyncSignal = false;
 		m_bKillSignal = false;
 		
-		// ƒXƒŒƒbƒh‹N“®
+		// ã‚¹ãƒ¬ãƒƒãƒ‰èµ·å‹•
 		if(!(m_hThread = ::CreateThread(NULL, 0UL, CSmartThread::ThreadFunc, static_cast<LPVOID>(this), (bStart)? 0UL : CREATE_SUSPENDED, &m_dwThreadID))){
-			// ƒXƒŒƒbƒh‹N“®¸”s
+			// ã‚¹ãƒ¬ãƒƒãƒ‰èµ·å‹•å¤±æ•—
 			return false;
 			}
 
-		// ƒXƒŒƒbƒh‹N“®Š®—¹‘Ò‚¿
+		// ã‚¹ãƒ¬ãƒƒãƒ‰èµ·å‹•å®Œäº†å¾…ã¡
 		if(bStart){
 			while(!m_bSyncSignal)::Sleep(0);
 			}	
@@ -66,22 +66,22 @@ public:
 	{
 		if(!m_hThread)return false;
 	
-		// I—¹ƒVƒOƒiƒ‹ƒZƒbƒg
+		// çµ‚äº†ã‚·ã‚°ãƒŠãƒ«ã‚»ãƒƒãƒˆ
 		m_bKillSignal = true;
 
-		// ƒXƒŒƒbƒh‚Ì’†‚©‚çŒÄ‚Ño‚µ‚½ê‡‚ÍŠJ•ú‚µ‚È‚¢
+		// ã‚¹ãƒ¬ãƒƒãƒ‰ã®ä¸­ã‹ã‚‰å‘¼ã³å‡ºã—ãŸå ´åˆã¯é–‹æ”¾ã—ãªã„
 		if(::GetCurrentThreadId() == m_dwThreadID)return true;
 	
-		// ƒTƒXƒyƒ“ƒhó‘Ô‚Ì‚Æ‚«‚ÍƒŒƒWƒ…[ƒ€
+		// ã‚µã‚¹ãƒšãƒ³ãƒ‰çŠ¶æ…‹ã®ã¨ãã¯ãƒ¬ã‚¸ãƒ¥ãƒ¼ãƒ 
 		::ResumeThread(m_hThread);
 
-		// I—¹‚ğ‘Ò‚Â
+		// çµ‚äº†ã‚’å¾…ã¤
 		while(m_bSyncSignal){
 			if(!bPumpMessage)::Sleep(0);
 			else PumpMessage();
 			}
 
-		// ƒXƒŒƒbƒhŠJ•ú
+		// ã‚¹ãƒ¬ãƒƒãƒ‰é–‹æ”¾
 		::CloseHandle(m_hThread);
 		m_hThread = NULL;
 
@@ -92,7 +92,7 @@ public:
 	{
 		if(!m_hThread)false;
 
-		// ƒXƒŒƒbƒhƒTƒXƒyƒ“ƒh
+		// ã‚¹ãƒ¬ãƒƒãƒ‰ã‚µã‚¹ãƒšãƒ³ãƒ‰
 		::SuspendThread(m_hThread);
 	
 		return true;	
@@ -102,7 +102,7 @@ public:
 	{
 		if(!m_hThread)false;
 
-		// ƒXƒŒƒbƒhƒŒƒWƒ…[ƒ€
+		// ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ¬ã‚¸ãƒ¥ãƒ¼ãƒ 
 		::ResumeThread(m_hThread);
 	
 		return true;	
@@ -110,19 +110,19 @@ public:
 
 	const HANDLE GetThreadHandle(void) const
 	{
-		// ƒXƒŒƒbƒhƒnƒ“ƒhƒ‹‚ğ•Ô‚·
+		// ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã™
 		return m_hThread;	
 	}
 	
 	const DWORD GetThreadID(void) const
 	{
-		// ƒXƒŒƒbƒhID‚ğ•Ô‚·
+		// ã‚¹ãƒ¬ãƒƒãƒ‰IDã‚’è¿”ã™
 		return m_dwThreadID;
 	}
 
 	const bool IsRunning(void) const
 	{
-		// ƒXƒŒƒbƒhÀs’†—L–³‚ğ•Ô‚·
+		// ã‚¹ãƒ¬ãƒƒãƒ‰å®Ÿè¡Œä¸­æœ‰ç„¡ã‚’è¿”ã™
 		return m_bSyncSignal;
 	}
 	
@@ -131,19 +131,19 @@ protected:
 	{
 		CSmartThread *pThis = static_cast<CSmartThread *>(pParam);
 
-		// ƒTƒXƒyƒ“ƒhó‘Ô‚ÅI—¹
+		// ã‚µã‚¹ãƒšãƒ³ãƒ‰çŠ¶æ…‹ã§çµ‚äº†
 		if(pThis->m_bKillSignal){
 			pThis->m_bSyncSignal = false;
 			return 0UL;	
 			}
 
-		// ‹N“®ƒVƒOƒiƒ‹ƒZƒbƒg
+		// èµ·å‹•ã‚·ã‚°ãƒŠãƒ«ã‚»ãƒƒãƒˆ
 		pThis->m_bSyncSignal = true;
 
-		// ƒXƒŒƒbƒhƒƒ\ƒbƒhÀs
+		// ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ¡ã‚½ãƒƒãƒ‰å®Ÿè¡Œ
 		((pThis->m_pThreadOwner)->*(pThis->m_pTargetFunc))(pThis, pThis->m_bKillSignal, pThis->m_pThreadParam);
 
-		// ‹N“®ƒVƒOƒiƒ‹ƒNƒŠƒA
+		// èµ·å‹•ã‚·ã‚°ãƒŠãƒ«ã‚¯ãƒªã‚¢
 		pThis->m_bSyncSignal = false;
 
 		return 0UL;	
@@ -153,7 +153,7 @@ protected:
 	{
 		MSG Msg;
 
-		// ƒƒbƒZ[ƒWƒ|ƒ“ƒv‚ğ‹ì“®‚·‚é
+		// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ—ã‚’é§†å‹•ã™ã‚‹
 		while(::PeekMessage(&Msg, NULL, 0UL, 0UL, PM_REMOVE)){
 			::TranslateMessage(&Msg);
 			::DispatchMessage(&Msg);

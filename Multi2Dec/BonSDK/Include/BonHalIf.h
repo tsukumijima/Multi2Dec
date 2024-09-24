@@ -1,4 +1,4 @@
-// BonHalIf.h: Bon HALƒCƒ“ƒ^ƒtƒF[ƒX’è‹`
+ï»¿// BonHalIf.h: Bon HALã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å®šç¾©
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// HALŠî–{ƒCƒ“ƒ^ƒtƒF[ƒX
+// HALåŸºæœ¬ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IHalDevice :				public IBonObject
@@ -20,7 +20,7 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒ`ƒ…[ƒi HALƒCƒ“ƒ^ƒtƒF[ƒX
+// TSãƒãƒ¥ãƒ¼ãƒŠ HALã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IHalTsTuner :				public IBonObject
@@ -48,28 +48,28 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// B-CASƒJ[ƒh HALƒCƒ“ƒ^ƒtƒF[ƒX
+// B-CASã‚«ãƒ¼ãƒ‰ HALã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class IHalBcasCard :			public IBonObject
 {
 public:
-	enum	// GetEcmError() ƒŠƒ^[ƒ“ƒR[ƒh
+	enum	// GetEcmError() ãƒªã‚¿ãƒ¼ãƒ³ã‚³ãƒ¼ãƒ‰
 	{
-		EC_NO_ERROR			= 0x00000000UL,		// ƒGƒ‰[‚È‚µ³í
-		EC_NOT_OPEN			= 0x00000001UL,		// ƒJ[ƒh‚ğƒI[ƒvƒ“‚µ‚Ä‚¢‚È‚¢
-		EC_TRANSMIT_ERROR	= 0x00000002UL,		// ƒJ[ƒh’ÊMƒGƒ‰[
-		EC_NOT_CONTRACTED	= 0x00000003UL,		// ‹’®–¢Œ_–ñ
-		EC_BADARGUMENT		= 0x00000004UL		// ˆø”‚ª•s³
+		EC_NO_ERROR			= 0x00000000UL,		// ã‚¨ãƒ©ãƒ¼ãªã—æ­£å¸¸
+		EC_NOT_OPEN			= 0x00000001UL,		// ã‚«ãƒ¼ãƒ‰ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã—ã¦ã„ãªã„
+		EC_TRANSMIT_ERROR	= 0x00000002UL,		// ã‚«ãƒ¼ãƒ‰é€šä¿¡ã‚¨ãƒ©ãƒ¼
+		EC_NOT_CONTRACTED	= 0x00000003UL,		// è¦–è´æœªå¥‘ç´„
+		EC_BADARGUMENT		= 0x00000004UL		// å¼•æ•°ãŒä¸æ­£
 	};
 
-	typedef struct		// ’Ê“d§Œäî•ñ\‘¢‘Ì
+	typedef struct		// é€šé›»åˆ¶å¾¡æƒ…å ±æ§‹é€ ä½“
 	{
-		SYSTEMTIME stStartTime;	// ’Ê“dŠJn“ú
-		SYSTEMTIME stEndTime;	// ’Ê“dI—¹“ú
-		BYTE byDurTime;			// “dŒ¹OFFŒã‚Ì’Ê“dŠÔ[h]
-		WORD wNtID;				// óMƒlƒbƒgƒ[ƒN
-		WORD wTsID;				// óMTS
+		SYSTEMTIME stStartTime;	// é€šé›»é–‹å§‹æ—¥
+		SYSTEMTIME stEndTime;	// é€šé›»çµ‚äº†æ—¥
+		BYTE byDurTime;			// é›»æºOFFå¾Œã®é€šé›»æ™‚é–“[h]
+		WORD wNtID;				// å—ä¿¡ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯
+		WORD wTsID;				// å—ä¿¡TS
 	} POWERCTRLINFO;
 	
 	virtual const bool OpenCard(void) = 0;
@@ -77,9 +77,9 @@ public:
 	
 	virtual const bool IsInteractive(void) = 0;
 	
-	virtual const BYTE * GetBcasCardID(void) = 0;	// 6ƒoƒCƒg
-	virtual const BYTE * GetInitialCbc(void) = 0;	// 8ƒoƒCƒg
-	virtual const BYTE * GetSystemKey(void) = 0;	// 32ƒoƒCƒg
+	virtual const BYTE * GetBcasCardID(void) = 0;	// 6ãƒã‚¤ãƒˆ
+	virtual const BYTE * GetInitialCbc(void) = 0;	// 8ãƒã‚¤ãƒˆ
+	virtual const BYTE * GetSystemKey(void) = 0;	// 32ãƒã‚¤ãƒˆ
 	
 	virtual const BYTE * GetKsFromEcm(const BYTE *pEcmData, const DWORD dwEcmSize) = 0;
 	virtual const DWORD GetEcmError(void) = 0;

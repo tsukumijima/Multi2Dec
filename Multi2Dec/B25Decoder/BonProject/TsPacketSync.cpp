@@ -1,4 +1,4 @@
-// TsPacketSync.cpp: TSƒpƒPƒbƒg“¯ŠúƒfƒR[ƒ_
+ï»¿// TsPacketSync.cpp: TSãƒ‘ã‚±ãƒƒãƒˆåŒæœŸãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,26 +8,26 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
-#define STRIDE_FILTER	10UL		// ƒpƒPƒbƒgüŠú”»’èƒtƒBƒ‹ƒ^‰ñ”
-#define BITRATE_PERIOD	1000UL		// ƒrƒbƒgƒŒ[ƒgXVüŠú(1000ms)
+#define STRIDE_FILTER	10UL		// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸåˆ¤å®šãƒ•ã‚£ãƒ«ã‚¿å›æ•°
+#define BITRATE_PERIOD	1000UL		// ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆæ›´æ–°å‘¨æœŸ(1000ms)
 
-// ƒNƒŠƒbƒv•t‚«ƒCƒ“ƒNƒŠƒƒ“ƒgƒ}ƒNƒ
+// ã‚¯ãƒªãƒƒãƒ—ä»˜ãã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆãƒã‚¯ãƒ­
 #define CLIPED_INCREMENT(V)			{if((V) < 0xFFFFFFFFUL)(V)++;}
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒpƒPƒbƒg“¯ŠúƒfƒR[ƒ_
+// TSãƒ‘ã‚±ãƒƒãƒˆåŒæœŸãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const bool CTsPacketSync::InputMedia(IMediaData *pMediaData, const DWORD dwInputIndex)
 {
-	// “ü—Íƒpƒ‰ƒ[ƒ^ƒ`ƒFƒbƒN
+	// å…¥åŠ›ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒã‚§ãƒƒã‚¯
 	if(!pMediaData || (dwInputIndex >= GetInputNum()))return false;
 
-	// ƒpƒPƒbƒg“¯Šú
+	// ãƒ‘ã‚±ãƒƒãƒˆåŒæœŸ
 	SyncPacket(pMediaData->GetData(), pMediaData->GetSize());
 
 	return true;
@@ -35,19 +35,19 @@ const bool CTsPacketSync::InputMedia(IMediaData *pMediaData, const DWORD dwInput
 
 void CTsPacketSync::DiscardNullPacket(const bool bEnable)
 {
-	// NULLƒpƒPƒbƒg‚Ì”jŠü‚ğ—LŒø/–³Œø‰»İ’è
+	// NULLãƒ‘ã‚±ãƒƒãƒˆã®ç ´æ£„ã‚’æœ‰åŠ¹/ç„¡åŠ¹åŒ–è¨­å®š
 	m_bDiscardNullPacket = (bEnable)? true : false;
 }
 
 void CTsPacketSync::ResetStatistics(void)
 {
-	// ƒpƒPƒbƒgüŠúƒJƒEƒ“ƒ^‚ğƒŠƒZƒbƒg
+	// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸã‚«ã‚¦ãƒ³ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆ
 	m_dwCurStrideSize = 0UL;
 	m_dwPrvStrideSize = 0UL;
 	m_dwFixStrideSize = 0UL;
 	m_dwFixStrideCount = 0UL;
 
-	// “Œvƒf[ƒ^‚ğƒŠƒZƒbƒg‚·‚é
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	m_dwInputPacketNum = 0UL;
 	m_dwOutputPacketNum = 0UL;
 	m_dwSyncErrNum = 0UL;
@@ -64,61 +64,61 @@ void CTsPacketSync::ResetStatistics(void)
 	::ZeroMemory(m_adwOutputPacketNum, sizeof(m_adwOutputPacketNum));
 	::ZeroMemory(m_adwContinuityErrNum, sizeof(m_adwContinuityErrNum));
 
-	// ƒpƒPƒbƒg˜A‘±«ƒJƒEƒ“ƒ^‚ğ‰Šú‰»‚·‚é
+	// ãƒ‘ã‚±ãƒƒãƒˆé€£ç¶šæ€§ã‚«ã‚¦ãƒ³ã‚¿ã‚’åˆæœŸåŒ–ã™ã‚‹
 	::FillMemory(m_abyContCounter, sizeof(m_abyContCounter), 0x10UL);
 }
 
 const DWORD CTsPacketSync::GetPacketStride(void)
 {
-	// ƒpƒPƒbƒgüŠú‚ğ•Ô‚·
+	// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸã‚’è¿”ã™
 	return m_dwFixStrideSize;
 }
 
 const DWORD CTsPacketSync::GetInputPacketNum(const WORD wPID)
 {
-	// “ü—ÍƒpƒPƒbƒg”‚ğ•Ô‚·(ƒGƒ‰[ƒpƒPƒbƒgœ‚­ANULLƒpƒPƒbƒgŠÜ‚Ş)
+	// å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™(ã‚¨ãƒ©ãƒ¼ãƒ‘ã‚±ãƒƒãƒˆé™¤ãã€NULLãƒ‘ã‚±ãƒƒãƒˆå«ã‚€)
 	return (wPID < 0x2000U)? m_adwInputPacketNum[wPID] : m_dwInputPacketNum;
 }
 
 const DWORD CTsPacketSync::GetOutputPacketNum(const WORD wPID)
 {
-	// o—ÍƒpƒPƒbƒg”‚ğ•Ô‚·(NULLƒpƒPƒbƒgœ‚­)
+	// å‡ºåŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚’è¿”ã™(NULLãƒ‘ã‚±ãƒƒãƒˆé™¤ã)
 	return (wPID < 0x2000U)? m_adwOutputPacketNum[wPID] : m_dwOutputPacketNum;
 }
 
 const DWORD CTsPacketSync::GetInputBitrate(void)
 {
-	// “ü—ÍƒrƒbƒgƒŒ[ƒg‚ğ•Ô‚·(ƒpƒPƒbƒgƒTƒCƒY~1•bŠÔ‚Ì“ü—ÍƒpƒPƒbƒg”~8bit)
+	// å…¥åŠ›ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆã‚’è¿”ã™(ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºÃ—1ç§’é–“ã®å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°Ã—8bit)
 	return m_dwLastInputPacket * TS_PACKET_SIZE * 8UL;
 }
 
 const DWORD CTsPacketSync::GetOutputBitrate(void)
 {
-	// o—ÍƒrƒbƒgƒŒ[ƒg‚ğ•Ô‚·(ƒpƒPƒbƒgƒTƒCƒY~1•bŠÔ‚Ì“ü—ÍƒpƒPƒbƒg”~8bit)
+	// å‡ºåŠ›ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆã‚’è¿”ã™(ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºÃ—1ç§’é–“ã®å…¥åŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°Ã—8bit)
 	return m_dwLastInputPacket * TS_PACKET_SIZE * 8UL;
 }
 
 const DWORD CTsPacketSync::GetSyncErrNum(void)
 {
-	// “¯ŠúƒGƒ‰[”‚ğ•Ô‚·(ƒpƒPƒbƒg‹«ŠE‚ª—‚ê‚éƒ‚[ƒh)
+	// åŒæœŸã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™(ãƒ‘ã‚±ãƒƒãƒˆå¢ƒç•ŒãŒä¹±ã‚Œã‚‹ãƒ¢ãƒ¼ãƒ‰)
 	return m_dwSyncErrNum;
 }
 
 const DWORD CTsPacketSync::GetFormatErrNum(void)
 {
-	// ƒtƒH[ƒ}ƒbƒgƒGƒ‰[”‚ğ•Ô‚·(ƒpƒPƒbƒgƒwƒbƒ_‚ª‹KŠiŠO‚Ìƒ‚[ƒh)
+	// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™(ãƒ‘ã‚±ãƒƒãƒˆãƒ˜ãƒƒãƒ€ãŒè¦æ ¼å¤–ã®ãƒ¢ãƒ¼ãƒ‰)
 	return m_dwFormatErrNum;
 }
 
 const DWORD CTsPacketSync::GetTransportErrNum(void)
 {
-	// ƒgƒ‰ƒ“ƒXƒ|[ƒgƒGƒ‰[”‚ğ•Ô‚·(Transport Error Indicator‚ª—§‚Âƒ‚[ƒh)
+	// ãƒˆãƒ©ãƒ³ã‚¹ãƒãƒ¼ãƒˆã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™(Transport Error IndicatorãŒç«‹ã¤ãƒ¢ãƒ¼ãƒ‰)
 	return m_dwTransportErrNum;
 }
 
 const DWORD CTsPacketSync::GetContinuityErrNum(const WORD wPID)
 {
-	// ˜A‘±«ƒGƒ‰[”‚ğ•Ô‚·(Continuity Counter‚ª•s˜A‘±‚É‚È‚éƒ‚[ƒh)
+	// é€£ç¶šæ€§ã‚¨ãƒ©ãƒ¼æ•°ã‚’è¿”ã™(Continuity CounterãŒä¸é€£ç¶šã«ãªã‚‹ãƒ¢ãƒ¼ãƒ‰)
 	return (wPID < 0x2000U)? m_adwContinuityErrNum[wPID] : m_dwContinuityErrNum;
 }
 
@@ -142,27 +142,27 @@ CTsPacketSync::CTsPacketSync(IBonObject *pOwner)
 	, m_dwCurInputPacket(0UL)
 	, m_dwCurOutputPacket(0UL)
 {
-	// “Œvƒf[ƒ^‰Šú‰»
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿åˆæœŸåŒ–
 	ResetStatistics();
 }
 
 CTsPacketSync::~CTsPacketSync(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 const bool CTsPacketSync::OnPlay(void)
 {
-	// “à•”ó‘Ô‚ğ‰Šú‰»‚·‚é
+	// å†…éƒ¨çŠ¶æ…‹ã‚’åˆæœŸåŒ–ã™ã‚‹
 	return OnReset();
 }
 
 const bool CTsPacketSync::OnReset(void)
 {
-	// ƒpƒPƒbƒgƒTƒCƒYƒNƒŠƒA
+	// ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºã‚¯ãƒªã‚¢
 	m_TsPacket.ClearSize();
 
-	// “Œvƒf[ƒ^ƒŠƒZƒbƒg
+	// çµ±è¨ˆãƒ‡ãƒ¼ã‚¿ãƒªã‚»ãƒƒãƒˆ
 	ResetStatistics();
 	
 	return true;
@@ -177,12 +177,12 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 		dwCurSize = m_TsPacket.GetSize();
 
 		if(!dwCurSize){
-			// “¯ŠúƒoƒCƒg‘Ò‚¿’†
+			// åŒæœŸãƒã‚¤ãƒˆå¾…ã¡ä¸­
 			do{
 				m_dwCurStrideSize++;
 				
 				if(pStream[dwCurPos++] == 0x47U){
-					// “¯ŠúƒoƒCƒg”­Œ©
+					// åŒæœŸãƒã‚¤ãƒˆç™ºè¦‹
 					m_TsPacket.AddByte(0x47U);
 					break;
 					}
@@ -190,28 +190,28 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 			while(dwCurPos < dwSize);
 			}
 		else{
-			// ƒf[ƒ^‘Ò‚¿
+			// ãƒ‡ãƒ¼ã‚¿å¾…ã¡
 			if((dwSize - dwCurPos) >= (TS_PACKET_SIZE - dwCurSize)){
-				// ƒpƒPƒbƒgƒTƒCƒY•ªƒf[ƒ^‚ª‚»‚ë‚Á‚½
+				// ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºåˆ†ãƒ‡ãƒ¼ã‚¿ãŒãã‚ã£ãŸ
 				m_TsPacket.AddData(&pStream[dwCurPos], TS_PACKET_SIZE - dwCurSize);
 				m_dwCurStrideSize += (TS_PACKET_SIZE - dwCurSize);
 				dwCurPos += (TS_PACKET_SIZE - dwCurSize);
 				
-				// ƒwƒbƒ_‰ğÍ
+				// ãƒ˜ãƒƒãƒ€è§£æ
 				if(ParseTsPacket()){
-					// ƒpƒPƒbƒg³í
+					// ãƒ‘ã‚±ãƒƒãƒˆæ­£å¸¸
 
-					// “¯ŠúƒGƒ‰[”»’è
+					// åŒæœŸã‚¨ãƒ©ãƒ¼åˆ¤å®š
 					if((m_dwFixStrideSize != m_dwCurStrideSize) && m_dwFixStrideSize){
-						// ƒpƒPƒbƒgüŠúˆÙí
+						// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸç•°å¸¸
 						CLIPED_INCREMENT(m_dwSyncErrNum);
 						SendDecoderEvent(EID_SYNC_ERR, reinterpret_cast<PVOID>(m_dwSyncErrNum));
 						}
 
-					// ƒpƒPƒbƒgüŠúƒtƒBƒ‹ƒ^ƒŠƒ“ƒO
+					// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸãƒ•ã‚£ãƒ«ã‚¿ãƒªãƒ³ã‚°
 					if(m_dwCurStrideSize == m_dwPrvStrideSize){
 						if(++m_dwFixStrideCount >= STRIDE_FILTER){
-							// ƒpƒPƒbƒgüŠúŠm’è
+							// ãƒ‘ã‚±ãƒƒãƒˆå‘¨æœŸç¢ºå®š
 							m_dwFixStrideSize = m_dwCurStrideSize;
 							m_dwFixStrideCount = STRIDE_FILTER;
 							}
@@ -221,19 +221,19 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 						m_dwFixStrideCount = 0UL;
 						}
 
-					// ƒpƒPƒbƒgo—Í
+					// ãƒ‘ã‚±ãƒƒãƒˆå‡ºåŠ›
 					OnTsPacket();
 
-					// ƒrƒbƒgƒŒ[ƒgXV
+					// ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆæ›´æ–°
 					UpdateBitrate();
 					}
 
-				// ƒpƒPƒbƒgƒTƒCƒYƒNƒŠƒA
+				// ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºã‚¯ãƒªã‚¢
 				m_TsPacket.ClearSize();
 				m_dwCurStrideSize = 0UL;			
 				}	
 			else{
-				// c‚è‚Ìƒf[ƒ^‚ÍƒpƒPƒbƒgƒTƒCƒY‚É–‚½‚È‚¢
+				// æ®‹ã‚Šã®ãƒ‡ãƒ¼ã‚¿ã¯ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºã«æº€ãŸãªã„
 				m_TsPacket.AddData(&pStream[dwCurPos], dwSize - dwCurPos);
 				m_dwCurStrideSize += (dwSize - dwCurPos);
 				dwCurPos += (dwSize - dwCurPos);
@@ -244,29 +244,29 @@ void CTsPacketSync::SyncPacket(const BYTE *pStream, const DWORD dwSize)
 
 const bool CTsPacketSync::ParseTsPacket(void)
 {
-	// ƒpƒPƒbƒg‚ğ‰ğÍ‚·‚é
+	// ãƒ‘ã‚±ãƒƒãƒˆã‚’è§£æã™ã‚‹
 	switch(m_TsPacket.ParsePacket(m_abyContCounter)){
 		case ITsPacket::EC_VALID :
-			// ƒpƒPƒbƒg³í
+			// ãƒ‘ã‚±ãƒƒãƒˆæ­£å¸¸
 			CLIPED_INCREMENT(m_dwInputPacketNum);
 			CLIPED_INCREMENT(m_adwInputPacketNum[m_TsPacket.GetPID()]);
 			CLIPED_INCREMENT(m_dwCurInputPacket);
 			return true;
 
 		case ITsPacket::EC_FORMAT :
-			// ƒtƒH[ƒ}ƒbƒgˆÙí
+			// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆç•°å¸¸
 			CLIPED_INCREMENT(m_dwFormatErrNum);
 			SendDecoderEvent(EID_FORMAT_ERR, reinterpret_cast<PVOID>(m_dwFormatErrNum));
 			return false;
 		
 		case ITsPacket::EC_TRANSPORT :
-			// ƒgƒ‰ƒ“ƒXƒ|[ƒgƒGƒ‰[ˆÙí
+			// ãƒˆãƒ©ãƒ³ã‚¹ãƒãƒ¼ãƒˆã‚¨ãƒ©ãƒ¼ç•°å¸¸
 			CLIPED_INCREMENT(m_dwTransportErrNum);
 			SendDecoderEvent(EID_TRANSPORT_ERR, reinterpret_cast<PVOID>(m_dwTransportErrNum));
 			return false;
 	
 		case ITsPacket::EC_CONTINUITY :
-			// ˜A‘±«ˆÙí(ƒhƒƒbƒv)@¦ƒpƒPƒbƒg‚Ì”jŠü‚Í‚µ‚È‚¢
+			// é€£ç¶šæ€§ç•°å¸¸(ãƒ‰ãƒ­ãƒƒãƒ—)ã€€â€»ãƒ‘ã‚±ãƒƒãƒˆã®ç ´æ£„ã¯ã—ãªã„
 			CLIPED_INCREMENT(m_dwInputPacketNum);
 			CLIPED_INCREMENT(m_adwInputPacketNum[m_TsPacket.GetPID()]);
 			CLIPED_INCREMENT(m_dwContinuityErrNum);
@@ -276,7 +276,7 @@ const bool CTsPacketSync::ParseTsPacket(void)
 			return true;
 		
 		default :
-			// —áŠO
+			// ä¾‹å¤–
 			::DebugBreak();
 			return false;
 		}
@@ -284,37 +284,37 @@ const bool CTsPacketSync::ParseTsPacket(void)
 
 void CTsPacketSync::OnTsPacket(void)
 {
-	// ³íƒpƒPƒbƒgo—Í
+	// æ­£å¸¸ãƒ‘ã‚±ãƒƒãƒˆå‡ºåŠ›
 	const WORD wPID = m_TsPacket.GetPID();
 
-	// NULLƒpƒPƒbƒg‚Í”jŠü‚·‚é
+	// NULLãƒ‘ã‚±ãƒƒãƒˆã¯ç ´æ£„ã™ã‚‹
 	if(m_bDiscardNullPacket && (wPID == 0x1FFFU))return;
 
-	// o—ÍƒpƒPƒbƒg”ƒCƒ“ƒNƒŠƒƒ“ƒg
+	// å‡ºåŠ›ãƒ‘ã‚±ãƒƒãƒˆæ•°ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	CLIPED_INCREMENT(m_dwOutputPacketNum);
 	CLIPED_INCREMENT(m_adwOutputPacketNum[wPID]);
 	CLIPED_INCREMENT(m_dwCurOutputPacket);
 	
-	// ‰ºˆÊƒfƒR[ƒ_‚Éƒf[ƒ^o—Í
+	// ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã«ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
 	OutputMedia(&m_TsPacket);
 }
 
 void CTsPacketSync::UpdateBitrate(void)
 {
-	// ƒrƒbƒgƒŒ[ƒgXV
+	// ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆæ›´æ–°
 	const DWORD dwCurUpdateTime = ::GetTickCount();
 	
-	// XVüŠúƒ`ƒFƒbƒN
+	// æ›´æ–°å‘¨æœŸãƒã‚§ãƒƒã‚¯
 	if((dwCurUpdateTime - m_dwLastUpdateTime) < BITRATE_PERIOD)return;
 
-	// ƒJƒEƒ“ƒ^XV
+	// ã‚«ã‚¦ãƒ³ã‚¿æ›´æ–°
 	m_dwLastInputPacket = m_dwCurInputPacket;
 	m_dwLastOutputPacket = m_dwCurOutputPacket;
 
-	// ƒJƒEƒ“ƒ^ƒŠƒZƒbƒg
+	// ã‚«ã‚¦ãƒ³ã‚¿ãƒªã‚»ãƒƒãƒˆ
 	m_dwCurInputPacket = 0UL;
 	m_dwCurOutputPacket = 0UL;
 	
-	// üŠúXV
+	// å‘¨æœŸæ›´æ–°
 	m_dwLastUpdateTime = dwCurUpdateTime;
 }

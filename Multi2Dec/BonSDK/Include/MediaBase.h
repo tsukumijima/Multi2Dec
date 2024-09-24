@@ -1,4 +1,4 @@
-// MediaBase.h: BonƒƒfƒBƒAŠî’êƒNƒ‰ƒX
+ï»¿// MediaBase.h: Bonãƒ¡ãƒ‡ã‚£ã‚¢åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IMediaDataŠî’êƒNƒ‰ƒX
+// IMediaDataåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CMediaData :	public CBonObject,
@@ -56,7 +56,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IMediaDecoderŠî’êƒNƒ‰ƒX
+// IMediaDecoderåŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 class CMediaDecoder :	public CBonObject,
@@ -86,7 +86,7 @@ protected:
 	virtual const bool OutputMedia(IMediaData *pMediaData, const DWORD dwOutptIndex = 0UL);
 	virtual const DWORD SendDecoderEvent(const DWORD dwEventID, PVOID pParam = NULL);
 
-	// o—Íƒsƒ“ƒf[ƒ^ƒx[ƒX
+	// å‡ºåŠ›ãƒ”ãƒ³ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹
 	struct TAG_OUTPUTDECODER
 	{
 		IMediaDecoder *pDecoder;

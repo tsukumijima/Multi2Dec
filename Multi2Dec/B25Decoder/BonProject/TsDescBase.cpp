@@ -1,4 +1,4 @@
-// TsDescBase.cpp: ƒfƒXƒNƒŠƒvƒ^Šî’êƒNƒ‰ƒX
+ï»¿// TsDescBase.cpp: ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿åŸºåº•ã‚¯ãƒ©ã‚¹
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,25 +9,25 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒfƒXƒNƒŠƒvƒ^‹¤’ÊƒCƒ“ƒ^ƒtƒF[ƒXŠî’êƒNƒ‰ƒX
+// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿å…±é€šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CDescBase::ParseDesc(const BYTE *pData, const DWORD dwDataSize)
 {
-	// ‹Lqq‚ÌƒfƒtƒHƒ‹ƒg‰ğÍˆ—
-	if(!pData)return 0UL;									// ƒf[ƒ^‚ª‹ó
-	else if(dwDataSize < 2U)return 0UL;						// Å’á‚Å‚àƒ^ƒO+‹Lqq’·‚Ì2ƒoƒCƒg•K—v
-	else if(dwDataSize < (WORD)(pData[1] + 2U))return 0UL;	// ƒf[ƒ^‚ª‹Lqq‚ÌƒTƒCƒY‚æ‚è‚à¬‚³‚¢
+	// è¨˜è¿°å­ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè§£æå‡¦ç†
+	if(!pData)return 0UL;									// ãƒ‡ãƒ¼ã‚¿ãŒç©º
+	else if(dwDataSize < 2U)return 0UL;						// æœ€ä½ã§ã‚‚ã‚¿ã‚°+è¨˜è¿°å­é•·ã®2ãƒã‚¤ãƒˆå¿…è¦
+	else if(dwDataSize < (WORD)(pData[1] + 2U))return 0UL;	// ãƒ‡ãƒ¼ã‚¿ãŒè¨˜è¿°å­ã®ã‚µã‚¤ã‚ºã‚ˆã‚Šã‚‚å°ã•ã„
 
-	// ƒwƒbƒ_•Û‘¶
+	// ãƒ˜ãƒƒãƒ€ä¿å­˜
 	m_byDescTag = pData[0];
 	m_byDescLen = pData[1];
 
-	// ƒf[ƒ^ƒ|ƒCƒ“ƒ^•Û‘¶
+	// ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿ä¿å­˜
 	m_pDescData = (m_byDescLen)? &pData[2] : NULL;
 
 	if(m_pDescData){
-		// ƒf[ƒ^‰ğÍ
+		// ãƒ‡ãƒ¼ã‚¿è§£æ
 		if(!ParseData())return 0UL;
 		}
 
@@ -36,19 +36,19 @@ const DWORD CDescBase::ParseDesc(const BYTE *pData, const DWORD dwDataSize)
 
 const BYTE CDescBase::GetTag(void) const
 {
-	// ‹Lqqƒ^ƒO‚ğ•Ô‚·
+	// è¨˜è¿°å­ã‚¿ã‚°ã‚’è¿”ã™
 	return m_byDescTag;
 }
 
 const BYTE CDescBase::GetLength(void) const
 {
-	// ‹Lqq’·‚ğ•Ô‚·(ƒ^ƒO‚Æ‹Lqq’·‚Íœ‚­)
+	// è¨˜è¿°å­é•·ã‚’è¿”ã™(ã‚¿ã‚°ã¨è¨˜è¿°å­é•·ã¯é™¤ã)
 	return m_byDescLen;
 }
 
 const BYTE * CDescBase::GetData(void) const
 {
-	// ‹Lqqƒf[ƒ^‚ğ•Ô‚·
+	// è¨˜è¿°å­ãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™
 	return m_pDescData;
 }
 
@@ -68,49 +68,49 @@ CDescBase::~CDescBase(void)
 
 const bool CDescBase::ParseData(void)
 {
-	// ƒfƒtƒHƒ‹ƒg‚Ìˆ—‚Å‚Í‰½‚à‚µ‚È‚¢(”h¶ƒNƒ‰ƒX‚ÅƒI[ƒo[ƒ‰ƒCƒh‚·‚é)
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å‡¦ç†ã§ã¯ä½•ã‚‚ã—ãªã„(æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹)
 	return true;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒfƒXƒNƒŠƒvƒ^W‡ƒCƒ“ƒ^ƒtƒF[ƒXŠî’êƒNƒ‰ƒX
+// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿é›†åˆã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹åŸºåº•ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CDescBlock::ParseDescs(void)
 {
-	// ‹LqqƒCƒ“ƒXƒ^ƒ“ƒXƒNƒŠƒA
+	// è¨˜è¿°å­ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚¯ãƒªã‚¢
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_DescArray[dwIndex]);
 		}
 	
 	m_DescArray.clear();
 
-	// ƒf[ƒ^ƒ|ƒCƒ“ƒ^æ“¾
+	// ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿å–å¾—
 	const BYTE *pData = GetData();
 	if(!pData || (GetSize() < 2UL))return 0UL;
 
-	// ‹Lqq‰ğÍ
+	// è¨˜è¿°å­è§£æ
 	CDescBase *pDescBase;
 	DWORD dwPos = 0UL;
 
 	while((GetSize() - dwPos) >= 2UL){
-		// ƒ^ƒO‚É‘Î‰‚·‚é‹Lqq‚ÌƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+		// ã‚¿ã‚°ã«å¯¾å¿œã™ã‚‹è¨˜è¿°å­ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 		if(!(pDescBase = CreateDesc(pData[dwPos])))break;
 
-		// ‹Lqq‰ğÍ
+		// è¨˜è¿°å­è§£æ
 		if(pDescBase->ParseDesc(&pData[dwPos], GetSize() - dwPos)){
-			// ‹Lqq’Ç‰Á
+			// è¨˜è¿°å­è¿½åŠ 
 			m_DescArray.push_back(pDescBase);
 			}
 		else{
-			// ”ñ‘Î‰ or ƒGƒ‰[
-			::BON_ASSERT(false, TEXT("‹Lqq‚ª”ñ‘Î‰ or ƒGƒ‰[\r\nTag = %02X"), pData[dwPos]);
+			// éå¯¾å¿œ or ã‚¨ãƒ©ãƒ¼
+			::BON_ASSERT(false, TEXT("è¨˜è¿°å­ãŒéå¯¾å¿œ or ã‚¨ãƒ©ãƒ¼\r\nTag = %02X"), pData[dwPos]);
 			
 			pDescBase->Release();
 			}
 
-		// ‰ğÍˆÊ’uXV
+		// è§£æä½ç½®æ›´æ–°
 		dwPos += (pData[dwPos + 1UL] + 2UL);
 		}
 		
@@ -119,26 +119,26 @@ const DWORD CDescBlock::ParseDescs(void)
 
 void CDescBlock::Reset(void)
 {
-	// ‹LqqƒCƒ“ƒXƒ^ƒ“ƒXƒNƒŠƒA
+	// è¨˜è¿°å­ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚¯ãƒªã‚¢
 	for(DWORD dwIndex = 0UL ; dwIndex < m_DescArray.size() ; dwIndex++){
 		BON_SAFE_RELEASE(m_DescArray[dwIndex]);
 		}
 	
 	m_DescArray.clear();
 
-	// ƒf[ƒ^ƒNƒŠƒA
+	// ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒªã‚¢
 	ClearSize();
 }
 
 const DWORD CDescBlock::GetDescNum(void) const
 {
-	// ‹Lqq‚Ì”‚ğ•Ô‚·
+	// è¨˜è¿°å­ã®æ•°ã‚’è¿”ã™
 	return m_DescArray.size();
 }
 
 const IDescBase * CDescBlock::GetDescByTag(const BYTE byTag, const DWORD dwIndex) const
 {
-	// w’è‚³‚ê‚½ƒ^ƒO‚Ì‹Lqq‚ğ•Ô‚·
+	// æŒ‡å®šã•ã‚ŒãŸã‚¿ã‚°ã®è¨˜è¿°å­ã‚’è¿”ã™
 	for(DWORD dwPos = 0UL, dwCount = 0UL ; dwPos < m_DescArray.size() ; dwPos++){
 		if(m_DescArray[dwPos]){
 			if(m_DescArray[dwPos]->GetTag() == byTag){
@@ -154,20 +154,20 @@ const IDescBase * CDescBlock::GetDescByTag(const BYTE byTag, const DWORD dwIndex
 
 const IDescBase * CDescBlock::GetDescByIndex(const DWORD dwIndex) const
 {
-	// ƒCƒ“ƒfƒbƒNƒX‚Åw’è‚µ‚½‹Lqq‚ğ•Ô‚·
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§æŒ‡å®šã—ãŸè¨˜è¿°å­ã‚’è¿”ã™
 	return (dwIndex < m_DescArray.size())? m_DescArray[dwIndex] : NULL;
 }
 
 const bool CDescBlock::CopyDescBlock(const IDescBlock *pSrc)
 {
-	// IMediaDataƒCƒ“ƒ^ƒtƒF[ƒX‚ğæ“¾
+	// IMediaDataã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å–å¾—
 	const IMediaData * const pMediaData = dynamic_cast<const IMediaData *>(pSrc);
 	if(!pMediaData)return false;	
 	
-	// •Ûƒf[ƒ^ƒŠƒZƒbƒg
+	// ä¿æŒãƒ‡ãƒ¼ã‚¿ãƒªã‚»ãƒƒãƒˆ
 	Reset();
 	
-	// ƒf[ƒ^ƒRƒs[A‰ğÍ
+	// ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼ã€è§£æ
 	if(CMediaData::CopyData(pMediaData)){
 		return (ParseDescs())? true : false;		
 		}
@@ -177,15 +177,15 @@ const bool CDescBlock::CopyDescBlock(const IDescBlock *pSrc)
 
 const DWORD CDescBlock::CopyData(const IMediaData *pSrc)
 {
-	// IPsiSectionƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+	// IPsiSectionã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 	const IDescBlock * const pDescBlock = dynamic_cast<const IDescBlock *>(pSrc);
 
 	if(pDescBlock){
-		// IDescBlock‚Æ‚µ‚ÄƒRƒs[
+		// IDescBlockã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return (CopyDescBlock(pDescBlock))? GetSize() : 0UL;
 		}
 	else{
-		// IMediaData‚Æ‚µ‚ÄƒRƒs[
+		// IMediaDataã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 		return CMediaData::CopyData(pSrc);
 		}
 }
@@ -198,13 +198,13 @@ CDescBlock::CDescBlock(IBonObject *pOwner)
 
 CDescBlock::~CDescBlock(void)
 {
-	// ‹LqqƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// è¨˜è¿°å­ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	Reset();
 }
 
 CDescBase * CDescBlock::CreateDesc(const BYTE byTag)
 {
-	// ƒ^ƒO‚É‘Î‰‚µ‚½‹Lqq‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
+	// ã‚¿ã‚°ã«å¯¾å¿œã—ãŸè¨˜è¿°å­ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
 	switch(byTag){
 		case CCaMethodDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CCaMethodDesc::CreateInstance(NULL));
 		case CNetworkNameDesc::DESC_TAG		: return dynamic_cast<CDescBase *>(CNetworkNameDesc::CreateInstance(NULL));

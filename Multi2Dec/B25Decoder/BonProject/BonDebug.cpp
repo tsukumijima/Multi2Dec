@@ -1,4 +1,4 @@
-// BonDebug.cpp: ƒfƒoƒbƒO•â•ƒ‰ƒCƒuƒ‰ƒŠ
+ï»¿// BonDebug.cpp: ãƒ‡ãƒãƒƒã‚°è£œåŠ©ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—p—áŠOƒNƒ‰ƒX
+// æ±ç”¨ä¾‹å¤–ã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 CBonException::CBonException(LPCSTR lpszSourceFile, const DWORD dwSourceLine, const BONGUID ClassId)
@@ -17,18 +17,18 @@ CBonException::CBonException(LPCSTR lpszSourceFile, const DWORD dwSourceLine, co
 	, m_lpszSourceFile(lpszSourceFile)
 	, m_dwSourceLine(dwSourceLine)
 {
-	// à–¾‚ğ‰Šú‰»
-	::_tcscpy(m_szDescription, TEXT("—áŠO‚ÉŠÖ‚·‚éà–¾‚Í‚ ‚è‚Ü‚¹‚ñ"));
+	// èª¬æ˜ã‚’åˆæœŸåŒ–
+	::_tcscpy(m_szDescription, TEXT("ä¾‹å¤–ã«é–¢ã™ã‚‹èª¬æ˜ã¯ã‚ã‚Šã¾ã›ã‚“"));
 }
 
 CBonException::~CBonException(void)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 CBonException & CBonException::operator( )(LPCTSTR lpszFormat, ...)
 {
-	// à–¾‚ğ‘®‰»
+	// èª¬æ˜ã‚’æ›¸å¼åŒ–
 	va_list Args;
 	va_start(Args ,lpszFormat);
 	::_vstprintf(m_szDescription, lpszFormat, Args);
@@ -39,100 +39,100 @@ CBonException & CBonException::operator( )(LPCTSTR lpszFormat, ...)
 
 void CBonException::Notify(const bool bEnable)
 {
-	// —áŠO‚ğ’Ê’m‚·‚é
+	// ä¾‹å¤–ã‚’é€šçŸ¥ã™ã‚‹
 	TCHAR szOutput[1024] = TEXT("");
-	TCHAR szSource[1024] = TEXT("•s–¾‚Èƒ\[ƒXƒtƒ@ƒCƒ‹");
+	TCHAR szSource[1024] = TEXT("ä¸æ˜ãªã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«");
 	
-	// ƒ\[ƒXƒtƒ@ƒCƒ‹–¼‚ğæ“¾
+	// ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—
 	GetSourceFile(szSource);
 	
 	if(m_ClassId != ::GetGuid()){
-		TCHAR szModuleName[BON_MAX_MODULE_NAME] = TEXT("•s–¾‚È");
-		TCHAR szClassName[BON_MAX_CLASS_NAME]	= TEXT("•s–¾‚È");
+		TCHAR szModuleName[BON_MAX_MODULE_NAME] = TEXT("ä¸æ˜ãª");
+		TCHAR szClassName[BON_MAX_CLASS_NAME]	= TEXT("ä¸æ˜ãª");
 		
-		// ƒNƒ‰ƒX–¼‚ğæ“¾
+		// ã‚¯ãƒ©ã‚¹åã‚’å–å¾—
 		::GET_BON_CLASS_NAME(m_ClassId, szClassName);
 		
-		// ƒ‚ƒWƒ…[ƒ‹–¼‚ğæ“¾
+		// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åã‚’å–å¾—
 		::GET_BON_MODULE_NAME(::GET_BON_CLASS_MODULE(m_ClassId), szModuleName);
 		
-		// ƒfƒoƒbƒOo—Í•¶š—ñ¶¬
-		::_stprintf(szOutput, TEXT("[—áŠOƒCƒxƒ“ƒg]\r\n@EêŠ\tF %sƒ‚ƒWƒ…[ƒ‹@%sƒNƒ‰ƒX\r\n@Eƒ\[ƒX\tF %s@%lu s–Ú\r\n@Eà–¾\tF %s\r\n"), szModuleName, szClassName, szSource, m_dwSourceLine, m_szDescription);
+		// ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›æ–‡å­—åˆ—ç”Ÿæˆ
+		::_stprintf(szOutput, TEXT("[ä¾‹å¤–ã‚¤ãƒ™ãƒ³ãƒˆ]\r\nã€€ãƒ»å ´æ‰€\tï¼š %sãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã€€%sã‚¯ãƒ©ã‚¹\r\nã€€ãƒ»ã‚½ãƒ¼ã‚¹\tï¼š %sã€€%lu è¡Œç›®\r\nã€€ãƒ»èª¬æ˜\tï¼š %s\r\n"), szModuleName, szClassName, szSource, m_dwSourceLine, m_szDescription);
 		}
 	else{
-		// ƒfƒoƒbƒOo—Í•¶š—ñ¶¬
-		::_stprintf(szOutput, TEXT("[—áŠOƒCƒxƒ“ƒg]\r\n@EêŠ\tF ƒOƒ[ƒoƒ‹–”‚Í”ñBonƒNƒ‰ƒX\r\n@Eƒ\[ƒX\tF %s@%lu s–Ú\r\n@Eà–¾\tF %s\r\n"), szSource, m_dwSourceLine, m_szDescription);
+		// ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›æ–‡å­—åˆ—ç”Ÿæˆ
+		::_stprintf(szOutput, TEXT("[ä¾‹å¤–ã‚¤ãƒ™ãƒ³ãƒˆ]\r\nã€€ãƒ»å ´æ‰€\tï¼š ã‚°ãƒ­ãƒ¼ãƒãƒ«åˆã¯éBonã‚¯ãƒ©ã‚¹\r\nã€€ãƒ»ã‚½ãƒ¼ã‚¹\tï¼š %sã€€%lu è¡Œç›®\r\nã€€ãƒ»èª¬æ˜\tï¼š %s\r\n"), szSource, m_dwSourceLine, m_szDescription);
 		}
 
-	// ƒfƒoƒbƒOo—Í
+	// ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›
 	::OutputDebugString(szOutput);
 
-	// ƒCƒxƒ“ƒgƒƒO‚Éo—Í
-		// ‚Ü‚¾–¢À‘•
+	// ã‚¤ãƒ™ãƒ³ãƒˆãƒ­ã‚°ã«å‡ºåŠ›
+		// ã¾ã æœªå®Ÿè£…
 
-	// ƒ†[ƒU‚É’Ê’m
+	// ãƒ¦ãƒ¼ã‚¶ã«é€šçŸ¥
 	if(bEnable){
-		::_tcscat(szOutput, TEXT("\r\n\r\n—áŠO‚ğ–³‹‚µ‚ÄƒvƒƒOƒ‰ƒ€‚ÌÀs‚ğŒp‘±‚µ‚Ü‚·‚©H"));
+		::_tcscat(szOutput, TEXT("\r\n\r\nä¾‹å¤–ã‚’ç„¡è¦–ã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®å®Ÿè¡Œã‚’ç¶™ç¶šã—ã¾ã™ã‹ï¼Ÿ"));
 
-		if(::MessageBox(NULL, szOutput, TEXT("BonSDK —áŠO’Ê’m"), MB_YESNO | MB_ICONERROR | MB_TASKMODAL) == IDYES){
-			// Às‚ğŒp‘±
+		if(::MessageBox(NULL, szOutput, TEXT("BonSDK ä¾‹å¤–é€šçŸ¥"), MB_YESNO | MB_ICONERROR | MB_TASKMODAL) == IDYES){
+			// å®Ÿè¡Œã‚’ç¶™ç¶š
 			return;
 			}
 
-		// ƒfƒoƒbƒOƒuƒŒ[ƒN
+		// ãƒ‡ãƒãƒƒã‚°ãƒ–ãƒ¬ãƒ¼ã‚¯
 		::DebugBreak();
 		}
 }
 
 const BONGUID CBonException::GetGuid(void)
 {
-	// —áŠO”­¶‚ÌBONGUID‚ğ•Ô‚·
+	// ä¾‹å¤–ç™ºç”Ÿæ™‚ã®BONGUIDã‚’è¿”ã™
 	return m_ClassId;
 }
 
 const DWORD CBonException::GetDescription(LPTSTR lpszDescription)
 {
-	// —áŠO”­¶‚Ìà–¾‚ğ•Ô‚·
+	// ä¾‹å¤–ç™ºç”Ÿæ™‚ã®èª¬æ˜ã‚’è¿”ã™
 	if(lpszDescription)::_tcscpy(lpszDescription, m_szDescription);
 
-	// •¶š”‚ğ•Ô‚·
+	// æ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(m_szDescription);
 }
 
 const DWORD CBonException::GetSourceFile(LPTSTR lpszSourceFile)
 {
-	// —áŠO”­¶‚Ìƒ\[ƒXƒtƒ@ƒCƒ‹–¼‚ğ•Ô‚·
+	// ä¾‹å¤–ç™ºç”Ÿæ™‚ã®ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¿”ã™
 	TCHAR szPathName[_MAX_PATH] = TEXT("");
 	TCHAR szFileName[_MAX_FNAME] = TEXT("");
 	TCHAR szExtName[_MAX_EXT] = TEXT("");
 
 #ifdef _UNICODE
-	// UNICODE‚É•ÏŠ·
+	// UNICODEã«å¤‰æ›
 	::MultiByteToWideChar(CP_OEMCP, MB_PRECOMPOSED, m_lpszSourceFile, -1, szPathName, sizeof(szPathName));
 #else
-	// ‚»‚Ì‚Ü‚ÜƒRƒs[
+	// ãã®ã¾ã¾ã‚³ãƒ”ãƒ¼
 	::_tcscpy(szPathName, m_lpszSourceFile);
 #endif
 
-	// ƒtƒ@ƒCƒ‹–¼‚ğ’Šo
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŠ½å‡º
 	::_tsplitpath(szPathName, NULL, NULL, szFileName, szExtName);
 	::_tmakepath(szPathName, NULL, NULL, szFileName, szExtName);	
 
 	if(lpszSourceFile)::_tcscpy(lpszSourceFile, szPathName);
 
-	// •¶š”‚ğ•Ô‚·
+	// æ–‡å­—æ•°ã‚’è¿”ã™
 	return ::_tcslen(szPathName);
 }
 
 const DWORD CBonException::GetSourceLine(void)
 {
-	// —áŠO”­¶‚Ìƒ\[ƒXƒR[ƒhs‚ğ•Ô‚·
+	// ä¾‹å¤–ç™ºç”Ÿæ™‚ã®ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰è¡Œã‚’è¿”ã™
 	return m_dwSourceLine;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ”Ä—pÆ‡ƒNƒ‰ƒX
+// æ±ç”¨ç…§åˆã‚¯ãƒ©ã‚¹
 /////////////////////////////////////////////////////////////////////////////
 
 CBonAssert::CBonAssert(LPCSTR lpszSourceFile, const DWORD dwSourceLine, const BONGUID ClassId)
@@ -140,20 +140,20 @@ CBonAssert::CBonAssert(LPCSTR lpszSourceFile, const DWORD dwSourceLine, const BO
 	, m_dwSourceLine(dwSourceLine)
 	, m_ClassId(ClassId)
 {
-	// ‰½‚à‚µ‚È‚¢
+	// ä½•ã‚‚ã—ãªã„
 }
 
 void CBonAssert::operator( )(const bool bSuccess, LPCTSTR lpszFormat, ...)
 {
-	// ğŒ®”Å
+	// æ¡ä»¶å¼ç‰ˆ
 	if(!bSuccess){
-		// —áŠOƒIƒuƒWƒFƒNƒg¶¬
+		// ä¾‹å¤–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 		CBonException Exception(m_lpszSourceFile, m_dwSourceLine, m_ClassId);
 		
 		if(lpszFormat){
 			TCHAR szDescription[1024] = TEXT("");
 
-			// ƒtƒH[ƒ}ƒbƒg‚ğ‘®‰»
+			// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’æ›¸å¼åŒ–
 			va_list Args;
 			va_start(Args , lpszFormat);
 			::_vstprintf(szDescription, lpszFormat, Args);
@@ -161,22 +161,22 @@ void CBonAssert::operator( )(const bool bSuccess, LPCTSTR lpszFormat, ...)
 			Exception(szDescription);
 			}
 
-		// —áŠO‚ğ”­¶‚³‚¹‚é
+		// ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹
 		Exception.Notify();
 		}
 }
 
 void CBonAssert::operator( )(const void *pPointer, LPCTSTR lpszFormat, ...)
 {
-	// ƒ|ƒCƒ“ƒ^”Å
+	// ãƒã‚¤ãƒ³ã‚¿ç‰ˆ
 	if(!pPointer){
-		// —áŠOƒIƒuƒWƒFƒNƒg¶¬
+		// ä¾‹å¤–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 		CBonException Exception(m_lpszSourceFile, m_dwSourceLine, m_ClassId);
 		
 		if(lpszFormat){
 			TCHAR szDescription[1024] = TEXT("");
 
-			// ƒtƒH[ƒ}ƒbƒg‚ğ‘®‰»
+			// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’æ›¸å¼åŒ–
 			va_list Args;
 			va_start(Args , lpszFormat);
 			::_vstprintf(szDescription, lpszFormat, Args);
@@ -184,19 +184,19 @@ void CBonAssert::operator( )(const void *pPointer, LPCTSTR lpszFormat, ...)
 			Exception(szDescription);
 			}
 
-		// —áŠO‚ğ”­¶‚³‚¹‚é
+		// ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹
 		Exception.Notify();
 		}
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒfƒoƒbƒO•â•ŠÖ”
+// ãƒ‡ãƒãƒƒã‚°è£œåŠ©é–¢æ•°
 /////////////////////////////////////////////////////////////////////////////
 
 const BONGUID GetGuid(void)
 {
-	// ƒOƒ[ƒoƒ‹ƒXƒR[ƒv‚Ìê‡‚ÍBCID_NULL‚ğ•Ô‚·
+	// ã‚°ãƒ­ãƒ¼ãƒãƒ«ã‚¹ã‚³ãƒ¼ãƒ—ã®å ´åˆã¯BCID_NULLã‚’è¿”ã™
 	return BCID_NULL;
 }
 
@@ -204,12 +204,12 @@ void BON_TRACE(LPCTSTR lpszFormat, ...)
 {
 	TCHAR szOutput[1024] = TEXT("");
 
-	// ƒƒbƒZ[ƒW‚ğ‘®‰»
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ›¸å¼åŒ–
 	va_list Args;
 	va_start(Args , lpszFormat);
 	::_vstprintf(szOutput, lpszFormat, Args);
 	va_end(Args);
 
-	// ƒfƒoƒbƒOo—Í‚É‘‚«‚İ
+	// ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›ã«æ›¸ãè¾¼ã¿
 	::OutputDebugString(szOutput);
 }

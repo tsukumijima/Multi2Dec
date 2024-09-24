@@ -1,4 +1,4 @@
-// TsSourceTuner.cpp: TSƒ\[ƒXƒ`ƒ…[ƒiƒfƒR[ƒ_
+ï»¿// TsSourceTuner.cpp: TSã‚½ãƒ¼ã‚¹ãƒãƒ¥ãƒ¼ãƒŠãƒ‡ã‚³ãƒ¼ãƒ€
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -8,53 +8,53 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹ƒ[ƒJƒ‹’è”İ’è
+// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ã‚«ãƒ«å®šæ•°è¨­å®š
 /////////////////////////////////////////////////////////////////////////////
 
 #define TSBUFFER_SIZE	0x10000UL	// 64KB
 
 
 /////////////////////////////////////////////////////////////////////////////
-// TSƒ\[ƒXƒ`ƒ…[ƒiƒfƒR[ƒ_
+// TSã‚½ãƒ¼ã‚¹ãƒãƒ¥ãƒ¼ãƒŠãƒ‡ã‚³ãƒ¼ãƒ€
 /////////////////////////////////////////////////////////////////////////////
 
 const DWORD CTsSourceTuner::OpenTuner(LPCTSTR lpszBCId)
 {
-	// ˆê’UƒNƒ[ƒY
+	// ä¸€æ—¦ã‚¯ãƒ­ãƒ¼ã‚º
 	CloseTuner();
 
 	IHalDevice *pHalDevice = NULL;
 
 	try{
-		// ƒ`ƒ…[ƒi‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
+		// ãƒãƒ¥ãƒ¼ãƒŠã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
 		if(!(pHalDevice = ::BON_SAFE_CREATE<IHalDevice *>(lpszBCId)))throw (DWORD)EC_INTERNAL_ERR;
 
-		// ƒfƒoƒCƒXƒ^ƒCƒv‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã‚¿ã‚¤ãƒ—ã‚’ãƒã‚§ãƒƒã‚¯
 		if(pHalDevice->GetDeviceType() != ::BON_NAME_TO_GUID(TEXT("IHalTsTuner")))throw (DWORD)EC_INTERNAL_ERR;
 
-		// ƒfƒoƒCƒX‚Ì‘¶İ‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã®å­˜åœ¨ã‚’ãƒã‚§ãƒƒã‚¯
 		if(!pHalDevice->GetTotalDeviceNum())throw (DWORD)EC_DEVICE_NONE;
 
-		// ƒfƒoƒCƒX‚Ì‹ó‚«‚ğƒ`ƒFƒbƒN
+		// ãƒ‡ãƒã‚¤ã‚¹ã®ç©ºãã‚’ãƒã‚§ãƒƒã‚¯
 		if(pHalDevice->GetActiveDeviceNum() >= pHalDevice->GetTotalDeviceNum())throw (DWORD)EC_DEVICE_FULL;
 	
-		// IHalTsTunerƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+		// IHalTsTunerã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 		if(!(m_pHalTsTuner = dynamic_cast<IHalTsTuner *>(pHalDevice)))throw (DWORD)EC_INTERNAL_ERR;
 
-		// TSƒoƒbƒtƒ@ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+		// TSãƒãƒƒãƒ•ã‚¡ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 		if(!(m_pTsBuffer = ::BON_SAFE_CREATE<IMediaData *>(TEXT("CMediaData"))))throw (DWORD)EC_INTERNAL_ERR;
 	
-		// TSƒoƒbƒtƒ@ƒTƒCƒYŠm•Û
+		// TSãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºç¢ºä¿
 		if(m_pTsBuffer->GetBuffer(TSBUFFER_SIZE) != TSBUFFER_SIZE)throw (DWORD)EC_INTERNAL_ERR;
 
-		// ƒ`ƒ…[ƒi‚ğƒI[ƒvƒ“
+		// ãƒãƒ¥ãƒ¼ãƒŠã‚’ã‚ªãƒ¼ãƒ—ãƒ³
 		if(!m_pHalTsTuner->OpenTuner())throw (DWORD)EC_OPEN_FAILED;
 
-		// TSóMƒXƒŒƒbƒh‹N“®
+		// TSå—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰èµ·å‹•
 		if(!m_TsRecvThread.StartThread(this, &CTsSourceTuner::TsRecvThread))throw (DWORD)EC_INTERNAL_ERR;
 		}
 	catch(DWORD dwErrCode){
-		// ƒGƒ‰[”­¶
+		// ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 		BON_SAFE_RELEASE(pHalDevice);
 		m_pHalTsTuner = NULL;
 		
@@ -67,19 +67,19 @@ const DWORD CTsSourceTuner::OpenTuner(LPCTSTR lpszBCId)
 
 const bool CTsSourceTuner::CloseTuner(void)
 {
-	// TSóMƒXƒŒƒbƒh’â~
+	// TSå—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰åœæ­¢
 	if(m_bIsPlaying)StopDecoder();
 
 	m_bIsPlaying = false;
 	m_TsRecvThread.EndThread(true);
 
-	// ƒ`ƒ…[ƒi‚ğƒNƒ[ƒY
+	// ãƒãƒ¥ãƒ¼ãƒŠã‚’ã‚¯ãƒ­ãƒ¼ã‚º
 	if(m_pHalTsTuner)m_pHalTsTuner->CloseTuner();
 
-	// TSƒoƒbƒtƒ@‚ğŠJ•ú
+	// TSãƒãƒƒãƒ•ã‚¡ã‚’é–‹æ”¾
 	BON_SAFE_RELEASE(m_pTsBuffer);
 
-	// ƒ`ƒ…[ƒiƒCƒ“ƒXƒ^ƒ“ƒXŠJ•ú
+	// ãƒãƒ¥ãƒ¼ãƒŠã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹é–‹æ”¾
 	BON_SAFE_RELEASE(m_pHalTsTuner);
 	
 	return true;
@@ -87,52 +87,52 @@ const bool CTsSourceTuner::CloseTuner(void)
 
 const DWORD CTsSourceTuner::GetDeviceName(LPTSTR lpszName)
 {
-	// IHalDeviceƒCƒ“ƒ^ƒtƒF[ƒXæ“¾
+	// IHalDeviceã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹å–å¾—
 	IHalDevice * const pHalDevice = dynamic_cast<IHalDevice *>(m_pHalTsTuner);
 
-	// ƒfƒoƒCƒX–¼‚ğ•Ô‚·
+	// ãƒ‡ãƒã‚¤ã‚¹åã‚’è¿”ã™
 	return (pHalDevice)? pHalDevice->GetDeviceName(lpszName) : 0UL;
 }
 
 const DWORD CTsSourceTuner::GetTuningSpaceName(const DWORD dwSpace, LPTSTR lpszName)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return 0UL;
 
-	// ƒ`ƒ…[ƒjƒ“ƒO‹óŠÔ–¼‚ğ•Ô‚·
+	// ãƒãƒ¥ãƒ¼ãƒ‹ãƒ³ã‚°ç©ºé–“åã‚’è¿”ã™
 	return m_pHalTsTuner->EnumTuningSpace(dwSpace, lpszName);
 }
 
 const DWORD CTsSourceTuner::GetChannelName(const DWORD dwSpace, const DWORD dwChannel, LPTSTR lpszName)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return 0UL;
 
-	// ƒ`ƒƒƒ“ƒlƒ‹–¼‚ğ•Ô‚·
+	// ãƒãƒ£ãƒ³ãƒãƒ«åã‚’è¿”ã™
 	return m_pHalTsTuner->EnumChannelName(dwSpace, dwChannel, lpszName);
 }
 
 const DWORD CTsSourceTuner::GetCurSpace(void)
 {
-	// Œ»İ‚Ìƒ`ƒ…[ƒjƒ“ƒO‹óŠÔ‚ğ•Ô‚·
+	// ç¾åœ¨ã®ãƒãƒ¥ãƒ¼ãƒ‹ãƒ³ã‚°ç©ºé–“ã‚’è¿”ã™
 	return (m_pHalTsTuner)? m_pHalTsTuner->GetCurSpace() : 0UL;
 }
 
 const DWORD CTsSourceTuner::GetCurChannel(void)
 {
-	// Œ»İ‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğ•Ô‚·
+	// ç¾åœ¨ã®ãƒãƒ£ãƒ³ãƒãƒ«ã‚’è¿”ã™
 	return (m_pHalTsTuner)? m_pHalTsTuner->GetCurChannel() : 0UL;
 }
 
 const bool CTsSourceTuner::SetChannel(const DWORD dwSpace, const DWORD dwChannel)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return 0UL;
 
-	// ƒ`ƒƒƒ“ƒlƒ‹‚ğ•ÏX‚·‚é
+	// ãƒãƒ£ãƒ³ãƒãƒ«ã‚’å¤‰æ›´ã™ã‚‹
 	if(!m_pHalTsTuner->SetChannel(dwSpace, dwChannel))return false;
 	
-	// ‰ºˆÊƒfƒR[ƒ_‚ğƒŠƒZƒbƒg‚·‚é
+	// ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	ResetDecoder();
 
 	return true;
@@ -140,16 +140,16 @@ const bool CTsSourceTuner::SetChannel(const DWORD dwSpace, const DWORD dwChannel
 
 const float CTsSourceTuner::GetSignalLevel(void)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return 0UL;
 
-	// M†ƒŒƒxƒ‹‚ğ•Ô‚·
+	// ä¿¡å·ãƒ¬ãƒ™ãƒ«ã‚’è¿”ã™
 	return m_pHalTsTuner->GetSignalLevel();
 }
 
 IHalTsTuner * CTsSourceTuner::GetHalTsTuner(void)
 {
-	// ƒ`ƒ…[ƒiƒfƒoƒCƒX‚ğ•Ô‚·
+	// ãƒãƒ¥ãƒ¼ãƒŠãƒ‡ãƒã‚¤ã‚¹ã‚’è¿”ã™
 	return m_pHalTsTuner;
 }
 
@@ -169,16 +169,16 @@ CTsSourceTuner::~CTsSourceTuner(void)
 
 const bool CTsSourceTuner::OnPlay(void)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return false;
 
-	// ‚·‚Å‚ÉÄ¶’†
+	// ã™ã§ã«å†ç”Ÿä¸­
 	if(m_bIsPlaying)return true;
 
-	// –¢ˆ—‚ÌƒXƒgƒŠ[ƒ€‚ğ”jŠü‚·‚é
+	// æœªå‡¦ç†ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’ç ´æ£„ã™ã‚‹
 	m_pHalTsTuner->PurgeStream();
 
-	// ƒXƒgƒŠ[ƒ€‚ğÄ¶ó‘Ô‚É‚·‚é
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’å†ç”ŸçŠ¶æ…‹ã«ã™ã‚‹
 	m_bIsPlaying = true;
 
 	return true;
@@ -186,10 +186,10 @@ const bool CTsSourceTuner::OnPlay(void)
 
 const bool CTsSourceTuner::OnStop(void)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return false;
 
-	// ƒXƒgƒŠ[ƒ€‚ğ’â~ó‘Ô‚É‚·‚é
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’åœæ­¢çŠ¶æ…‹ã«ã™ã‚‹
 	m_bIsPlaying = false;
 	
 	return true;
@@ -197,7 +197,7 @@ const bool CTsSourceTuner::OnStop(void)
 
 const bool CTsSourceTuner::OnReset(void)
 {
-	// –¢ˆ—‚ÌƒXƒgƒŠ[ƒ€‚ğ”jŠü‚·‚é
+	// æœªå‡¦ç†ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’ç ´æ£„ã™ã‚‹
 	if(m_bIsPlaying && m_pHalTsTuner)m_pHalTsTuner->PurgeStream();
 
 	return true;
@@ -209,10 +209,10 @@ void CTsSourceTuner::TsRecvThread(CSmartThread<CTsSourceTuner> *pThread, bool &b
 	DWORD dwStreamSize = 0UL;
 	DWORD dwRemainNum = 0UL;
 
-	// ƒ`ƒ…[ƒi‚©‚çTSƒf[ƒ^‚ğæ‚èo‚·ƒXƒŒƒbƒh
+	// ãƒãƒ¥ãƒ¼ãƒŠã‹ã‚‰TSãƒ‡ãƒ¼ã‚¿ã‚’å–ã‚Šå‡ºã™ã‚¹ãƒ¬ãƒƒãƒ‰
 	while(!bKillSignal){
 		
-		// ˆ—ŠÈ—ª‰»‚Ì‚½‚ßƒ|[ƒŠƒ“ƒO•û®‚ğÌ—p‚·‚é
+		// å‡¦ç†ç°¡ç•¥åŒ–ã®ãŸã‚ãƒãƒ¼ãƒªãƒ³ã‚°æ–¹å¼ã‚’æ¡ç”¨ã™ã‚‹
 		do{
 			if(m_pHalTsTuner->GetStream(&pStreamData, &dwStreamSize, &dwRemainNum)){
 				if(pStreamData && dwStreamSize){
@@ -222,20 +222,20 @@ void CTsSourceTuner::TsRecvThread(CSmartThread<CTsSourceTuner> *pThread, bool &b
 			}
 		while(dwRemainNum);
 
-		// ƒEƒFƒCƒg
+		// ã‚¦ã‚§ã‚¤ãƒˆ
 		::Sleep(1UL);
 		}
 }
 
 const bool CTsSourceTuner::PurgeStream(void)
 {
-	// ƒ`ƒ…[ƒi‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¢
+	// ãƒãƒ¥ãƒ¼ãƒŠãŒã‚ªãƒ¼ãƒ—ãƒ³ã•ã‚Œã¦ã„ãªã„
 	if(!m_pHalTsTuner)return false;
 
-	// –¢ˆ—‚ÌƒXƒgƒŠ[ƒ€‚ğ”jŠü‚·‚é
+	// æœªå‡¦ç†ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’ç ´æ£„ã™ã‚‹
 	m_pHalTsTuner->PurgeStream();
 
-	// ‰ºˆÊƒfƒR[ƒ_‚ğƒŠƒZƒbƒg‚·‚é
+	// ä¸‹ä½ãƒ‡ã‚³ãƒ¼ãƒ€ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	ResetDecoder();
 
 	return true;
@@ -245,12 +245,12 @@ void CTsSourceTuner::OnTsStream(BYTE *pStreamData, DWORD dwStreamSize)
 {
 	CBlockLock AutoLock(m_pLock);
 
-	// ’â~’†‚Í‰½‚à‚µ‚È‚¢
+	// åœæ­¢ä¸­ã¯ä½•ã‚‚ã—ãªã„
 	if(!m_bIsPlaying)return;
 
-	// ƒf[ƒ^‚ğƒoƒbƒtƒ@‚ÉƒZƒbƒg‚·‚é
+	// ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒãƒ•ã‚¡ã«ã‚»ãƒƒãƒˆã™ã‚‹
 	m_pTsBuffer->SetData(pStreamData, dwStreamSize);
 
-	// Ÿ‚ÌƒfƒR[ƒ_‚Éƒf[ƒ^‚ğ“n‚·
+	// æ¬¡ã®ãƒ‡ã‚³ãƒ¼ãƒ€ã«ãƒ‡ãƒ¼ã‚¿ã‚’æ¸¡ã™
 	OutputMedia(m_pTsBuffer);
 }
