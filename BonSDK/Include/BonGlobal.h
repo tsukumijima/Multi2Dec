@@ -16,7 +16,7 @@
 	#define BONAPI	__declspec(dllimport)
 #endif
 
-#include <typeinfo.h>
+#include <typeinfo>
 
 
 // BonコアエンジンAPI
