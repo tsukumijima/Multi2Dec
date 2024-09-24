@@ -51,7 +51,7 @@ const DWORD CBcasCardReader::GetTotalDeviceNum(void)
 	// 初期化試行
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
-		hBcasCard = NULL;
+		hBcasCard = 0;
 		dwActiveProtocol = SCARD_PROTOCOL_UNDEFINED;
 
 		// カードリーダに接続
@@ -91,7 +91,7 @@ const bool CBcasCardReader::OpenCard(void)
 	// 初期化試行
 	for(DWORD dwIndex = 0UL ; dwIndex < m_CardReaderArray.size() ; dwIndex++){
 
-		m_hBcasCard = NULL;
+		m_hBcasCard = 0;
 		dwActiveProtocol = SCARD_PROTOCOL_UNDEFINED;
 
 		// カードリーダに接続
@@ -107,7 +107,7 @@ const bool CBcasCardReader::OpenCard(void)
 
 			// カードリーダ切断
 			::SCardDisconnect(m_hBcasCard, SCARD_LEAVE_CARD);
-			m_hBcasCard = NULL;
+			m_hBcasCard = 0;
 			}
 		}
 
@@ -119,7 +119,7 @@ void CBcasCardReader::CloseCard(void)
 	// カードリーダ切断
 	if(m_hBcasCard){
 		::SCardDisconnect(m_hBcasCard, SCARD_LEAVE_CARD);
-		m_hBcasCard = NULL;
+		m_hBcasCard = 0;
 		}
 }
 
@@ -318,8 +318,8 @@ const WORD CBcasCardReader::GetPowerCtrlInfo(POWERCTRLINFO *pPowerCtrlInfo)
 
 CBcasCardReader::CBcasCardReader(IBonObject *pOwner)
 	: CBonObject(pOwner)
-	, m_ScardContext(NULL)
-	, m_hBcasCard(NULL)
+	, m_ScardContext(0)
+	, m_hBcasCard(0)
 	, m_dwEcmError(EC_NOT_OPEN)
 {
 	// 内部状態初期化
@@ -347,7 +347,7 @@ const bool CBcasCardReader::EnumBcasCardReader(void)
 	if(::SCardListReaders(m_ScardContext, NULL, NULL, &dwBuffSize) != SCARD_S_SUCCESS)return false;
 
 	// バッファ確保
-	std::auto_ptr<TCHAR> szReaders(new TCHAR[dwBuffSize]);
+	std::unique_ptr<TCHAR[]> szReaders(new TCHAR[dwBuffSize]);
 
 	// カードリーダ列挙
 	if(::SCardListReaders(m_ScardContext, NULL, szReaders.get(), &dwBuffSize) != SCARD_S_SUCCESS)return false;
