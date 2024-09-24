@@ -96,12 +96,12 @@ const bool CPatTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 
 		if(!PatItem.wProgramID){
 			// NITのPID
-			::BON_TRACE(TEXT("NIT #%u [ID:%04X][PID:%04X]\n"), m_NitPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
+			::BON_TRACE(TEXT("NIT #%u [ID:%04X][PID:%04X]\n"), (int)m_NitPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
 			m_NitPIDArray.push_back(PatItem);
 			}
 		else{
 			// PMTのPID
-			::BON_TRACE(TEXT("PMT #%u [ID:%04X][PID:%04X]\n"), m_PmtPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
+			::BON_TRACE(TEXT("PMT #%u [ID:%04X][PID:%04X]\n"), (int)m_PmtPIDArray.size(), PatItem.wProgramID, PatItem.wPID);
 			m_PmtPIDArray.push_back(PatItem);
 			}
 		}
@@ -288,7 +288,7 @@ const bool CPmtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		PmtItem.pDescBlock->SetData(&pHexData[wPos + 5U], wDescLen);
 		PmtItem.pDescBlock->ParseDescs();
 
-		::BON_TRACE(TEXT("[%u] Stream Type ID = %02X  PID = %04X\n"), m_EsInfoArray.size(), PmtItem.byStreamTypeID, PmtItem.wEsPID);		
+		::BON_TRACE(TEXT("[%u] Stream Type ID = %02X  PID = %04X\n"), (int)m_EsInfoArray.size(), PmtItem.byStreamTypeID, PmtItem.wEsPID);
 
 		for(DWORD dwIndex = 0UL ; dwIndex < PmtItem.pDescBlock->GetDescNum() ; dwIndex++){
 			const IDescBase *pDescBase = PmtItem.pDescBlock->GetDescByIndex(dwIndex);
@@ -429,7 +429,7 @@ const bool CNitTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		NitItem.pDescBlock->SetData(&pHexData[wPos + 6U], wDescLen);
 		NitItem.pDescBlock->ParseDescs();
 
-		::BON_TRACE(TEXT("[%u] TS ID = %04X  Original Network ID = %04X\n    Descriptor Field:\n"), m_TsInfoArray.size(), NitItem.wTsID, NitItem.wOrgNetworkID);		
+		::BON_TRACE(TEXT("[%u] TS ID = %04X  Original Network ID = %04X\n    Descriptor Field:\n"), (int)m_TsInfoArray.size(), NitItem.wTsID, NitItem.wOrgNetworkID);
 
 		for(DWORD dwIndex = 0UL ; dwIndex < NitItem.pDescBlock->GetDescNum() ; dwIndex++){
 			const IDescBase *pDescBase = NitItem.pDescBlock->GetDescByIndex(dwIndex);
@@ -583,7 +583,7 @@ const bool CSdtTable::OnTableUpdate(const IPsiSection *pNewSection, const IPsiSe
 		wPos += (wDescLen + 5U);
 
 		// 以下デバッグ用
-		::BON_TRACE(TEXT("\n[%u] Service ID = %04X\n    Eit Schedule = %u\n    Eit Present Following = %u\n    Running Status = %u\n    Scrambling = %u\n"), m_SdtItemArray.size() - 1U, SdtItem.wServiceID, SdtItem.bIsEitSchedule, SdtItem.IsEitPresentFollowing, SdtItem.byRunningStatus, SdtItem.bIsScrambling);		
+		::BON_TRACE(TEXT("\n[%u] Service ID = %04X\n    Eit Schedule = %u\n    Eit Present Following = %u\n    Running Status = %u\n    Scrambling = %u\n"), (int)m_SdtItemArray.size() - 1U, SdtItem.wServiceID, SdtItem.bIsEitSchedule, SdtItem.IsEitPresentFollowing, SdtItem.byRunningStatus, SdtItem.bIsScrambling);
 
 		TCHAR szTemp[256];
 		::_tcscpy(szTemp, TEXT("Unknown"));
