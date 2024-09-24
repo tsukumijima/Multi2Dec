@@ -173,6 +173,11 @@ const DWORD CTsPacket::CopyData(const IMediaData *pSrc)
 		}
 }
 
+const DWORD CTsPacket::GetBuffer(const DWORD dwGetSize)
+{
+	return CMediaData::GetBuffer(dwGetSize + EXTRA_BUFFER_ALLOCATION_SIZE);
+}
+
 CTsPacket::CTsPacket(IBonObject *pOwner)
 	: CMediaData(pOwner)
 {
@@ -188,3 +193,5 @@ CTsPacket::~CTsPacket(void)
 {
 
 }
+
+const DWORD CTsPacket::EXTRA_BUFFER_ALLOCATION_SIZE = 16;

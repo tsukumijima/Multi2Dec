@@ -5,6 +5,13 @@
 #include "stdafx.h"
 #include "Multi2Decoder.h"
 #include <stdlib.h>
+#include <memory>
+#include <new>
+#if defined(MULTI2_SIMD_SSE2)
+#include <emmintrin.h>
+#elif defined(MULTI2_SIMD_NEON)
+#include <arm_neon.h>
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,6 +46,144 @@ static inline void DwordToHex(DWORD dwSrc, BYTE *pHexData)
 #endif
 }
 
+#if defined(MULTI2_SIMD_SSE2)
+
+// 以下、x86/x64向け最適化コードはTVCAS_attachment(20120915)のMulti2DecoderSIMD.cppを移植したもの
+
+template <int Rotate>
+static inline __m128i LeftRotateX4(const __m128i &Value)
+{
+	return _mm_or_si128(_mm_slli_epi32(Value, Rotate), _mm_srli_epi32(Value, 32 - Rotate));
+}
+
+static inline __m128i ByteSwapX4(const __m128i &Value)
+{
+	__m128i t0 = _mm_srli_epi16(Value, 8);
+	__m128i t1 = _mm_slli_epi16(Value, 8);
+	return LeftRotateX4<16>(_mm_or_si128(t0, t1));
+}
+
+static inline void RoundFuncPi1X8(__m128i &Left1, __m128i &Right1, __m128i &Left2, __m128i &Right2)
+{
+	Right1 = _mm_xor_si128(Right1, Left1);
+	Right2 = _mm_xor_si128(Right2, Left2);
+}
+
+static inline void RoundFuncPi2X8(__m128i &Left1, __m128i &Right1, __m128i &Left2, __m128i &Right2, const __m128i &Key1)
+{
+	__m128i t1 = _mm_add_epi32(Right1, Key1);
+	__m128i t2 = _mm_add_epi32(Right2, Key1);
+	t1 = _mm_add_epi32(LeftRotateX4<1>(t1), t1);
+	t2 = _mm_add_epi32(LeftRotateX4<1>(t2), t2);
+	t1 = _mm_sub_epi32(t1, _mm_set1_epi32(1));
+	t2 = _mm_sub_epi32(t2, _mm_set1_epi32(1));
+	t1 = _mm_xor_si128(LeftRotateX4<4>(t1), t1);
+	t2 = _mm_xor_si128(LeftRotateX4<4>(t2), t2);
+	Left1 = _mm_xor_si128(Left1, t1);
+	Left2 = _mm_xor_si128(Left2, t2);
+}
+
+static inline void RoundFuncPi3X8(__m128i &Left1, __m128i &Right1, __m128i &Left2, __m128i &Right2, const __m128i &Key2, const __m128i &Key3)
+{
+	__m128i t1 = _mm_add_epi32(Left1, Key2);
+	__m128i t2 = _mm_add_epi32(Left2, Key2);
+	t1 = _mm_add_epi32(LeftRotateX4<2>(t1), t1);
+	t2 = _mm_add_epi32(LeftRotateX4<2>(t2), t2);
+	t1 = _mm_add_epi32(t1, _mm_set1_epi32(1));
+	t2 = _mm_add_epi32(t2, _mm_set1_epi32(1));
+	t1 = _mm_xor_si128(LeftRotateX4<8>(t1), t1);
+	t2 = _mm_xor_si128(LeftRotateX4<8>(t2), t2);
+	t1 = _mm_add_epi32(t1, Key3);
+	t2 = _mm_add_epi32(t2, Key3);
+	t1 = _mm_add_epi32(t1, _mm_srli_epi32(t1, 31));
+	t2 = _mm_add_epi32(t2, _mm_srli_epi32(t2, 31));
+	t1 = _mm_xor_si128(LeftRotateX4<16>(t1), _mm_or_si128(t1, Left1));
+	t2 = _mm_xor_si128(LeftRotateX4<16>(t2), _mm_or_si128(t2, Left2));
+	Right1 = _mm_xor_si128(Right1, t1);
+	Right2 = _mm_xor_si128(Right2, t2);
+}
+
+static inline void RoundFuncPi4X8(__m128i &Left1, __m128i &Right1, __m128i &Left2, __m128i &Right2, const __m128i &Key4)
+{
+	__m128i t1 = _mm_add_epi32(Right1, Key4);
+	__m128i t2 = _mm_add_epi32(Right2, Key4);
+	t1 = _mm_add_epi32(LeftRotateX4<2>(t1), t1);
+	t2 = _mm_add_epi32(LeftRotateX4<2>(t2), t2);
+	t1 = _mm_add_epi32(t1, _mm_set1_epi32(1));
+	t2 = _mm_add_epi32(t2, _mm_set1_epi32(1));
+	Left1 = _mm_xor_si128(Left1, t1);
+	Left2 = _mm_xor_si128(Left2, t2);
+}
+
+#elif defined(MULTI2_SIMD_NEON)
+
+// 以下、ARM向け最適化コードはx86/x64向け最適化コードをほとんど直訳したもの
+
+template <int Rotate>
+static inline uint32x4_t LeftRotateX4(const uint32x4_t &Value)
+{
+	return vsliq_n_u32(vshrq_n_u32(Value, 32 - Rotate), Value, Rotate);
+}
+
+static inline uint32x4_t ByteSwapX4(const uint32x4_t &Value)
+{
+	return vreinterpretq_u32_u8(vrev32q_u8(vreinterpretq_u8_u32(Value)));
+}
+
+static inline void RoundFuncPi1X8(uint32x4_t &Left1, uint32x4_t &Right1, uint32x4_t &Left2, uint32x4_t &Right2)
+{
+	Right1 = veorq_u32(Right1, Left1);
+	Right2 = veorq_u32(Right2, Left2);
+}
+
+static inline void RoundFuncPi2X8(uint32x4_t &Left1, uint32x4_t &Right1, uint32x4_t &Left2, uint32x4_t &Right2, const uint32x4_t &Key1)
+{
+	uint32x4_t t1 = vaddq_u32(Right1, Key1);
+	uint32x4_t t2 = vaddq_u32(Right2, Key1);
+	t1 = vaddq_u32(LeftRotateX4<1>(t1), t1);
+	t2 = vaddq_u32(LeftRotateX4<1>(t2), t2);
+	t1 = vsubq_u32(t1, vdupq_n_u32(1));
+	t2 = vsubq_u32(t2, vdupq_n_u32(1));
+	t1 = veorq_u32(LeftRotateX4<4>(t1), t1);
+	t2 = veorq_u32(LeftRotateX4<4>(t2), t2);
+	Left1 = veorq_u32(Left1, t1);
+	Left2 = veorq_u32(Left2, t2);
+}
+
+static inline void RoundFuncPi3X8(uint32x4_t &Left1, uint32x4_t &Right1, uint32x4_t &Left2, uint32x4_t &Right2, const uint32x4_t &Key2, const uint32x4_t &Key3)
+{
+	uint32x4_t t1 = vaddq_u32(Left1, Key2);
+	uint32x4_t t2 = vaddq_u32(Left2, Key2);
+	t1 = vaddq_u32(LeftRotateX4<2>(t1), t1);
+	t2 = vaddq_u32(LeftRotateX4<2>(t2), t2);
+	t1 = vaddq_u32(t1, vdupq_n_u32(1));
+	t2 = vaddq_u32(t2, vdupq_n_u32(1));
+	t1 = veorq_u32(LeftRotateX4<8>(t1), t1);
+	t2 = veorq_u32(LeftRotateX4<8>(t2), t2);
+	t1 = vaddq_u32(t1, Key3);
+	t2 = vaddq_u32(t2, Key3);
+	t1 = vsraq_n_u32(t1, t1, 31);
+	t2 = vsraq_n_u32(t2, t2, 31);
+	t1 = veorq_u32(LeftRotateX4<16>(t1), vorrq_u32(t1, Left1));
+	t2 = veorq_u32(LeftRotateX4<16>(t2), vorrq_u32(t2, Left2));
+	Right1 = veorq_u32(Right1, t1);
+	Right2 = veorq_u32(Right2, t2);
+}
+
+static inline void RoundFuncPi4X8(uint32x4_t &Left1, uint32x4_t &Right1, uint32x4_t &Left2, uint32x4_t &Right2, const uint32x4_t &Key4)
+{
+	uint32x4_t t1 = vaddq_u32(Right1, Key4);
+	uint32x4_t t2 = vaddq_u32(Right2, Key4);
+	t1 = vaddq_u32(LeftRotateX4<2>(t1), t1);
+	t2 = vaddq_u32(LeftRotateX4<2>(t2), t2);
+	t1 = vaddq_u32(t1, vdupq_n_u32(1));
+	t2 = vaddq_u32(t2, vdupq_n_u32(1));
+	Left1 = veorq_u32(Left1, t1);
+	Left2 = veorq_u32(Left2, t2);
+}
+
+#endif
+
 inline void CMulti2Decoder::DATKEY::SetHexData(const BYTE *pHexData)
 {
 	// バイトオーダー変換
@@ -64,6 +209,19 @@ void CMulti2Decoder::SYSKEY::SetHexData(const BYTE *pHexData)
 void CMulti2Decoder::SYSKEY::SetKey(int nIndex, DWORD dwKey)
 {
 	dwKeys[nIndex] = dwKey;
+#if defined(MULTI2_SIMD_SSE2) || defined(MULTI2_SIMD_NEON)
+	pdw4Keys = byKeys;
+	size_t nSpace = sizeof(byKeys);
+	if(!std::align(16, 8, pdw4Keys, nSpace)){
+		// 通常ありえない
+		throw std::bad_alloc();
+		}
+#ifdef MULTI2_SIMD_SSE2
+	(static_cast<__m128i *>(pdw4Keys))[nIndex] = _mm_set1_epi32(dwKey);
+#else
+	(static_cast<uint32x4_t *>(pdw4Keys))[nIndex] = vdupq_n_u32(dwKey);
+#endif
+#endif
 }
 
 CMulti2Decoder::CMulti2Decoder(void)
@@ -116,7 +274,7 @@ const bool CMulti2Decoder::SetScrambleKey(const BYTE *pScrambleKey)
 	return true;
 }
 
-const bool CMulti2Decoder::Decode(BYTE *pData, const DWORD dwSize, const BYTE byScrCtrl) const
+const bool CMulti2Decoder::Decode(BYTE *pData, const DWORD dwSize, const BYTE byScrCtrl, const DWORD dwExtraSize) const
 {
 	if(!byScrCtrl)return true;										// スクランブルなし
 	else if(!m_bIsSysKeyValid || !m_bIsWorkKeyValid)return false;	// スクランブルキー未設定
@@ -126,6 +284,119 @@ const bool CMulti2Decoder::Decode(BYTE *pData, const DWORD dwSize, const BYTE by
 	const SYSKEY &WorkKey = (byScrCtrl == 3)? m_WorkKeyOdd : m_WorkKeyEven;
 
 	DWORD dwPos;
+
+#if defined(MULTI2_SIMD_SSE2) || defined(MULTI2_SIMD_NEON)
+	if(dwSize == 184 && dwExtraSize >= 8){
+#ifdef MULTI2_SIMD_SSE2
+		__m128i Cbc = _mm_set_epi32(0, 0, m_InitialCbc.dwRight, m_InitialCbc.dwLeft);
+		__m128i *pdw4Keys = static_cast<__m128i *>(WorkKey.pdw4Keys);
+#else
+		uint32x4_t CbcLeft = vdupq_n_u32(m_InitialCbc.dwLeft);
+		uint32x4_t CbcRight = vdupq_n_u32(m_InitialCbc.dwRight);
+		uint32x4_t *pdw4Keys = static_cast<uint32x4_t *>(WorkKey.pdw4Keys);
+#endif
+
+		for(dwPos = 0; dwPos < sizeof(DATKEY) * 8 * 3; dwPos += sizeof(DATKEY) * 8){
+#ifdef MULTI2_SIMD_SSE2
+			__m128i Src1 = _mm_loadu_si128(reinterpret_cast<__m128i *>(pData + dwPos));
+			__m128i Src2 = _mm_loadu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 2));
+			__m128i Src3 = _mm_loadu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 4));
+			__m128i Src4 = _mm_loadu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 6));
+
+			// r2 l2 r1 l1 .. r8 l8 r7 l7
+			Src1 = ByteSwapX4(Src1);
+			Src2 = ByteSwapX4(Src2);
+			Src3 = ByteSwapX4(Src3);
+			Src4 = ByteSwapX4(Src4);
+
+			// r2 r1 l2 l1 .. r8 r7 l8 l7
+			__m128i x1 = _mm_shuffle_epi32(Src1, (3 << 6) | (1 << 4) | (2 << 2) | 0);
+			__m128i y1 = _mm_shuffle_epi32(Src2, (3 << 6) | (1 << 4) | (2 << 2) | 0);
+			__m128i x2 = _mm_shuffle_epi32(Src3, (3 << 6) | (1 << 4) | (2 << 2) | 0);
+			__m128i y2 = _mm_shuffle_epi32(Src4, (3 << 6) | (1 << 4) | (2 << 2) | 0);
+
+			// l4 l3 l2 l1 .. r8 r7 r6 r5
+			__m128i Left1 = _mm_unpacklo_epi64(x1, y1);
+			__m128i Right1 = _mm_unpackhi_epi64(x1, y1);
+			__m128i Left2 = _mm_unpacklo_epi64(x2, y2);
+			__m128i Right2 = _mm_unpackhi_epi64(x2, y2);
+#else
+			uint32x4x2_t Src1 = vld2q_u32(reinterpret_cast<DWORD *>(pData + dwPos));
+			uint32x4x2_t Src2 = vld2q_u32(reinterpret_cast<DWORD *>(pData + dwPos + sizeof(DATKEY) * 4));
+
+			// {l1,l2,l3,l4} .. {r5,r6,r7,r8}
+			uint32x4_t SrcLeft1 = ByteSwapX4(Src1.val[0]);
+			uint32x4_t SrcRight1 = ByteSwapX4(Src1.val[1]);
+			uint32x4_t SrcLeft2 = ByteSwapX4(Src2.val[0]);
+			uint32x4_t SrcRight2 = ByteSwapX4(Src2.val[1]);
+
+			uint32x4_t Left1 = SrcLeft1;
+			uint32x4_t Right1 = SrcRight1;
+			uint32x4_t Left2 = SrcLeft2;
+			uint32x4_t Right2 = SrcRight2;
+#endif
+
+			for(DWORD dwRound = 0; dwRound < SCRAMBLE_ROUND; dwRound++){
+				RoundFuncPi4X8(Left1, Right1, Left2, Right2, pdw4Keys[7]);
+				RoundFuncPi3X8(Left1, Right1, Left2, Right2, pdw4Keys[5], pdw4Keys[6]);
+				RoundFuncPi2X8(Left1, Right1, Left2, Right2, pdw4Keys[4]);
+				RoundFuncPi1X8(Left1, Right1, Left2, Right2);
+				RoundFuncPi4X8(Left1, Right1, Left2, Right2, pdw4Keys[3]);
+				RoundFuncPi3X8(Left1, Right1, Left2, Right2, pdw4Keys[1], pdw4Keys[2]);
+				RoundFuncPi2X8(Left1, Right1, Left2, Right2, pdw4Keys[0]);
+				RoundFuncPi1X8(Left1, Right1, Left2, Right2);
+				}
+
+#ifdef MULTI2_SIMD_SSE2
+			// r2 l2 r1 l1 .. r8 l8 r7 l7
+			x1 = _mm_unpacklo_epi32(Left1, Right1);
+			y1 = _mm_unpackhi_epi32(Left1, Right1);
+			x2 = _mm_unpacklo_epi32(Left2, Right2);
+			y2 = _mm_unpackhi_epi32(Left2, Right2);
+
+			Src2 = _mm_shuffle_epi32(Src2, (1 << 6) | (0 << 4) | (3 << 2) | 2);
+			Src4 = _mm_shuffle_epi32(Src4, (1 << 6) | (0 << 4) | (3 << 2) | 2);
+			x1 = _mm_xor_si128(x1, _mm_unpacklo_epi64(Cbc, Src1));
+			y1 = _mm_xor_si128(y1, _mm_unpackhi_epi64(Src1, Src2));
+			x2 = _mm_xor_si128(x2, _mm_unpacklo_epi64(Src2, Src3));
+			y2 = _mm_xor_si128(y2, _mm_unpackhi_epi64(Src3, Src4));
+			Cbc = Src4;
+
+			x1 = ByteSwapX4(x1);
+			y1 = ByteSwapX4(y1);
+			x2 = ByteSwapX4(x2);
+			y2 = ByteSwapX4(y2);
+
+			_mm_storeu_si128(reinterpret_cast<__m128i *>(pData + dwPos), x1);
+			_mm_storeu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 2), y1);
+			_mm_storeu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 4), x2);
+			_mm_storeu_si128(reinterpret_cast<__m128i *>(pData + dwPos + sizeof(DATKEY) * 6), y2);
+#else
+			// {l0,l1,l2,l3} .. {r4,r5,r6,r7}
+			uint32x4_t x1 = vextq_u32(CbcLeft, SrcLeft1, 3);
+			uint32x4_t y1 = vextq_u32(CbcRight, SrcRight1, 3);
+			uint32x4_t x2 = vextq_u32(SrcLeft1, SrcLeft2, 3);
+			uint32x4_t y2 = vextq_u32(SrcRight1, SrcRight2, 3);
+
+			x1 = veorq_u32(Left1, x1);
+			y1 = veorq_u32(Right1, y1);
+			x2 = veorq_u32(Left2, x2);
+			y2 = veorq_u32(Right2, y2);
+			CbcLeft = SrcLeft2;
+			CbcRight = SrcRight2;
+
+			uint32x4x2_t z1 = {ByteSwapX4(x1), ByteSwapX4(y1)};
+			uint32x4x2_t z2 = {ByteSwapX4(x2), ByteSwapX4(y2)};
+
+			vst2q_u32(reinterpret_cast<DWORD *>(pData + dwPos), z1);
+			vst2q_u32(reinterpret_cast<DWORD *>(pData + dwPos + sizeof(DATKEY) * 4), z2);
+#endif
+			}
+
+		return true;
+		}
+#endif
+
 	DATKEY CbcData = m_InitialCbc;
 	DATKEY SrcData1, SrcData2;
 

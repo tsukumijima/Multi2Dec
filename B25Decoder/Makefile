@@ -26,6 +26,9 @@ ALL_H := \
   IB25Decoder.h \
   stdafx.h
 
+ifdef USE_SIMD
+  CPPFLAGS := -DMULTI2_SIMD $(CPPFLAGS)
+endif
 PKG_CONFIG_RESULT := $(shell pkg-config libpcsclite --cflags)
 ifeq ($(PKG_CONFIG_RESULT),)
   $(error Failed)

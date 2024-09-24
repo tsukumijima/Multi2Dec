@@ -551,7 +551,7 @@ const bool CTsDescrambler::CEcmProcessor::DescramblePacket(ITsPacket * const pTs
 
 	// スクランブル解除
 	if(pMediaData){
-		if(m_Multi2Decoder.Decode(pTsPacket->GetPayloadData(), (DWORD)pTsPacket->GetPayloadSize(), pTsPacket->m_Header.byTransportScramblingCtrl)){
+		if(m_Multi2Decoder.Decode(pTsPacket->GetPayloadData(), (DWORD)pTsPacket->GetPayloadSize(), pTsPacket->m_Header.byTransportScramblingCtrl, CTsPacket::EXTRA_BUFFER_ALLOCATION_SIZE)){
 			// トランスポートスクランブル制御再設定
 			pMediaData->SetAt(3UL, pMediaData->GetAt(3UL) & 0x3FU);
 			pTsPacket->m_Header.byTransportScramblingCtrl = 0U;

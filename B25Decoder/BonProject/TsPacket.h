@@ -29,8 +29,12 @@ public:
 
 // CMediaData
 	virtual const DWORD CopyData(const IMediaData *pSrc);
+	// 要求サイズよりもEXTRA_BUFFER_ALLOCATION_SIZEだけ余分に確保する
+	virtual const DWORD GetBuffer(const DWORD dwGetSize);
 
 // CTsPacket
 	CTsPacket(IBonObject *pOwner);
 	virtual ~CTsPacket(void);
+
+	static const DWORD EXTRA_BUFFER_ALLOCATION_SIZE;
 };

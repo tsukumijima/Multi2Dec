@@ -9,6 +9,14 @@
 // MULTI2暗号デコーダクラス
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef MULTI2_SIMD
+#if !defined(MULTI2_SIMD_SSE2) && (defined(_WIN32) || defined(__SSE2__))
+#define MULTI2_SIMD_SSE2
+#elif !defined(MULTI2_SIMD_NEON) && defined(__ARM_NEON) && defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define MULTI2_SIMD_NEON
+#endif
+#endif
+
 class CMulti2Decoder
 {
 public:
@@ -17,7 +25,8 @@ public:
 	
 	void Initialize(const BYTE *pSystemKey, const BYTE *pInitialCbc);
 	const bool SetScrambleKey(const BYTE *pScrambleKey);
-	const bool Decode(BYTE *pData, const DWORD dwSize, const BYTE byScrCtrl) const;
+	// dwExtraSizeはdwSizeを越えてオーバーラン可能なサイズ。最適化のため16以上を推奨
+	const bool Decode(BYTE *pData, const DWORD dwSize, const BYTE byScrCtrl, const DWORD dwExtraSize = 0) const;
 
 private:
 	class DATKEY	// Data Key(Dk) 64bit
@@ -36,6 +45,11 @@ private:
 		void SetKey(int nIndex, DWORD dwKey);
 	
 		DWORD dwKeys[8];
+#if defined(MULTI2_SIMD_SSE2) || defined(MULTI2_SIMD_NEON)
+		// アラインのために16バイトだけ余分にとる
+		BYTE byKeys[16 * 8 + 16];
+		void *pdw4Keys;
+#endif
 	};
 
 	static inline void DecryptBlock(DATKEY &Block, const SYSKEY &WorkKey);
