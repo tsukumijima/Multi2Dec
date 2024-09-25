@@ -29,7 +29,12 @@ Axfc で公開されている [Multi2Dec_0210_Patch.tar.gz](https://www.axfc.net
 > 他方 libaribb25 は TS ファイル全体を完璧にデコードするために設計されており、デコード失敗時などのエラーハンドリングや機能の豊富さでは、Multi2Dec 内のオリジナルの B25Decoder 実装の方が優れているようです。  
 > C++ で記述されており、libaribb25 よりコードが読みやすい点もメリット。
 
-## ビルド方法
+## ビルド
+
+ビルドを実行すると、B25Decoder.dll / B25Decoder.so が生成されます。  
+
+> [!NOTE]
+> Multi2Dec に含まれるツール群全体のビルドを行う [Multi2Dec.sln](Multi2Dec.sln) はオリジナルの最終バージョンから一切メンテナンスされておらず、約20年前に公開された VS2005 向けの sln ファイルのままです。
 
 ### Windows
 
@@ -64,4 +69,4 @@ make USE_SIMD=y
 > 上記 Readme の内容は公開当時から一切更新されておらず、情報が古くなっている箇所があります。
 
 
-Multi2Dec やその改良パッチの作者の方に感謝します。
+Multi2Dec やその改良パッチの作者の方々に感謝します。
