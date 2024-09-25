@@ -402,6 +402,7 @@ FodyWeavers.xsd
 *.so
 *.a
 
+Release-MIN/
 .DS_Store
 ._*
 *.zip
