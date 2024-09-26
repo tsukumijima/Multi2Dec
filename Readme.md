@@ -54,6 +54,7 @@ msbuild B25Decoder_VC17.sln /t:Build /p:Configuration=Release-MIN /p:Platform=x6
 
 ```bash
 sudo apt install g++ libpcsclite-dev make pkg-config
+cd B25Decoder
 make USE_SIMD=y
 ```
 
