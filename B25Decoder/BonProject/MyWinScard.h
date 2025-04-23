@@ -67,10 +67,10 @@ int SCardTransmit(SCARDHANDLE hCard,
                   unsigned int cbSendLength,
                   /*@out@*/ void *pioRecvPci, // NULLであること
                   /*@out@*/ BYTE *pbRecvBuffer,
-                  unsigned int *pcbRecvLength);
+                  /*@in,out@*/ unsigned int *pcbRecvLength);
 
 int SCardListReaders(SCARDCONTEXT hContext,
                      /*@null@*/ /*@out@*/ LPCSTR mszGroups,
                      /*@null@*/ /*@out@*/ LPSTR mszReaders,
-                     /*@out@*/ unsigned int *pcchReaders);
+                     /*@in,out@*/ unsigned int *pcchReaders);
 }
