@@ -33,7 +33,7 @@ int SCardConnect(SCARDCONTEXT hContext,
                  /*@out@*/ SCARDHANDLE *phCard,
                  /*@out@*/ unsigned int *pdwActiveProtocol)
 {
-	DWORD dwActiveProtocol;
+	DWORD dwActiveProtocol = pdwActiveProtocol ? *pdwActiveProtocol : 0;
 	LONG nRet = ::SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols,
 	                           (::SCARDHANDLE *)phCard, pdwActiveProtocol ? &dwActiveProtocol : NULL);
 	if (pdwActiveProtocol) {
@@ -54,12 +54,12 @@ int SCardTransmit(SCARDHANDLE hCard,
                   unsigned int cbSendLength,
                   /*@out@*/ void *pioRecvPci,
                   /*@out@*/ BYTE *pbRecvBuffer,
-                  unsigned int *pcbRecvLength)
+                  /*@in,out@*/ unsigned int *pcbRecvLength)
 {
 	if (pioSendPci || pioRecvPci) {
 		return (int)SCARD_E_INVALID_PARAMETER;
 	}
-	DWORD cbRecvLength;
+	DWORD cbRecvLength = pcbRecvLength ? *pcbRecvLength : 0;
 	LONG nRet = ::SCardTransmit(hCard, SCARD_PCI_T1, pbSendBuffer, cbSendLength, NULL,
 	                            pbRecvBuffer, pcbRecvLength ? &cbRecvLength : NULL);
 	if (pcbRecvLength) {
@@ -71,9 +71,9 @@ int SCardTransmit(SCARDHANDLE hCard,
 int SCardListReaders(SCARDCONTEXT hContext,
                      /*@null@*/ /*@out@*/ LPCSTR mszGroups,
                      /*@null@*/ /*@out@*/ LPSTR mszReaders,
-                     /*@out@*/ unsigned int *pcchReaders)
+                     /*@in,out@*/ unsigned int *pcchReaders)
 {
-	DWORD cchReaders;
+	DWORD cchReaders = pcchReaders ? *pcchReaders : 0;
 	LONG nRet = ::SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders ? &cchReaders : NULL);
 	if (pcchReaders) {
 		*pcchReaders = (unsigned int)cchReaders;
